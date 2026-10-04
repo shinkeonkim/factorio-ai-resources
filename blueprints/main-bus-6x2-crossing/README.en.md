@@ -30,7 +30,8 @@ none
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | default |
+| [`blueprint.txt`](blueprint.txt) | belt (default) |
+| [`variants/fluid.txt`](variants/fluid.txt) | fluid (pipe-to-ground) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -53,5 +54,7 @@ python3 tools/build.py main-bus-6x2-crossing
 - All six lanes dive under one column; the branch belt runs north through that column.
 - It enters from the 2 empty rows below and leaves north. Place one on every group between the tapped group and the factory, same column.
 - 1-tile underground gap: works with every tier.
+- `variants/fluid.txt`: for fluid branches — one pipe-to-ground pair from the first gap row below (south-facing) to the last gap row above (north-facing).
+
 
 Details: [Main bus 6+2 guide](../../docs/guides/main-bus-6x2.en.md)

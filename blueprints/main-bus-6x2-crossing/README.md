@@ -30,7 +30,8 @@
 
 | 파일 | 설명 |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | 기본 |
+| [`blueprint.txt`](blueprint.txt) | 벨트 (기본) |
+| [`variants/fluid.txt`](variants/fluid.txt) | 유체 (지하 파이프) |
 
 문자열을 클립보드에 복사한 뒤 게임에서 블루프린트 라이브러리 → 문자열 가져오기:
 
@@ -53,5 +54,7 @@ python3 tools/build.py main-bus-6x2-crossing
 - 6줄이 모두 지하 벨트로 한 열 아래를 지나가고, 그 열에 북쪽으로 가는 분기 벨트가 지나갑니다.
 - 아래 빈칸 2줄에서 들어와 위쪽으로 나갑니다. 분기를 뺀 묶음과 공장 사이의 모든 묶음에 같은 열로 하나씩 놓습니다.
 - 지하 벨트 간격 1칸이라 모든 티어에서 동작합니다.
+- `variants/fluid.txt`: 유체 분기용. 아래 빈칸 첫 줄(남향)에서 위 빈칸 마지막 줄(북향)까지 지하 파이프 한 쌍.
+
 
 자세한 사용법: [메인버스 6+2 가이드](../../docs/guides/main-bus-6x2.md)

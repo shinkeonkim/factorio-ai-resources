@@ -17,5 +17,18 @@
   "summary": {
     "ko": "아래 묶음에서 올라오는 분기 벨트가 6줄 묶음을 세로로 가로지르게 하는 조각 (6줄 모두 1칸 잠수).",
     "en": "Lets a branch from a lower group pass north through a 6-lane group (all six lanes dive one column)."
+  },
+  "variants": [
+    {
+      "file": "variants/fluid.txt",
+      "label": {
+        "ko": "유체 (지하 파이프)",
+        "en": "fluid (pipe-to-ground)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "벨트 (기본)",
+    "en": "belt (default)"
   }
 }

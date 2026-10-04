@@ -1,6 +1,6 @@
 # 메인버스 6+2 기본 구간
 
-> 6줄 묶음 3개를 빈칸 2줄로 띄운 가로 버스 구간 (32칸). 줄마다 아이템 표시 조합기 포함.
+> 이 저장소의 버스 구간(33칸): 철 6 | 구리 6 | 회로 2·2·2 | 강철 2·플라스틱 2·돌·벽돌 | 석탄·황·건전지·엔진·전기 엔진·LDS | 유체 6줄. 묶음 사이 빈칸 2줄.
 
 [English](README.en.md)
 
@@ -13,8 +13,8 @@
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base) |
-| 크기 | 33×22 타일 |
-| 엔티티 | 594 |
+| 크기 | 35×46 타일 |
+| 엔티티 | 1062 |
 | 주요 설비 | - |
 | 검사 | 통과 |
 
@@ -28,20 +28,38 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 | `iron-plate` | 900 | (0, 1) |
 | `iron-plate` | 900 | (0, 2) |
 | `iron-plate` | 900 | (0, 3) |
-| `copper-plate` | 900 | (0, 4) |
-| `copper-plate` | 900 | (0, 5) |
+| `iron-plate` | 900 | (0, 4) |
+| `iron-plate` | 900 | (0, 5) |
 | `copper-plate` | 900 | (0, 8) |
 | `copper-plate` | 900 | (0, 9) |
-| `steel-plate` | 900 | (0, 10) |
-| `stone-brick` | 900 | (0, 11) |
-| `electronic-circuit` | 900 | (0, 12) |
-| `electronic-circuit` | 900 | (0, 13) |
-| `plastic-bar` | 900 | (0, 16) |
-| `advanced-circuit` | 900 | (0, 17) |
-| `coal` | 900 | (0, 18) |
-| `stone` | 900 | (0, 19) |
-| `sulfur` | 900 | (0, 20) |
+| `copper-plate` | 900 | (0, 10) |
+| `copper-plate` | 900 | (0, 11) |
+| `copper-plate` | 900 | (0, 12) |
+| `copper-plate` | 900 | (0, 13) |
+| `electronic-circuit` | 900 | (0, 16) |
+| `electronic-circuit` | 900 | (0, 17) |
+| `advanced-circuit` | 900 | (0, 18) |
+| `advanced-circuit` | 900 | (0, 19) |
+| `processing-unit` | 900 | (0, 20) |
 | `processing-unit` | 900 | (0, 21) |
+| `steel-plate` | 900 | (0, 24) |
+| `steel-plate` | 900 | (0, 25) |
+| `plastic-bar` | 900 | (0, 26) |
+| `plastic-bar` | 900 | (0, 27) |
+| `stone` | 900 | (0, 28) |
+| `stone-brick` | 900 | (0, 29) |
+| `coal` | 900 | (0, 32) |
+| `sulfur` | 900 | (0, 33) |
+| `battery` | 900 | (0, 34) |
+| `engine-unit` | 900 | (0, 35) |
+| `electric-engine-unit` | 900 | (0, 36) |
+| `low-density-structure` | 900 | (0, 37) |
+| `petroleum-gas` (fluid) | 60,000 | (0, 40) |
+| `light-oil` (fluid) | 60,000 | (0, 41) |
+| `heavy-oil` (fluid) | 60,000 | (0, 42) |
+| `lubricant` (fluid) | 60,000 | (0, 43) |
+| `sulfuric-acid` (fluid) | 60,000 | (0, 44) |
+| `water` (fluid) | 60,000 | (0, 45) |
 
 ### 출력
 
@@ -55,6 +73,7 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 | [`variants/red.txt`](variants/red.txt) | 빨강 벨트 |
 | [`variants/blue.txt`](variants/blue.txt) | 파랑 벨트 |
 | [`variants/turbo.txt`](variants/turbo.txt) | 터보 벨트 |
+| [`variants/extension.txt`](variants/extension.txt) | 연장용 (표시 없음, 동쪽에 이어 붙이기) |
 
 문자열을 클립보드에 복사한 뒤 게임에서 블루프린트 라이브러리 → 문자열 가져오기:
 
@@ -74,12 +93,10 @@ python3 tools/build.py main-bus-6x2-segment
 
 ## 구조
 
-- 버스는 **동쪽으로** 흐르고, 한 묶음 = 6줄, 묶음 사이 = 빈칸 2줄입니다. 3묶음(18줄) 기준 높이 22칸.
-- 각 줄 서쪽 끝의 일정 신호 조합기는 **추천 배치** 표시입니다(값 = 그 벨트 한 줄의 분당 용량). 필요에 맞게 신호만 바꾸세요.
-  - 1묶음: 철판 ×4, 구리판 ×2
-  - 2묶음: 구리판 ×2, 강철, 돌벽돌, 녹색 회로 ×2
-  - 3묶음: 플라스틱, 적색 회로, 석탄, 돌, 황, 청색 회로
-- 물·원유 같은 유체는 버스에 싣지 않습니다(waterfill로 필요한 곳에 물을 둡니다).
+- 버스는 **동쪽으로** 흐르고, 한 묶음 = 6줄, 묶음 사이 = 빈칸 2줄입니다. 6묶음 46줄.
+- 각 줄 서쪽 끝의 일정 신호 조합기가 그 줄의 아이템입니다(값 = 그 벨트 한 줄의 분당 용량, 유체는 표시용).
+- 맨 아래 유체 묶음은 지하 파이프 사슬이라 줄끼리 섞이지 않습니다. 유체 입구는 각 줄 첫 지하 파이프의 서쪽 칸이며, **지하 파이프로 연결**하세요(일반 파이프를 세로로 붙이면 줄끼리 섞입니다).
+- 버스를 늘릴 때는 `variants/extension.txt`(표시 없음)를 33칸 단위로 동쪽에 이어 붙입니다. 벨트와 지하 파이프 사슬이 그대로 이어집니다.
 
 ## 업그레이드
 

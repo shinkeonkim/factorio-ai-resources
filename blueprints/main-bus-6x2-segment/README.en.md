@@ -1,6 +1,6 @@
 # Main bus 6+2 segment
 
-> Horizontal bus segment: 3 groups of 6 lanes with 2 empty rows between them (32 tiles), lane labels included.
+> House bus segment (33 tiles): iron 6 | copper 6 | circuits 2·2·2 | steel 2, plastic 2, stone, brick | coal, sulfur, battery, engine, e-engine, LDS | 6 fluid lines; 2 empty rows between groups.
 
 [한국어](README.md)
 
@@ -13,8 +13,8 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base) |
-| Size | 33×22 tiles |
-| Entities | 594 |
+| Size | 35×46 tiles |
+| Entities | 1062 |
 | Main machines | - |
 | Validation | OK |
 
@@ -28,20 +28,38 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 | `iron-plate` | 900 | (0, 1) |
 | `iron-plate` | 900 | (0, 2) |
 | `iron-plate` | 900 | (0, 3) |
-| `copper-plate` | 900 | (0, 4) |
-| `copper-plate` | 900 | (0, 5) |
+| `iron-plate` | 900 | (0, 4) |
+| `iron-plate` | 900 | (0, 5) |
 | `copper-plate` | 900 | (0, 8) |
 | `copper-plate` | 900 | (0, 9) |
-| `steel-plate` | 900 | (0, 10) |
-| `stone-brick` | 900 | (0, 11) |
-| `electronic-circuit` | 900 | (0, 12) |
-| `electronic-circuit` | 900 | (0, 13) |
-| `plastic-bar` | 900 | (0, 16) |
-| `advanced-circuit` | 900 | (0, 17) |
-| `coal` | 900 | (0, 18) |
-| `stone` | 900 | (0, 19) |
-| `sulfur` | 900 | (0, 20) |
+| `copper-plate` | 900 | (0, 10) |
+| `copper-plate` | 900 | (0, 11) |
+| `copper-plate` | 900 | (0, 12) |
+| `copper-plate` | 900 | (0, 13) |
+| `electronic-circuit` | 900 | (0, 16) |
+| `electronic-circuit` | 900 | (0, 17) |
+| `advanced-circuit` | 900 | (0, 18) |
+| `advanced-circuit` | 900 | (0, 19) |
+| `processing-unit` | 900 | (0, 20) |
 | `processing-unit` | 900 | (0, 21) |
+| `steel-plate` | 900 | (0, 24) |
+| `steel-plate` | 900 | (0, 25) |
+| `plastic-bar` | 900 | (0, 26) |
+| `plastic-bar` | 900 | (0, 27) |
+| `stone` | 900 | (0, 28) |
+| `stone-brick` | 900 | (0, 29) |
+| `coal` | 900 | (0, 32) |
+| `sulfur` | 900 | (0, 33) |
+| `battery` | 900 | (0, 34) |
+| `engine-unit` | 900 | (0, 35) |
+| `electric-engine-unit` | 900 | (0, 36) |
+| `low-density-structure` | 900 | (0, 37) |
+| `petroleum-gas` (fluid) | 60,000 | (0, 40) |
+| `light-oil` (fluid) | 60,000 | (0, 41) |
+| `heavy-oil` (fluid) | 60,000 | (0, 42) |
+| `lubricant` (fluid) | 60,000 | (0, 43) |
+| `sulfuric-acid` (fluid) | 60,000 | (0, 44) |
+| `water` (fluid) | 60,000 | (0, 45) |
 
 ### Outputs
 
@@ -55,6 +73,7 @@ none
 | [`variants/red.txt`](variants/red.txt) | red belts |
 | [`variants/blue.txt`](variants/blue.txt) | blue belts |
 | [`variants/turbo.txt`](variants/turbo.txt) | turbo belts |
+| [`variants/extension.txt`](variants/extension.txt) | extension (no labels, append to the east) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -74,15 +93,13 @@ python3 tools/build.py main-bus-6x2-segment
 
 ## Layout
 
-- The bus flows **east**; a group = 6 lanes, groups are separated by 2 empty rows. 3 groups (18 lanes) = 22 rows.
-- The constant combinator at the west end of each lane is a **suggested allocation** label (count = that belt's capacity per minute); change the signal to match your bus.
-  - group 1: iron ×4, copper ×2
-  - group 2: copper ×2, steel, stone brick, green circuits ×2
-  - group 3: plastic, red circuits, coal, stone, sulfur, blue circuits
-- Fluids stay off the bus (with Waterfill, water is placed where it is needed).
+- Flows **east**; a group = 6 lanes, 2 empty rows between groups; 6 groups = 46 rows.
+- The constant combinator at the west end of each lane names its item (count = lane capacity per minute; fluids are labels only).
+- The bottom fluid group uses pipe-to-ground chains, so lines never mix. Feed each line into the tile west of its first pipe-to-ground **with a pipe-to-ground** (stacked plain pipes would join the lines).
+- To extend the bus, append `variants/extension.txt` (no labels) every 33 tiles to the east; belts and chains continue seamlessly.
 
 ## Upgrading
 
-Only the belts change; run the upgrade planner. The variants (red/blue/turbo) are the same layout with other belts.
+Only the belts change; run the upgrade planner. Variants (red/blue/turbo) are the same layout with other belts.
 
 Details: [Main bus 6+2 guide](../../docs/guides/main-bus-6x2.en.md)

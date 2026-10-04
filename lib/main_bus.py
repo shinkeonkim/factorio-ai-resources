@@ -14,22 +14,76 @@ TIER = {"yellow": ("transport-belt", "underground-belt", "splitter"),
         "turbo": ("turbo-transport-belt", "turbo-underground-belt", "turbo-splitter")}
 GROUP, GAP = 6, 2
 PITCH = GROUP + GAP
-# suggested lane allocation for a 3-group (18-lane) starter-to-rocket bus
-SUGGESTED = [["iron-plate"] * 4 + ["copper-plate"] * 2,
-             ["copper-plate"] * 2 + ["steel-plate", "stone-brick", "electronic-circuit", "electronic-circuit"],
-             ["plastic-bar", "advanced-circuit", "coal", "stone", "sulfur", "processing-unit"]]
+# House bus (top -> bottom). Solid groups first, the fluid group last (bottom) so solid branches never
+# cross fluid lines; fluid branches climb through the 2-row gaps with pipe-to-ground hops.
+LAYOUT = [
+    {"kind": "solid", "lanes": ["iron-plate"] * 6},
+    {"kind": "solid", "lanes": ["copper-plate"] * 6},
+    {"kind": "solid", "lanes": ["electronic-circuit"] * 2 + ["advanced-circuit"] * 2 + ["processing-unit"] * 2},
+    {"kind": "solid", "lanes": ["steel-plate"] * 2 + ["plastic-bar"] * 2 + ["stone", "stone-brick"]},
+    {"kind": "solid", "lanes": ["coal", "sulfur", "battery", "engine-unit", "electric-engine-unit", "low-density-structure"]},
+    {"kind": "fluid", "lanes": ["petroleum-gas", "light-oil", "heavy-oil", "lubricant", "sulfuric-acid", "water"]},
+]
+SUGGESTED = [g["lanes"] for g in LAYOUT if g["kind"] == "solid"]
 LANE_PER_MIN = {"yellow": 900, "red": 1800, "blue": 2700, "turbo": 3600}
+FLUID_PER_MIN = 60000          # label only: a pipe-to-ground chain carries ~1,000+/s over these lengths
+PTG_SPAN = 10                  # pipe-to-ground max distance; a pair covers x .. x+10 (9 tiles between)
+PERIOD = PTG_SPAN + 1          # chain period: [W-facing at x] ... [E-facing at x+10], next pair at x+11
 
 
-def segment(bp, groups=3, length=32, tier="yellow", lanes=SUGGESTED, x0=0, y0=0, markers=True):
-    """Straight bus segment; optional constant-combinator label at the west end of every lane."""
+def group_row(g):
+    return PITCH * g
+
+
+def fluid_chain(bp, y, x0, length):
+    """Horizontal pipe-to-ground chain on row y from x0 (inclusive) over `length` tiles (multiple of PERIOD).
+    Neighbouring chains do not connect: pipe-to-ground only joins on its single above-ground side."""
+    for j in range(length // PERIOD):
+        a = x0 + PERIOD * j
+        bp.add("pipe-to-ground", a, y, W)                 # above-ground side faces west (joins the previous pair)
+        bp.add("pipe-to-ground", a + PTG_SPAN, y, E)
+
+
+def segment(bp, length=33, tier="yellow", layout=LAYOUT, x0=0, y0=0, markers=True):
+    """Bus segment for `layout` (default: the house bus). Solid groups: belts; fluid group: ptg chains.
+    A constant-combinator label sits at the west end of every lane (count = lane capacity per minute)."""
     belt = TIER[tier][0]
-    for g in range(groups):
-        for i in range(GROUP):
+    for g, grp in enumerate(layout):
+        for i, item in enumerate(grp["lanes"]):
             y = y0 + PITCH * g + i
-            bp.belt_line(belt, x0, y, E, length)
-            if markers and lanes and g < len(lanes):
-                bp.add_marker(x0 - 1, y, {lanes[g][i]: LANE_PER_MIN[tier]})
+            if grp["kind"] == "solid":
+                bp.belt_line(belt, x0, y, E, length)
+                count = LANE_PER_MIN[tier]
+            else:
+                # no plain inlet pipe: stacked plain pipes would join all fluid lines. Feed each line with a
+                # pipe-to-ground facing east at x0 (its underground passes under the label).
+                fluid_chain(bp, y, x0 + 1, length - length % PERIOD)
+                count = FLUID_PER_MIN
+            if markers:
+                bp.add_marker(x0 - 1, y, {item: count})
+
+
+def fluid_tap(bp, line, x=0, y0=0, rise=True):
+    """Bring fluid line `line` (0..5) of the fluid group (rows y0..y0+5) up to the gap row above it.
+    The line surfaces at column x (ptg E at x-1, pipe at x, ptg W at x+1 re-pair with the chain);
+    lines above it are underground at x, so a pipe-to-ground hop climbs to row y0-1 (facing north),
+    ready for fluid_crossing() pieces in the groups above."""
+    r = y0 + line
+    bp.add("pipe-to-ground", x - 1, r, E)
+    bp.add("pipe", x, r)
+    bp.add("pipe-to-ground", x + 1, r, W)
+    if line == 0:
+        bp.add("pipe", x, y0 - 1)
+    else:
+        bp.add("pipe-to-ground", x, r - 1, S)             # joins the pipe below, goes underground north
+        bp.add("pipe-to-ground", x, y0 - 1, N)
+
+
+def fluid_crossing(bp, x=0, y0=0):
+    """A fluid branch passes north through one 6-lane group (lanes y0..y0+5): pipe-to-ground from the
+    first gap row below (y0+6, facing south) to the last gap row above (y0-1, facing north)."""
+    bp.add("pipe-to-ground", x, y0 + GROUP, S)
+    bp.add("pipe-to-ground", x, y0 - 1, N)
 
 
 def dive(bp, ug, rows, x_in, x_out, x_before=None, belt=None):

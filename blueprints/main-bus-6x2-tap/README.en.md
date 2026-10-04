@@ -1,6 +1,6 @@
 # Main bus 6+2 tap pieces
 
-> Takes one lane of a 6-lane group north: lanes 0-5 × full / half (splitter), 12 pieces.
+> Takes one lane north: belt lanes 0-5 × full/half (12) + fluid lines 0-5 (6).
 
 [한국어](README.md)
 
@@ -42,6 +42,12 @@ none
 | [`variants/half-lane3.txt`](variants/half-lane3.txt) | half · lane 3 |
 | [`variants/half-lane4.txt`](variants/half-lane4.txt) | half · lane 4 |
 | [`variants/half-lane5.txt`](variants/half-lane5.txt) | half · lane 5 |
+| [`variants/fluid-line0.txt`](variants/fluid-line0.txt) | fluid · line 0 |
+| [`variants/fluid-line1.txt`](variants/fluid-line1.txt) | fluid · line 1 |
+| [`variants/fluid-line2.txt`](variants/fluid-line2.txt) | fluid · line 2 |
+| [`variants/fluid-line3.txt`](variants/fluid-line3.txt) | fluid · line 3 |
+| [`variants/fluid-line4.txt`](variants/fluid-line4.txt) | fluid · line 4 |
+| [`variants/fluid-line5.txt`](variants/fluid-line5.txt) | fluid · line 5 |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -67,5 +73,10 @@ python3 tools/build.py main-bus-6x2-tap
 - Undergrounds span at most 2 tiles, so **yellow undergrounds (max 4) work** and the layout survives upgrades.
 - Super-force build (Shift+click) it over an existing segment to replace the straight belts.
 - A branch from a lower group climbs through each group above with the [crossing piece](../main-bus-6x2-crossing/README.en.md) on the same column.
+
+## Fluid taps
+
+- `variants/fluid-line*.txt`: surfaces one line of the fluid group inside a chain (super-force build it **2-8 tiles into a pipe-to-ground pair**) and climbs to the gap row above.
+- Stack the `fluid` variant of the [crossing piece](../main-bus-6x2-crossing/README.en.md) on the groups above, same column.
 
 Details: [Main bus 6+2 guide](../../docs/guides/main-bus-6x2.en.md)

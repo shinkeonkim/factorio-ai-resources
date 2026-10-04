@@ -1,6 +1,6 @@
 # 메인버스 6+2 분기 조각
 
-> 6줄 묶음의 한 줄을 북쪽으로 빼는 조각. 줄 0~5 × 전부(full)/반(half, 스플리터) 12종.
+> 6줄 묶음의 한 줄을 북쪽으로 빼는 조각: 벨트 줄 0~5 × 전부/반 12종 + 유체 줄 0~5 6종.
 
 [English](README.en.md)
 
@@ -42,6 +42,12 @@
 | [`variants/half-lane3.txt`](variants/half-lane3.txt) | 반 · 줄 3 |
 | [`variants/half-lane4.txt`](variants/half-lane4.txt) | 반 · 줄 4 |
 | [`variants/half-lane5.txt`](variants/half-lane5.txt) | 반 · 줄 5 |
+| [`variants/fluid-line0.txt`](variants/fluid-line0.txt) | 유체 · 줄 0 |
+| [`variants/fluid-line1.txt`](variants/fluid-line1.txt) | 유체 · 줄 1 |
+| [`variants/fluid-line2.txt`](variants/fluid-line2.txt) | 유체 · 줄 2 |
+| [`variants/fluid-line3.txt`](variants/fluid-line3.txt) | 유체 · 줄 3 |
+| [`variants/fluid-line4.txt`](variants/fluid-line4.txt) | 유체 · 줄 4 |
+| [`variants/fluid-line5.txt`](variants/fluid-line5.txt) | 유체 · 줄 5 |
 
 문자열을 클립보드에 복사한 뒤 게임에서 블루프린트 라이브러리 → 문자열 가져오기:
 
@@ -67,5 +73,10 @@ python3 tools/build.py main-bus-6x2-tap
 - 지하 벨트 간격이 최대 2칸이라 **노랑 지하 벨트(최대 4칸)로도 동작**하고, 업그레이드해도 배치가 그대로입니다.
 - 기존 버스 구간 위에 '강제 건설(Shift+클릭)'로 덮어 놓으면 직선 벨트가 교체됩니다.
 - 아래쪽 묶음에서 뺀 분기는 위쪽 묶음마다 [통과 조각](../main-bus-6x2-crossing/README.md)을 같은 열에 놓아 올립니다.
+
+## 유체 분기
+
+- `variants/fluid-line*.txt`: 유체 묶음의 한 줄을 사슬 중간에서 지상으로 올리고(지하 파이프 쌍 사이 **2~8칸 지점**에 강제 건설), 지하 파이프로 묶음 위 빈칸까지 올립니다.
+- 그 위 묶음들은 [통과 조각](../main-bus-6x2-crossing/README.md)의 `fluid` 변형을 같은 열에 쌓아 올립니다.
 
 자세한 사용법: [메인버스 6+2 가이드](../../docs/guides/main-bus-6x2.md)

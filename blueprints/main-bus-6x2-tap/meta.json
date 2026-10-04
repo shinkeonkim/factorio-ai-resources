@@ -15,8 +15,8 @@
     "en": "Main bus 6+2 tap pieces"
   },
   "summary": {
-    "ko": "6줄 묶음의 한 줄을 북쪽으로 빼는 조각. 줄 0~5 × 전부(full)/반(half, 스플리터) 12종.",
-    "en": "Takes one lane of a 6-lane group north: lanes 0-5 × full / half (splitter), 12 pieces."
+    "ko": "6줄 묶음의 한 줄을 북쪽으로 빼는 조각: 벨트 줄 0~5 × 전부/반 12종 + 유체 줄 0~5 6종.",
+    "en": "Takes one lane north: belt lanes 0-5 × full/half (12) + fluid lines 0-5 (6)."
   },
   "variants": [
     {
@@ -94,6 +94,48 @@
       "label": {
         "ko": "반 · 줄 5",
         "en": "half · lane 5"
+      }
+    },
+    {
+      "file": "variants/fluid-line0.txt",
+      "label": {
+        "ko": "유체 · 줄 0",
+        "en": "fluid · line 0"
+      }
+    },
+    {
+      "file": "variants/fluid-line1.txt",
+      "label": {
+        "ko": "유체 · 줄 1",
+        "en": "fluid · line 1"
+      }
+    },
+    {
+      "file": "variants/fluid-line2.txt",
+      "label": {
+        "ko": "유체 · 줄 2",
+        "en": "fluid · line 2"
+      }
+    },
+    {
+      "file": "variants/fluid-line3.txt",
+      "label": {
+        "ko": "유체 · 줄 3",
+        "en": "fluid · line 3"
+      }
+    },
+    {
+      "file": "variants/fluid-line4.txt",
+      "label": {
+        "ko": "유체 · 줄 4",
+        "en": "fluid · line 4"
+      }
+    },
+    {
+      "file": "variants/fluid-line5.txt",
+      "label": {
+        "ko": "유체 · 줄 5",
+        "en": "fluid · line 5"
       }
     }
   ],

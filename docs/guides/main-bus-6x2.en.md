@@ -32,9 +32,9 @@ Factories in this repository assume a **horizontal main bus**: resources travel 
 
 | Piece | Use |
 |---|---|
-| [Segment](../../blueprints/main-bus-6x2-segment/README.en.md) | 6 lanes × 3 groups, 32 tiles, lane label combinators |
-| [Tap](../../blueprints/main-bus-6x2-tap/README.en.md) | one lane north: full / half (splitter), lanes 0-5 |
-| [Crossing](../../blueprints/main-bus-6x2-crossing/README.en.md) | a branch from a lower group passes through a group |
+| [Segment](../../blueprints/main-bus-6x2-segment/README.en.md) | the 6 groups above (5 solid + 1 fluid), 33 tiles, lane labels |
+| [Tap](../../blueprints/main-bus-6x2-tap/README.en.md) | one lane north: full / half (splitter), lanes 0-5, fluid lines 0-5 |
+| [Crossing](../../blueprints/main-bus-6x2-crossing/README.en.md) | a branch from a lower group passes through a group (belt / fluid) |
 
 ### Making a branch
 
@@ -42,16 +42,41 @@ Factories in this repository assume a **horizontal main bus**: resources travel 
 2. Put a crossing piece on the same column of every group above it.
 3. The branch leaves above the top group into the factory. Keep 4-6 tiles between branches.
 
-## Suggested lanes (3 groups, 18 lanes)
+## This repository's bus (6 groups, top → bottom)
 
-| Group | lanes 0-5 |
-|---|---|
-| 1 | iron ×4, copper ×2 |
-| 2 | copper ×2, steel, stone brick, green circuits ×2 |
-| 3 | plastic, red circuits, coal, stone, sulfur, blue circuits |
+| Group | lanes 0-5 | Note |
+|---|---|---|
+| 1 | iron ×6 | |
+| 2 | copper ×6 | |
+| 3 | green ×2, red ×2, blue circuits ×2 | |
+| 4 | steel ×2, plastic ×2, stone, stone brick | |
+| 5 | coal, sulfur, battery, engine, electric engine, low density structure | late-tech intermediates |
+| 6 | **fluids**: petroleum, light oil, heavy oil, lubricant, sulfuric acid, water | pipe-to-ground chains; water optional with Waterfill |
 
-- Fluids (water, crude, petroleum, lubricant, sulfuric acid) stay off the bus in pipes. With Waterfill,
-  **make water next to the factory that needs it**.
+- 46 rows in total. Most-used groups are on top so branches cross fewer groups.
+- The fluid group is **at the bottom**: solid branches only go up, so they never cross fluid lines.
+
+### Fluid lines
+
+- Each fluid line is a **pipe-to-ground chain** (a pair every 10 tiles). Pipe-to-ground connects only on its
+  single above-ground side, so six chains can sit side by side without mixing.
+- **Fluid tap** (`fluid-line*` in the [tap pieces](../../blueprints/main-bus-6x2-tap/README.en.md)): surfaces one
+  line inside a span (2-8 tiles into a pair) and climbs to the gap row above the group.
+- **Crossing a group** (`fluid` variant of the [crossing piece](../../blueprints/main-bus-6x2-crossing/README.en.md)):
+  one pipe-to-ground pair from the first gap row below to the last gap row above. Stacked group by group,
+  **the two gap rows are where consecutive pairs meet**.
+
+```
+  ...P...   ← gap row below the next group: next crossing (south-facing)
+  ...P...   ← gap row above this group: crossing top (north-facing)
+  >>>>>>>   ┐
+  >>>>>>>   │ 6-lane group (passed underground)
+  >>>>>>>   ┘
+  ...P...   ← gap row below: crossing bottom (south-facing)
+  ...P...   ← top of the crossing of the group below
+```
+
+- With Waterfill, **water is made next to the factory**; the water line is a spare.
 - Put the most demanded branches first (west). Splitters always halve, so downstream factories only fill
   after upstream ones are saturated.
 
