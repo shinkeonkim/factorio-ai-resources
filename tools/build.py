@@ -164,7 +164,7 @@ def planet_section(name, lang):
     out = ["", "### " + ("단지 구성" if ko else "Complex"), "",
            ("| 줄 | 셀 크기 | 셀 수 | 출력 (분당, 후반) | 입력 (분당, 후반) |" if ko else
             "| Line | Cell | Cells | Output (/min, late) | Inputs (/min, late) |"), "|---|---|---:|---|---|"]
-    for key, n in mod.PLAN:
+    for key, n in getattr(mod, "LINES", mod.PLAN):
         c = mod.C[key]
         a = fan(c, "late")
         outs = ", ".join(f"{icon(k, 'fluid' if k in c.fluids_out else 'item')} {v * 60 * n:,.0f}" for k, v in a["out_per_s"].items())
@@ -172,16 +172,17 @@ def planet_section(name, lang):
         if c.centre == "chest":
             outs = ("상자 (몰)" if ko else "chests (mall)")
         out.append(f"| {c.name} | {c.width}×{c.period} | {n} | {outs} | {ins} |")
-    bp, rep = compose(name, mod.LAYOUT, mod.stacks(), tier=mod.BUS_TIER)
+    for nm, ko_txt, en_txt in getattr(mod, "SPECIAL", []):
+        out.append(f"| {nm} | - | - | {ko_txt if ko else en_txt} | |")
+    bp, rep = compose(name, mod.LAYOUT, mod.stacks(), tier=mod.BUS_TIER, cover=getattr(mod, "COVER", None))
     bp.connect_poles()
-    use, gen = mod.power_budget(bp)
     out += ["", ("버스 (위 → 아래, 6줄 + 빈 2줄 묶음; 유체는 맨 아래):" if ko else "Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):"), "",
             ("| 묶음 | 줄 |" if ko else "| Group | Lanes |"), "|---|---|"]
     for g, grp in enumerate(mod.LAYOUT):
         out.append(f"| {g + 1} ({grp['kind']}) | " + ", ".join(icon(i, 'fluid' if grp['kind'] == 'fluid' else 'item') if i else "-" for i in grp["lanes"]) + " |")
-    out += ["", (f"전체 {len(bp.entities):,}개 엔티티, 폭 {rep['x_end']}칸. 최대 전력 {use / 1000:,.0f} MW / 발전 {gen / 1000:,.0f} MW. "
+    out += ["", (f"전체 {len(bp.entities):,}개 엔티티, 폭 {rep['x_end']}칸. {mod.power_line(bp, lang)} "
                  "버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다." if ko else
-                 f"{len(bp.entities):,} entities, {rep['x_end']} tiles wide. Peak power {use / 1000:,.0f} MW / generated {gen / 1000:,.0f} MW. "
+                 f"{len(bp.entities):,} entities, {rep['x_end']} tiles wide. {mod.power_line(bp, lang)} "
                  "Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).")]
     return out
 
@@ -285,6 +286,10 @@ def auto_section(d: pathlib.Path, meta: dict, st: dict, lang: str) -> str:
         out.append(f"![{t['preview']}](images/preview.webp)")
     if (d / "images" / "detail.webp").exists():
         out += ["", f"**{t['detail']}**", "", f"![{t['detail']}](images/detail.webp)"]
+    parts = sorted((d / "images").glob("part-*.webp"), key=lambda q: int(q.stem.split("-")[1])) if (d / "images").exists() else []
+    if parts:
+        out += ["", "**" + ("구간별 확대 (서쪽 → 동쪽)" if lang == "ko" else "Zoomed sections (west → east)") + "**", ""]
+        out += [f"![{q.stem}](images/{q.name})" for q in parts]
     for v in meta.get("variants", []):
         if v.get("preview") and (d / variant_image(v)).exists():
             out += ["", f"**{v['label'][lang]}**", "", f"![{v['label'][lang]}]({variant_image(v)})"]
@@ -423,12 +428,12 @@ class Images:
                 print(f"! FBE renderer unavailable ({type(e).__name__}: {str(e)[:120]}); using schematic previews")
                 self.kind = "schematic"
 
-    def render(self, obj: dict, title: str, box=None):
+    def render(self, obj: dict, title: str, box=None, max_px=1600):
         if self.kind == "fbe":
             from render_fbe import finish, sub_blueprint
             from blueprint import encode
             src = sub_blueprint(obj, box) if box else obj
-            return finish(self.fbe.render(encode(src)))
+            return finish(self.fbe.render(encode(src)), max_px)
         return render(obj, title=title, box=box)
 
     def close(self):
@@ -459,7 +464,20 @@ def build_one(d: pathlib.Path, regen: bool, images):
             if images:
                 img_dir = d / "images"; img_dir.mkdir(exist_ok=True)
                 title = meta["title"]["en"]
-                save_webp(images.render(obj, title), img_dir / "preview.webp")
+                big = 3200 if meta.get("planet") else 1600
+                save_webp(images.render(obj, title, max_px=big) if images.kind == "fbe" else images.render(obj, title),
+                          img_dir / "preview.webp")
+                if meta.get("planet") and images.kind == "fbe":   # zoomed slices along the bus
+                    from blueprint import _footprints
+                    fps = list(_footprints(obj["blueprint"]))
+                    x0 = min(f[2] for f in fps); x1 = max(f[2] + f[4] for f in fps)
+                    y0 = min(f[3] for f in fps); y1 = max(f[3] + f[5] for f in fps)
+                    for old in img_dir.glob("part-*.webp"):
+                        old.unlink()
+                    k = 1
+                    for xa in range(int(x0), int(x1), 240):
+                        save_webp(images.render(obj, title, (xa, y0, xa + 240, y1), max_px=1600), img_dir / f"part-{k}.webp")
+                        k += 1
                 box = focus_box(obj)
                 total = s["w"] * s["h"]
                 if box and (box[2] - box[0]) * (box[3] - box[1]) < 0.5 * total:

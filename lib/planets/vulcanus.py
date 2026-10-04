@@ -91,6 +91,7 @@ def stacks(plan=PLAN, tier="mid"):
 from lib.complex import Stack
 from lib.fbp import N, E, S, W
 from lib.fstack import stack as fstack, late_rates, TIERS as FT
+from lib.planets.common import void_sink, landing_pad_stack as _pad, rocket_stack as _rocket
 
 
 def power_stack(turbine_cols=8, turbines_per_col=8, tier="mid"):
@@ -123,98 +124,16 @@ def power_stack(turbine_cols=8, turbines_per_col=8, tier="mid"):
 
 
 def stone_sink(recyclers_per_side=7, tier="mid", name="Stone sink (recyclers)"):
-    """Voids stone: a stone belt runs north between two columns of recyclers. Each recycler takes stone with
-    two inserters and drops its 25 % self-recycling leftover out of its front (the tile above its left column)
-    onto a short belt that side-loads back into the stone belt. Recycler speed 0.5, self-recycling 0.5/16 s,
-    so one recycler handles up to 16 stone/s (the two inserters set the real rate). Needs the recycling
-    research (Fulgora); until then stone collects in the chest at the top."""
-    def build(bp, t):
-        f = FT[t]
-        c = 4
-        for y in range(0, 8):                                    # cap: feed column from the bus
-            bp.add(f["belt"], c, y, N)
-        bp.add_marker(c, 8, {"stone": 0})
-        bp.add(f["pole"], c - 1, 0)
-        for k in range(recyclers_per_side):
-            r = -5 * (k + 1)                                     # return belt row r, recyclers r+1 .. r+4
-            for y in range(r, r + 5):
-                bp.add(f["belt"], c, y, N)
-            # west recycler (cols c-3, c-2), east recycler (cols c+2, c+3)
-            bp.add("recycler", c - 3, r + 1, N)
-            bp.add("recycler", c + 2, r + 1, N)
-            for y in (r + 2, r + 3):
-                bp.add(f["ins"], c - 1, y, E)                    # picks from the stone belt (east of it)
-                bp.add(f["ins"], c + 1, y, W)
-            for x in (c - 3, c - 2, c - 1):
-                bp.add(f["belt"], x, r, E)                       # leftovers back into the stone belt
-            for x in (c + 2, c + 1):
-                bp.add(f["belt"], x, r, W)
-            bp.add(f["pole"], c - 1, r + 4); bp.add(f["pole"], c + 1, r + 4)
-        top = -5 * recyclers_per_side - 1
-        bp.add(f["ins"], c, top, S)                              # overflow into a buffer chest
-        bp.add("steel-chest", c, top - 1)
-        bp.add(f["pole"], c + 1, top)
-
-    return Stack(name, build, tier, [], {"stone": 30.0})
-
-
-def _requests(items, count):
-    return {"sections": [{"index": 1, "filters": [
-        {"index": i + 1, "name": it, "quality": "normal", "comparator": "=", "count": count} for i, it in enumerate(items)]}]}
+    """Voids stone with recyclers (stone recycles into itself 25 % of the time); see common.void_sink."""
+    return void_sink("stone", recyclers_per_side, tier, name)
 
 
 def landing_pad_stack(imports, tier="mid", count=200):
-    """Imports: the cargo landing pad requests `imports` from orbit; logistic bots carry each item to its own
-    requester chest, which an inserter empties onto a column running down to the bus, where that column
-    starts the item's lane. Columns are 4 apart so the bus taps never collide."""
-    def build(bp, t):
-        f = FT[t]
-        xs = [1 + 4 * k for k in range(len(imports))]
-        for x, item in zip(xs, imports):
-            bp.add("requester-chest", x, -3, request_filters=_requests([item], count))
-            bp.add(f["ins"], x, -2, N)                         # picks from the chest above
-            for y in range(-1, 8):
-                bp.add(f["belt"], x, y, S)
-        for x in xs[::2]:
-            bp.add(f["pole"], x + 1, -2)
-        mid = xs[len(xs) // 2]
-        bp.add("cargo-landing-pad", mid - 4, -14, request_filters=_requests(imports, count * 2))
-        bp.add("roboport", mid + 6, -10)
-        bp.add(f["pole"], mid + 5, -5); bp.add(f["pole"], mid + 5, -11)
-
-    xs = [1 + 4 * k for k in range(len(imports))]
-    return Stack("Landing pad (imports)", build, tier, [(it, "item", x) for it, x in zip(imports, xs)],
-                 {}, {it: 15.0 for it in imports}, gap=4)
+    return _pad(imports, tier, count)
 
 
 def rocket_stack(exports=("metallurgic-science-pack", "tungsten-carbide", "tungsten-plate", "iron-plate"), tier="mid"):
-    """Rocket silo fed from the bus: processing units, low density structures and rocket fuel go in through
-    the bottom edge (one rocket part = one of each, 3 s). Exports from the bus go into passive provider
-    chests beside it; the silo's cargo requests pull them in with logistic bots."""
-    ings = ["processing-unit", "low-density-structure", "rocket-fuel"]
-
-    def build(bp, t):
-        f = FT[t]
-        bp.add("rocket-silo", 0, -12)
-        for k, item in enumerate(ings):
-            x = 1 + 4 * k
-            for y in range(-2, 8):
-                bp.add(f["belt"], x, y, N)
-            bp.add(f["ins"], x, -3, S)                        # belt end -> silo
-            bp.add_marker(x, 8, {item: 20})
-        for k, item in enumerate(exports):
-            x = 13 + 4 * k
-            for y in range(-2, 8):
-                bp.add(f["belt"], x, y, N)
-            bp.add(f["ins"], x, -3, S)
-            bp.add("passive-provider-chest", x, -4)
-            bp.add_marker(x, 8, {item: 60})
-        for x in (3, 7, 11, 15, 19, 23):
-            bp.add(f["pole"], x, -2)
-        bp.add("roboport", 14, -12)
-        bp.add(f["pole"], 11, -6)
-
-    return Stack("Rocket silo + exports", build, tier, [], {i: 0.4 for i in ings} | {e: 1.0 for e in exports}, gap=4)
+    return _rocket(list(exports), tier=tier)
 
 
 POWER_KW = {"foundry": 2500, "assembling-machine-3": 375, "chemical-plant": 210, "oil-refinery": 420, "recycler": 180,
@@ -227,3 +146,15 @@ def power_budget(bp):
     use = sum(POWER_KW.get(e["name"], 0) for e in bp.entities)
     gen = sum(5820 for e in bp.entities if e["name"] == "steam-turbine")
     return use, gen
+
+
+SPECIAL = [("Power", "산 중화 화학 공장 2대 + 증기 터빈 64대 (372 MW)", "2 acid-neutralisation plants + 64 steam turbines (372 MW)"),
+           ("Landing pad", "수입품 11종 → 버스 줄", "11 imports → bus lanes"),
+           ("Rocket silo", "로켓 부품(수입 파랑 회로·주조 LDS·수입 로켓 연료) + 수출 상자", "rocket parts (imported blue circuits, cast LDS, imported rocket fuel) + export chests"),
+           ("Stone sinks ×3", "재활용기 14대씩, 돌 줄마다 하나", "14 recyclers each, one per stone lane")]
+
+
+def power_line(bp, lang):
+    use, gen = power_budget(bp)
+    return (f"최대 전력 {use / 1000:,.0f} MW / 발전 {gen / 1000:,.0f} MW." if lang == "ko"
+            else f"Peak power {use / 1000:,.0f} MW / generated {gen / 1000:,.0f} MW.")

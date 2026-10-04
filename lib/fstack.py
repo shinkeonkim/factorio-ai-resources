@@ -36,15 +36,17 @@ RECIPES = {**json.loads((_DATA / "recipes-space-age.json").read_text())["recipes
 MACHINES = json.loads((_DATA / "machines.json").read_text())["crafters"]
 SIZES = json.loads((_DATA / "entity_sizes.json").read_text())
 
-# fluid-box connection tiles for a north-facing machine, offset from its centre, box order (factorio-data)
+# fluid-box connections of a north-facing machine: (x, y) of the port tile relative to the machine centre and the
+# direction the connection points, in box order (factorio-data). Box i <-> i-th fluid ingredient / result.
 PORTS = {
-    "foundry": {"in": [(-1, 2), (1, 2)], "out": [(-1, -2), (1, -2)]},
-    "cryogenic-plant": {"in": [(-2, 2), (0, 2), (2, 2)], "out": [(-2, -2), (0, -2), (2, -2)]},
-    "chemical-plant": {"in": [(-1, -1), (1, -1)], "out": [(-1, 1), (1, 1)]},
-    "biochamber": {"in": [(-1, -1), (1, -1)], "out": [(1, 1), (-1, 1)]},
-    "assembling-machine-2": {"in": [(0, -1)], "out": [(0, 1)]},
-    "assembling-machine-3": {"in": [(0, -1)], "out": [(0, 1)]},
-    "oil-refinery": {"in": [(-1, 2), (1, 2)], "out": [(-2, -2), (0, -2), (2, -2)]},
+    "foundry": {"in": [(-1, 2, "S"), (1, 2, "S")], "out": [(-1, -2, "N"), (1, -2, "N")]},
+    "cryogenic-plant": {"in": [(-2, 2, "S"), (0, 2, "S"), (2, 2, "S")], "out": [(-2, -2, "N"), (0, -2, "N"), (2, -2, "N")]},
+    "chemical-plant": {"in": [(-1, -1, "N"), (1, -1, "N")], "out": [(-1, 1, "S"), (1, 1, "S")]},
+    "biochamber": {"in": [(-1, -1, "N"), (1, -1, "N")], "out": [(1, 1, "S"), (-1, 1, "S")]},
+    "assembling-machine-2": {"in": [(0, -1, "N")], "out": [(0, 1, "S")]},
+    "assembling-machine-3": {"in": [(0, -1, "N")], "out": [(0, 1, "S")]},
+    "oil-refinery": {"in": [(-1, 2, "S"), (1, 2, "S")], "out": [(-2, -2, "N"), (0, -2, "N"), (2, -2, "N")]},
+    "electromagnetic-plant": {"in": [(-1.5, 0.5, "W"), (1.5, -0.5, "E")], "out": [(0.5, 1.5, "S"), (-0.5, -1.5, "N")]},
 }
 SPEED = {k: v["speed"] for k, v in MACHINES.items()}
 PROD = {k: v.get("base_productivity", 0) for k, v in MACHINES.items()}
@@ -63,12 +65,24 @@ TIERS = {   # planets come after Nauvis: red belts and medium poles at the earli
 }
 
 CHEST = {"mid": "passive-provider-chest", "late": "passive-provider-chest", "end": "passive-provider-chest"}
+DIRS = [N, E, S, W]
 ROT = {N: lambda x, y: (x, y), E: lambda x, y: (-y, x), S: lambda x, y: (-x, -y), W: lambda x, y: (y, -x)}
 
 
+def _rot_dir(d, f):
+    return DIRS[(DIRS.index(d) + DIRS.index(f)) % 4]
+
+
 def _size(machine):
-    s = SIZES[machine]
-    return s["w"]
+    return SIZES[machine]["w"]
+
+
+@dataclass
+class Port:
+    kind: str          # "in" | "out"
+    fluid: str
+    side: str          # "belt" | "centre" | "above" | "below"
+    pos: int           # row (belt/centre: machine row 0..s-1) or column (above/below: distance d from the centre)
 
 
 @dataclass
@@ -104,32 +118,109 @@ class FluidCell:
         return [o["name"] for o in self.r["results"] if o.get("type") != "fluid"]
 
     @property
-    def centre(self):
-        if self.sink == "chest" and not self.fluids_out:
-            return "chest"
-        if self.fluids_out and self.items_out:
-            return "pipe+belt"
-        return "pipe" if self.fluids_out else "belt"
-
-    @property
     def s(self):
         return _size(self.machine)
 
+    # ---- port layout: facing per half, chosen once
+    def layout(self):
+        if getattr(self, "_layout", None):
+            return self._layout
+        P = PORTS[self.machine]
+        s = self.s
+        off = (s - 1) / 2
+
+        def ports_for(f, sgn):
+            belt_dir = W if sgn < 0 else E
+            out = []
+            for kind, boxes, fluids in (("in", P["in"], self.fluids_in), ("out", P["out"], self.fluids_out)):
+                for (x, y, d), fl in zip(boxes, fluids):
+                    rx, ry = ROT[f](x, y)
+                    rd = _rot_dir(d, f)
+                    if rd == belt_dir:
+                        side, pos = "belt", int(round(ry + off))
+                    elif rd in (E, W):
+                        side, pos = "centre", int(round(ry + off))
+                    else:
+                        col = int(round(rx + off))                    # 0 = west column of the machine
+                        side, pos = ("above" if rd == N else "below"), col
+                    out.append(Port(kind, fl, side, pos))
+            return out
+
+        best = None
+        for fw in DIRS:
+            for fe in DIRS:
+                pw, pe = ports_for(fw, -1), ports_for(fe, 1)
+                centre = {p.fluid for p in pw + pe if p.side == "centre"}
+                if len(centre) > 1:
+                    continue
+                bad = False
+                for ps in (pw, pe):
+                    if any(p.kind == "out" and p.side == "belt" for p in ps):
+                        bad = True                                # outputs must reach the centre or a gap row
+                    rows = [p.pos for p in ps if p.side == "belt"]
+                    if len(rows) != len(set(rows)):
+                        bad = True
+                    gaps = [p.side for p in ps if p.side in ("above", "below")]
+                    if len(set(gaps)) > 1 or len(gaps) > 1:      # one gap port per machine, all on one side
+                        bad = True
+                if bad:
+                    continue
+                gap = sum(p.side in ("above", "below") for p in pw + pe)
+                cin = sum(p.side == "centre" and p.kind == "in" for p in pw + pe)
+                below = sum(p.side == "below" for p in pw + pe)
+                score = (gap, cin, below, DIRS.index(fw), DIRS.index(fe))
+                if best is None or score < best[0]:
+                    best = (score, fw, fe, pw, pe, centre)
+        if best is None:
+            raise ValueError(f"{self.name}: no machine facing fits its fluid ports")
+        _, fw, fe, pw, pe, centre = best
+        self._layout = {"facing": {-1: fw, 1: fe}, "ports": {-1: pw, 1: pe},
+                        "centre_fluid": next(iter(centre)) if centre else None}
+        return self._layout
+
+    @property
+    def centre_fluid(self):
+        return self.layout()["centre_fluid"]
+
+    @property
+    def extra_row(self):
+        """1 if a port points below the lowest machine (it gets its own row inside the cell)"""
+        return int(any(p.side == "below" for ps in self.layout()["ports"].values() for p in ps))
+
+    @property
+    def mains(self):
+        """fluids carried by mains outside the belts (both halves use the same columns)"""
+        out = []
+        for ps in self.layout()["ports"].values():
+            for p in ps:
+                if p.side != "centre" and p.fluid not in out:
+                    out.append(p.fluid)
+        return out
+
+    @property
+    def centre(self):
+        cf = self.centre_fluid
+        if cf:
+            return "pipe+belt" if self.items_out else "pipe"
+        if self.sink == "chest":
+            return "chest"
+        return "belt" if self.items_out else "none"
+
     @property
     def period(self):
-        return (self.s + 1) * self.n
+        return (self.s + 1) * self.n + self.extra_row
 
     # ---- geometry (distances from the centre column c, measured outwards)
     @property
-    def d_port_c(self):                 # column between machine and centre
+    def d_port_c(self):
         return 2 if self.centre == "pipe+belt" else 1
 
     @property
-    def d_mach(self):                   # machine spans d_mach .. d_mach+s-1
+    def d_mach(self):
         return self.d_port_c + 1
 
     @property
-    def d_port_b(self):                 # belt-side port / inserter column
+    def d_port_b(self):
         return self.d_mach + self.s
 
     @property
@@ -140,38 +231,35 @@ class FluidCell:
     def d_outer(self):
         return self.d_inner + 1 if self.outer else None
 
-    def d_entry(self, i):               # pipe-to-ground beside main i
-        base = (self.d_outer or self.d_inner) + 1
-        return base + 2 * i
+    def d_entry(self, i):
+        return (self.d_outer or self.d_inner) + 1 + 2 * i
 
     def d_main(self, i):
         return self.d_entry(i) + 1
 
+    def main_of(self, fluid):
+        return self.mains.index(fluid)
+
     @property
     def c(self):
-        return self.d_main(len(self.fluids_in) - 1) if self.fluids_in else (self.d_outer or self.d_inner)
+        return self.d_main(len(self.mains) - 1) if self.mains else (self.d_outer or self.d_inner)
 
     @property
     def width(self):
         return 2 * self.c + 1
 
-    def facing(self, sgn):
-        """Rotation that points the input edge at the belt side (west for sgn=-1)."""
-        ports = PORTS[self.machine]
-        want = -1 if sgn < 0 else 1                     # x direction of the belt side
-        for f in (N, E, S, W):
-            xs = [ROT[f](x, y)[0] for x, y in ports["in"]]
-            if all(math.copysign(1, x) == want and abs(x) > self.s / 2 - 1 for x in xs):
-                return f
-        raise ValueError(f"{self.machine}: cannot face its inputs sideways")
-
-    def port_rows(self, sgn):
-        """input box i -> row offset from the machine's top row; output box i -> row offset."""
-        f = self.facing(sgn)
-        half = self.s // 2
-        ins = [ROT[f](x, y)[1] + half for x, y in PORTS[self.machine]["in"]]
-        outs = [ROT[f](x, y)[1] + half for x, y in PORTS[self.machine]["out"]]
-        return ins, outs
+    def products(self):
+        """[(item, kind, x offset from the stack origin)] leaving at the cap bottom"""
+        out = []
+        cf = self.centre_fluid
+        for fl in self.fluids_out:
+            if fl == cf:
+                out.append((fl, "fluid", self.c - 1 if self.centre == "pipe+belt" else self.c))
+            else:
+                out.append((fl, "fluid", self.c - self.d_main(self.main_of(fl))))
+        if self.items_out and self.centre in ("belt", "pipe+belt"):
+            out.append((self.items_out[0], "item", self.c))
+        return out
 
 
 def _amount(lst, name):
@@ -202,8 +290,9 @@ def slots(cell: FluidCell):
             raise ValueError(f"{cell.name}: {item} is not on a lane")
         load[lanes[item]] += rt["in"][item]
     out_load = sum(rt["out"][i] for i in cell.items_out)
-    free_b = cell.s - len(cell.fluids_in)
-    free_c = cell.s - len(cell.fluids_out)
+    ports = cell.layout()["ports"].values()
+    free_b = min(cell.s - sum(p.side == "belt" for p in ps) for ps in ports)
+    free_c = min(cell.s - sum(p.side == "centre" for p in ps) for ps in ports)
     want = {}
     for t in cell.tiers:
         ins = TIERS[t]["ins"]
@@ -224,50 +313,66 @@ def build_cell(bp, cell: FluidCell, tier: str, y0: int):
     t = TIERS[tier]
     c, s, P = cell.c, cell.s, cell.period
     want, _, _ = slots(cell)
+    L = cell.layout()
     for sgn in (-1, 1):
         X = lambda d: c + sgn * d
-        to_belt, to_centre = (W, E) if sgn < 0 else (E, W)            # inserter pickup side
-        f = cell.facing(sgn)
-        in_rows, out_rows = cell.port_rows(sgn)
+        to_belt, to_centre = (W, E) if sgn < 0 else (E, W)            # inserter pickup side / pipe-to-ground facing
+        f = L["facing"][sgn]
+        ports = L["ports"][sgn]
         for y in range(y0, y0 + P):
             bp.add(t["belt"], X(cell.d_inner), y, N)
             if cell.outer:
                 bp.add(t["belt"], X(cell.d_outer), y, N)
-            for i in range(len(cell.fluids_in)):
+            for i in range(len(cell.mains)):
                 bp.add("pipe", X(cell.d_main(i)), y)
+        gap_tiles = set()
         for k in range(cell.n):
-            top = y0 + P - s - (s + 1) * k                             # machine rows top .. top+s-1
+            top = y0 + P - cell.extra_row - s - (s + 1) * k             # machine rows top .. top+s-1
             left = X(cell.d_mach + s - 1) if sgn < 0 else X(cell.d_mach)
             bp.add(cell.machine, left, top, f, recipe=cell.recipe)
-            used = set()
-            for i, fl in enumerate(cell.fluids_in):                   # one fluid per row
-                row = top + in_rows[i]
-                used.add(row)
-                bp.add("pipe-to-ground", X(cell.d_port_b), row, to_centre)   # surfaces at the machine
-                bp.add("pipe-to-ground", X(cell.d_entry(i)), row, to_belt)    # next to its main
-            free = [top + r for r in range(s) if top + r not in used]
+            used_b, used_c = set(), set()
+            for p in ports:
+                ent = cell.d_entry(cell.main_of(p.fluid)) if p.side != "centre" else None
+                if p.side == "belt":
+                    row = top + p.pos
+                    used_b.add(row)
+                    bp.add("pipe-to-ground", X(cell.d_port_b), row, to_centre)   # surfaces at the machine
+                    bp.add("pipe-to-ground", X(ent), row, to_belt)               # next to its main
+                elif p.side == "centre":
+                    row = top + p.pos
+                    used_c.add(row)
+                    bp.add("pipe", X(cell.d_port_c), row)                        # touches the centre pipe
+                else:                                                            # gap row above / below
+                    row = top - 1 if p.side == "above" else top + s
+                    d = cell.d_mach + s - 1 - p.pos if sgn < 0 else cell.d_mach + p.pos
+                    bp.add("pipe", X(d), row)
+                    bp.add("pipe-to-ground", X(d + 1), row, to_centre)
+                    bp.add("pipe-to-ground", X(ent), row, to_belt)
+                    gap_tiles |= {(d, row), (d + 1, row)}
+            free = [top + r for r in range(s) if top + r not in used_b]
             for role, name in (("inner", t["ins"]), ("outer", LH)):
                 for _ in range(want.get(role, 0)):
                     bp.add(name, X(cell.d_port_b), free.pop(0), to_belt)
-            # centre side
-            out_used = set()
-            for i, fl in enumerate(cell.fluids_out):
-                row = top + out_rows[i]
-                out_used.add(row)
-                bp.add("pipe", X(cell.d_port_c), row)                  # touches the centre main
-            cfree = [top + r for r in range(s) if top + r not in out_used]
+            cfree = [top + r for r in range(s) if top + r not in used_c]
             if cell.centre == "chest":                       # west chest on the first free row, east on the second
                 cy = cfree[0] if sgn < 0 else cfree[1]
                 bp.add(t["ins"], X(cell.d_port_c), cy, to_belt)
                 bp.add(CHEST[tier], c, cy, bar=4)
                 continue
-            for _ in range(want.get("out", 0)):
-                name = t["ins"] if cell.centre == "belt" else LH
-                bp.add(name, X(cell.d_port_c), cfree.pop(0), to_belt)     # picks from the machine side
+            if cell.centre in ("belt", "pipe+belt"):
+                for _ in range(want.get("out", 0)):
+                    name = t["ins"] if cell.centre == "belt" else LH
+                    bp.add(name, X(cell.d_port_c), cfree.pop(0), to_belt)       # picks from the machine side
         for k in range(cell.n):                                        # gap row above each machine: poles
-            g = y0 + P - s - (s + 1) * k - 1
+            g = y0 + P - cell.extra_row - s - (s + 1) * k - 1
             for d in (cell.d_port_b, cell.d_port_c):
-                bp.add(t["pole"], X(d), g)
+                if (d, g) not in gap_tiles:
+                    bp.add(t["pole"], X(d), g)
+        if cell.extra_row:
+            g = y0 + P - 1
+            for d in (cell.d_port_b, cell.d_port_c):
+                if (d, g) not in gap_tiles:
+                    bp.add(t["pole"], X(d), g)
     for y in range(y0, y0 + P):
         if cell.centre == "belt":
             bp.add(t["belt"], c, y, S)
@@ -299,6 +404,8 @@ def analyse(cell: FluidCell, tier: str):
     lim = []
     for k, v in side_in.items():
         lim.append((PIPE_FLOW if k in cell.fluids_in else lane) / v)
+    if cell.centre_fluid in cell.fluids_in:
+        lim.append(PIPE_FLOW / (2 * side_in[cell.centre_fluid]))
     for k, v in out.items():
         lim.append((PIPE_FLOW if k in cell.fluids_out else 2 * lane) / v)
     return {"util": u, "out_per_s": out, "in_per_side": side_in, "max_cells": math.floor(min(lim))}
@@ -331,15 +438,17 @@ def build_cap(bp, cell: FluidCell, tier: str, rates_pm=None, rows=8):
         inward, outward = (E, W) if sgn < 0 else (W, E)
         for d in (cell.d_port_b, cell.d_port_c):
             bp.add(t["pole"], X(d), 0)
-        pipes = {cell.d_main(i) for i in range(len(cell.fluids_in))}
-        for i, fl in enumerate(cell.fluids_in):
+        pipes = {cell.d_main(i) for i in range(len(cell.mains))}
+        for i, fl in enumerate(cell.mains):
             for y in range(rows):
                 bp.add("pipe", X(cell.d_main(i)), y)
-            bp.add_marker(X(cell.d_main(i)), rows, {fl: round(rates_pm.get(fl, 0))})
+            if fl in cell.fluids_in:                          # outputs leave here instead (see products())
+                bp.add_marker(X(cell.d_main(i)), rows, {fl: round(rates_pm.get(fl, 0))})
         marks = []
         outer_fed = cell.outer and (("outer", "far") in lanes or ("outer", "near") in lanes)
         inner_fed = ("inner", "far") in lanes or ("inner", "near") in lanes
-        far_start = (max(pipes) if pipes else (cell.d_outer or cell.d_inner)) + 1
+        far_start = max((max(pipes) if pipes else (cell.d_outer or cell.d_inner)) + 1,
+                        cell.d_port_b + 3)               # feed columns at least 4 apart (bus taps)
 
         def column(d, y_top):
             for y in range(y_top, rows):
@@ -355,8 +464,8 @@ def build_cap(bp, cell: FluidCell, tier: str, rates_pm=None, rows=8):
                 nxt = d + step
                 if nxt in obstacles and (nxt - d_to) * step <= 0:
                     k = nxt
-                    while k in obstacles:
-                        k += step
+                    while k in obstacles or ((k + step) in obstacles and (k + step - d_to) * step <= 0):
+                        k += step                            # one underground over obstacles 1 tile apart
                     bp.add(t["ug"], X(d), y, way, type="input")
                     bp.add(t["ug"], X(k), y, way, type="output")
                     d = k + step
@@ -374,30 +483,37 @@ def build_cap(bp, cell: FluidCell, tier: str, rates_pm=None, rows=8):
             column(cell.d_port_b, 2)
             bp.add(t["belt"], X(cell.d_port_b), 1, outward)
             marks.append((cell.d_port_b, lanes[("inner", "near")]))
+        near_outer = ("outer", "near") in lanes
+        far_outer = ("outer", "far") in lanes
+        far_inner = ("inner", "far") in lanes
+        F = far_start
+        d_of = F + 1                                         # outer far-lane feed column
+        d_if = F + 1 + 4 * far_outer                         # inner far-lane feed column
+        d_on = F + 1 + 4 * far_outer + 4 * far_inner         # outer near-lane feed column
         if outer_fed:
-            for y in (5, 4, 3):
+            for y in (4, 3):
                 bp.add(t["belt"], X(cell.d_outer), y, N)
+            bp.add(t["belt"], X(cell.d_outer), 5, N)         # dead start, or the curve that brings the near lane
             bp.add(t["ug"], X(cell.d_outer), 2, N, type="input")
             bp.add(t["ug"], X(cell.d_outer), 0, N, type="output")
-            if ("outer", "near") in lanes:                 # from under the machines, 4 columns from the
-                dn = cell.d_port_b - 4                       # inner feed, underground under it
-                if dn < 2:
-                    raise ValueError(f"{cell.name}: no room for the outer belt's near-lane feed")
-                column(dn, 5)
-                run(dn, cell.d_inner, 4, {cell.d_port_b} if ("inner", "near") in lanes else set())
-                marks.append((dn, lanes[("outer", "near")]))
-            if ("outer", "far") in lanes:
-                d0 = far_start
-                column(d0 + 1, 5)
-                bp.add(t["belt"], X(d0 + 1), 4, inward)
-                run_inward(d0, cell.d_outer + 1, 4)
-                marks.append((d0 + 1, lanes[("outer", "far")]))
-        if ("inner", "far") in lanes:
-            d0 = far_start + (4 if outer_fed and ("outer", "far") in lanes else 0)
-            column(d0 + 1, 2)
-            bp.add(t["belt"], X(d0 + 1), 1, inward)
-            run_inward(d0, cell.d_inner + 1, 1)
-            marks.append((d0 + 1, lanes[("inner", "far")]))
+            if far_outer:
+                column(d_of, 5)
+                bp.add(t["belt"], X(d_of), 4, inward)
+                run_inward(d_of - 1, cell.d_outer + 1, 4)
+                marks.append((d_of, lanes[("outer", "far")]))
+            if near_outer:
+                # the item side-loads onto the right-hand lane of a belt that runs inward on row 5 and curves
+                # into the outer belt's start, which puts it on the outer belt's near lane
+                bp.add(t["belt"], X(d_on + 1), 5, inward)    # dead start
+                column(d_on, 6)
+                obstacles = set(pipes) | ({d_of} if far_outer else set()) | ({d_if} if far_inner else set())
+                run(d_on, cell.d_outer + 1, 5, obstacles)
+                marks.append((d_on, lanes[("outer", "near")]))
+        if far_inner:
+            column(d_if, 2)
+            bp.add(t["belt"], X(d_if), 1, inward)
+            run_inward(d_if - 1, cell.d_inner + 1, 1)
+            marks.append((d_if, lanes[("inner", "far")]))
         for d, item in marks:
             bp.add_marker(X(d), rows, {item: round(rates_pm.get(item, 0))})
     for y in range(rows):
@@ -407,6 +523,9 @@ def build_cap(bp, cell: FluidCell, tier: str, rates_pm=None, rows=8):
             bp.add("pipe", c, y)
         elif cell.centre == "pipe+belt":
             bp.add("pipe", c - 1, y); bp.add("pipe", c + 1, y); bp.add(t["belt"], c, y, S)
+    cf = cell.centre_fluid
+    if cf and cf in cell.fluids_in:                           # the centre pipe is an input: fed from the bus
+        bp.add_marker(c - 1 if cell.centre == "pipe+belt" else c, rows, {cf: round(rates_pm.get(cf, 0))})
 
 
 def stack(bp, cell, tier, n, rates_pm=None):
@@ -420,25 +539,41 @@ def late_rates(cell):
     return {k: v * 60 for k, v in a["in_per_side"].items()}
 
 
+def join_top(bp, cell: FluidCell, cells: int):
+    """Above the top cell: join the two centre pipes (pipe+belt) and both halves of every outer main that carries
+    an output, so each line leaves the stack through one column. Outer mains are joined with a pipe-to-ground
+    chain (it only connects at its ends, so nothing it passes over mixes in)."""
+    yt = -cell.period * cells - 1
+    c = cell.c
+    if cell.centre == "pipe+belt":
+        for dx in (-1, 0, 1):
+            bp.add("pipe", c + dx, yt)
+    rows = 0
+    for fl in cell.mains:
+        if fl not in cell.fluids_out:
+            continue
+        d = cell.d_main(cell.main_of(fl))
+        y = yt - rows
+        for k in range(rows + 1):                      # risers above the earlier chains
+            bp.add("pipe", c - d, yt - k); bp.add("pipe", c + d, yt - k)
+        x = c - d + 1
+        while x < c + d:
+            end = min(x + 10, c + d - 1)
+            bp.add("pipe-to-ground", x, y, W)
+            bp.add("pipe-to-ground", end, y, E)
+            x = end + 1
+        rows += 1
+
+
 def as_stack(cell: FluidCell, cells: int, tier: str = "mid", name=None):
     """A lib.complex.Stack for `cells` copies of this fluid cell on its cap (products and demand filled in)."""
     from lib.complex import Stack
 
     def build(bp, t):
         stack(bp, cell, t, cells, late_rates(cell))
-        if cell.centre == "pipe+belt":                         # join both halves' product mains on top
-            yt = -cell.period * cells - 1
-            for dx in (-1, 0, 1):
-                bp.add("pipe", cell.c + dx, yt)
+        join_top(bp, cell, cells)
 
-    if cell.centre == "pipe+belt":
-        products = [(cell.fluids_out[0], "fluid", cell.c - 1), (cell.items_out[0], "item", cell.c)]
-    elif cell.centre == "pipe":
-        products = [(cell.fluids_out[0], "fluid", cell.c)]
-    elif cell.centre == "belt":
-        products = [(cell.items_out[0], "item", cell.c)]
-    else:
-        products = []
+    products = cell.products()
     a = analyse(cell, "late")
     duty = 0.05 if cell.centre == "chest" else 1.0           # mall cells idle once their chests are full
     demand = {k: v * cells * duty for k, v in a["in_per_side"].items()}

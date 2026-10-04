@@ -1,0 +1,267 @@
+{
+  "id": "planet-fulgora",
+  "order": 61,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "space-age"
+  ],
+  "planet": "fulgora",
+  "tags": [
+    "planet",
+    "fulgora",
+    "space-age",
+    "all-in-one",
+    "stackable"
+  ],
+  "title": {
+    "ko": "풀가오라 올인원 단지",
+    "en": "Fulgora all-in-one complex"
+  },
+  "summary": {
+    "ko": "고철 초당 160 → 재활용·분류 → 홀뮴·전해액·초전도체·슈퍼커패시터 → 전자기 과학 분당 약 100, 2차 재활용(철·구리·초록 회로·플라스틱), 로켓·수출, 전자기 공장 몰, 번개 발전·보호, 넘침 처리까지 버스 하나에.",
+    "en": "160 scrap/s → recycling and sorting → holmium, electrolyte, superconductors, supercapacitors → about 100 electromagnetic science/min, secondary recycling (iron, copper, green circuits, plastic), rocket and exports, an EM-plant mall, lightning power and protection, and overflow disposal on one bus."
+  },
+  "variants": [
+    {
+      "file": "variants/water.txt",
+      "label": {
+        "ko": "물 (얼음 녹이기) — 캡 + 셀 1개",
+        "en": "Water (ice melting) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/light-oil.txt",
+      "label": {
+        "ko": "경유 (중유 분해) — 캡 + 셀 1개",
+        "en": "Light oil (heavy oil cracking) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/holmium-solution.txt",
+      "label": {
+        "ko": "홀뮴 용액 — 캡 + 셀 1개",
+        "en": "Holmium solution — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/holmium-plate.txt",
+      "label": {
+        "ko": "홀뮴 판 — 캡 + 셀 1개",
+        "en": "Holmium plate — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/electrolyte.txt",
+      "label": {
+        "ko": "전해액 — 캡 + 셀 1개",
+        "en": "Electrolyte — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/rocket-fuel.txt",
+      "label": {
+        "ko": "로켓 연료 — 캡 + 셀 1개",
+        "en": "Rocket fuel — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/superconductor.txt",
+      "label": {
+        "ko": "초전도체 — 캡 + 셀 1개",
+        "en": "Superconductor — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/accumulator.txt",
+      "label": {
+        "ko": "축전지 — 캡 + 셀 1개",
+        "en": "Accumulator — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/supercapacitor.txt",
+      "label": {
+        "ko": "슈퍼커패시터 — 캡 + 셀 1개",
+        "en": "Supercapacitor — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/science.txt",
+      "label": {
+        "ko": "전자기 과학 — 캡 + 셀 1개",
+        "en": "Electromagnetic science — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/iron-stick.txt",
+      "label": {
+        "ko": "철 막대 — 캡 + 셀 1개",
+        "en": "Iron sticks — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/refined-concrete.txt",
+      "label": {
+        "ko": "정제 콘크리트 — 캡 + 셀 1개",
+        "en": "Refined concrete — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/mall-em-plant.txt",
+      "label": {
+        "ko": "몰: 전자기 공장 — 캡 + 셀 1개",
+        "en": "Mall: electromagnetic plant — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/lightning-power.txt",
+      "label": {
+        "ko": "번개 발전 + 축전지",
+        "en": "lightning power + accumulators"
+      }
+    },
+    {
+      "file": "variants/scrap-recycling.txt",
+      "label": {
+        "ko": "고철 재활용 + 분류 (재활용기 16)",
+        "en": "scrap recycling + sorting (16 recyclers)"
+      }
+    },
+    {
+      "file": "variants/secondary-recycling.txt",
+      "label": {
+        "ko": "2차 재활용 (철·구리·초록 회로·플라스틱)",
+        "en": "secondary recycling (iron, copper, green circuits, plastic)"
+      }
+    },
+    {
+      "file": "variants/rocket-silo.txt",
+      "label": {
+        "ko": "로켓 사일로 + 수출 상자",
+        "en": "rocket silo + export chests"
+      }
+    },
+    {
+      "file": "variants/void.txt",
+      "label": {
+        "ko": "넘침 처리 (재활용기)",
+        "en": "overflow void (recyclers)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "단지 전체 (버스 + 모든 줄)",
+    "en": "the whole complex (bus + every line)"
+  },
+  "outputs": [
+    {
+      "item": "electromagnetic-science-pack",
+      "per_minute": "~100",
+      "where": {
+        "ko": "로켓 수출 상자",
+        "en": "rocket export chests"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "설계는 이 저장소에서 새로 만든 것입니다. 참고: Space Ghost의 'Fulgora blueprint book. All in'(factorioprints -OUf5gju1G_1O_K38VLl) — 재활용기 중심 구조, 액체 일괄 생산, 전해액 규모.",
+    "en": "Designed in this repository. Reference: Space Ghost's 'Fulgora blueprint book. All in' (factorioprints -OUf5gju1G_1O_K38VLl) — recycler-centred layout, all-fluids block, electrolyte scale."
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 도착",
+        "en": "0. Arrival"
+      },
+      "do": {
+        "ko": "번개 보호가 먼저입니다. 보호받지 못한 건물은 번개에 맞습니다. 번개 막대/수집기를 깔고, 고철 섬 위에 대형 채굴기, 기름 바다에 해양 펌프(중유).",
+        "en": "Lightning protection comes first: unprotected buildings get struck. Place rods/collectors, big drills on scrap islands, offshore pumps on the oil ocean (heavy oil)."
+      },
+      "research": [
+        "lightning-rod"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 고철 재활용·분류",
+        "en": "1. Scrap recycling & sorting"
+      },
+      "do": {
+        "ko": "고철 줄 4개(재활용기 16대씩). 분류 안 된 것·남는 것은 넘침 줄로 가서 처리 줄에서 사라집니다. 쓰지 않는 제품 줄은 차면 필터 인서터가 멈추고 자동으로 넘침으로 갑니다.",
+        "en": "Four scrap stacks (16 recyclers each). Anything unsorted or surplus rides to the overflow lane and is destroyed by the void stacks; a full product lane simply stops its filter inserters, so the surplus overflows by itself."
+      },
+      "research": []
+    },
+    {
+      "stage": {
+        "ko": "2. 홀뮴·유체",
+        "en": "2. Holmium & fluids"
+      },
+      "do": {
+        "ko": "얼음 → 물, 중유 분해 → 경유, 홀뮴 용액(채광 홀뮴 광석 + 돌 + 물), 홀뮴 판, 전해액.",
+        "en": "Ice → water, heavy-oil cracking → light oil, holmium solution (holmium ore + stone + water), holmium plates, electrolyte."
+      },
+      "research": [
+        "holmium-solution",
+        "holmium-plate",
+        "electrolyte",
+        "heavy-oil-cracking"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 전자기 과학",
+        "en": "3. Electromagnetic science"
+      },
+      "do": {
+        "ko": "2차 재활용으로 철·구리·초록 회로·플라스틱, 그리고 초전도체·축전지·슈퍼커패시터·과학. 고철 160/s 기준 분당 약 100(홀뮴이 한계). 늘리려면 고철 줄을 더 붙이고 과학 쪽 셀도 같은 비율로.",
+        "en": "Secondary recycling for iron, copper, green circuits and plastic, then superconductors, accumulators, supercapacitors and science: about 100/min from 160 scrap/s (holmium-limited). To grow, add scrap stacks and science-side cells in proportion."
+      },
+      "research": [
+        "superconductor",
+        "supercapacitor",
+        "electromagnetic-science-pack",
+        "accumulator"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "4. 로켓·몰",
+        "en": "4. Rocket & mall"
+      },
+      "do": {
+        "ko": "고철의 파랑 회로·LDS와 로켓 연료로 로켓 부품을 만들고 전자기 과학·홀뮴 판·슈퍼커패시터·초전도체를 수출. 정제 콘크리트 → 전자기 공장 몰.",
+        "en": "Rocket parts from scrap's blue circuits and LDS plus rocket fuel; export electromagnetic science, holmium plates, supercapacitors and superconductors. Refined concrete → EM-plant mall."
+      },
+      "research": [
+        "rocket-fuel",
+        "rocket-silo",
+        "refined-concrete",
+        "electromagnetic-plant"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "5. 전력 늘리기",
+        "en": "5. More power"
+      },
+      "do": {
+        "ko": "번개는 폭풍 때만 들어오므로 축전지 저장량이 중요합니다. 발전 줄(12 수집기, 2 GJ)이 모자라면 같은 타일을 더 붙이세요.",
+        "en": "Lightning only arrives in storms, so storage matters. If the power field (12 collectors, 2 GJ) falls short, add more of the same tiles."
+      },
+      "research": [
+        "lightning-collector"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "planet-vulcanus",
+      "why": {
+        "ko": "텅스텐·주조기 쪽 행성",
+        "en": "the tungsten / foundry planet"
+      }
+    }
+  ]
+}

@@ -8,13 +8,19 @@
 
 ![Preview](images/preview.webp)
 
+**Zoomed sections (west → east)**
+
+![part-1](images/part-1.webp)
+![part-2](images/part-2.webp)
+![part-3](images/part-3.webp)
+
 <sub>Images rendered with [Factorio Blueprint Editor](https://fbe.factorygamefan.com) (game graphics © Wube Software)</sub>
 
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 621×107 tiles |
-| Entities | 18997 |
+| Size | 643×107 tiles |
+| Entities | 19592 |
 | Main machines | `foundry` ×64 (tungsten-plate 16, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 6, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×42<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`passive-provider-chest` ×14<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`requester-chest` ×11<br>`steel-chest` ×3<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
@@ -49,6 +55,10 @@ none
 | Mall: turbo belt | 21×6 | 1 | chests (mall) | `tungsten-plate` 480, `express-transport-belt` 96, `lubricant` (fluid) 1,920 |
 | Mall: turbo underground | 21×6 | 1 | chests (mall) | `tungsten-plate` 1,829, `express-underground-belt` 91, `lubricant` (fluid) 1,829 |
 | Mall: turbo splitter | 23×6 | 1 | chests (mall) | `express-splitter` 60, `tungsten-plate` 900, `processing-unit` 120, `lubricant` (fluid) 4,800 |
+| Power | - | - | 2 acid-neutralisation plants + 64 steam turbines (372 MW) | |
+| Landing pad | - | - | 11 imports → bus lanes | |
+| Rocket silo | - | - | rocket parts (imported blue circuits, cast LDS, imported rocket fuel) + export chests | |
+| Stone sinks ×3 | - | - | 14 recyclers each, one per stone lane | |
 
 Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
 
@@ -62,7 +72,7 @@ Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
 | 6 (fluid) | `lava` (fluid), `lava` (fluid), `sulfuric-acid` (fluid), `molten-iron` (fluid), `molten-copper` (fluid), `molten-copper` (fluid) |
 | 7 (fluid) | `heavy-oil` (fluid), `lubricant` (fluid), -, -, -, - |
 
-18,997 entities, 620 tiles wide. Peak power 194 MW / generated 372 MW. Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).
+19,592 entities, 642 tiles wide. Peak power 194 MW / generated 372 MW. Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).
 
 ### Roadmap
 

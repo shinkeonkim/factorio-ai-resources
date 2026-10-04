@@ -51,7 +51,9 @@ def _read(stack):
     return keep, feeds, lo, hi
 
 
-def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=lambda x: True):
+def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=lambda x: True, cover=None):
+    """cover = (entity, size, spacing): after composing, scatter that entity (e.g. lightning collectors on Fulgora)
+    over the whole area on a `spacing` grid, each on the nearest free size x size spot."""
     belt, ug, spl = BUS_TIER[tier]
     bp = Blueprint(label, game="2.0")
     G = [y_bus + PITCH * g for g in range(len(layout))]
@@ -83,13 +85,22 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
     sources = []
     for st, dx, _ in placed:
         for item, kind, off in st.products:
+            x_out = dx + off
             cand = [ln for ln in lanes if ln["item"] == item and ln["src"] is None]
-            if not cand:
-                raise ValueError(f"{st.name}: no free bus lane for {item}")
-            ln = cand[0]
-            ln["src"] = dx + off
-            ln["supply"] = st.supply.get(item)
-            sources.append((ln, dx + off))
+            if cand:                                       # start a new lane here
+                ln = cand[0]
+                ln["src"] = x_out
+                ln["supply"] = st.supply.get(item, 0)
+            else:                                          # join an existing lane (side-load / fluid riser)
+                old = [ln for ln in lanes if ln["item"] == item and ln["src"] is not None and ln["src"] < x_out - 3]
+                if not old:
+                    raise ValueError(f"{st.name}: no bus lane for {item}")
+                ln = min(old, key=lambda l: l["supply"] or 0)
+                ln["supply"] = (ln["supply"] or 0) + st.supply.get(item, 0)
+                if ln["kind"] == "fluid":
+                    ln["taps"].append(x_out)              # surfaces there; its riser joins the stack's main
+                    continue
+            sources.append((ln, x_out))
     # ---- bus planner: per row, merged underground spans and tiles that must stay on the surface
     UGMAX = {"yellow": 4, "red": 6, "blue": 8, "turbo": 10}[tier]
     under = {}                 # row -> list[[a, b]] (entrance a, exit b)
@@ -137,25 +148,30 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
         changes.append(("s", r, x, x + 1))
         return _apply(changes, x, g, commit)
 
+    why = []
+
     def _apply(changes, x, g, commit):
         tmp = {row: [list(t) for t in sp] for row, sp in under.items()}
         for kind, row, a, b in changes:
             if kind == "u":
                 res = merged(tmp.get(row, []), a, b, surf.get(row, ()))
                 if res is None:
+                    why.append(f"row {row}: underground {a}..{b} too long or over surface {sorted(t for t in surf.get(row, ()) if a - 9 <= t <= b + 9)}")
                     return False
                 tmp[row] = res
         for kind, row, a, b in changes:
             if kind == "s":
                 if any(t[0] <= xx <= t[1] for t in tmp.get(row, []) for xx in range(a, b + 1)):
+                    why.append(f"row {row}: surface {a}..{b} inside underground {[t for t in tmp.get(row, []) if t[1] >= a - 2 and t[0] <= b + 2]}")
                     return False
                 if any(xx in surf.get(row, ()) for xx in range(a, b + 1)):
+                    why.append(f"row {row}: surface {a}..{b} already used")
                     return False
             if kind == "g" and (a, row) in gapcol:
-                return False
+                why.append(f"gap tile ({a},{row}) used"); return False
         branch = [(x, y) for gg in range(0, g) for y in (G[gg] + GROUP, G[gg] + GROUP + 1)] + [(x, G[0] - 1)]
         if any(t in gapcol for t in branch):
-            return False
+            why.append(f"branch column {x} gap rows used"); return False
         if commit:
             under.clear(); under.update(tmp)
             for kind, row, a, b in changes:
@@ -185,7 +201,7 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
         else:
             ln = next((l for l in cand if plan_tap(l, fx, False)), None)
             if ln is None:
-                raise ValueError(f"{st.name}: no {item} lane can be tapped at x={fx} without colliding (bus too crowded)")
+                raise ValueError(f"{st.name}: no {item} lane can be tapped at x={fx} without colliding: {why[-len(cand):]}")
             plan_tap(ln, fx, True)
         ln["load"] += need
         ln["taps"].append(fx)
@@ -255,6 +271,25 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
                     bp.add("medium-electric-pole", cand, y_sp)
                     last = cand
                     break
+    if cover:
+        name, size, spacing = cover
+        ys = [k[1] for k in bp._grid]
+        y_lo, y_hi = min(ys), max(ys)
+        placed_cover = 0
+        for gy in range(y_lo, y_hi + spacing, spacing):
+            for gx in range(0, x_end + spacing, spacing):
+                spot = None
+                for rad in range(0, 10):
+                    for dx in range(-rad, rad + 1):
+                        for dy in (-rad, rad) if abs(dx) != rad else range(-rad, rad + 1):
+                            x0, y0 = gx + dx, gy + dy
+                            if all((x0 + i, y0 + j) not in bp._grid for i in range(size) for j in range(size)):
+                                spot = (x0, y0); break
+                        if spot: break
+                    if spot: break
+                if spot:
+                    bp.add(name, *spot); placed_cover += 1
+        report["cover"] = placed_cover
     report["lane_use"] = [(l["item"], l["g"], l["i"], l["src"], len(l["taps"]), round(l["load"], 2), l["supply"]) for l in lanes]
     return bp, report
 

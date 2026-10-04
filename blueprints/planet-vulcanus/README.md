@@ -8,13 +8,19 @@
 
 ![미리보기](images/preview.webp)
 
+**구간별 확대 (서쪽 → 동쪽)**
+
+![part-1](images/part-1.webp)
+![part-2](images/part-2.webp)
+![part-3](images/part-3.webp)
+
 <sub>이미지: [Factorio Blueprint Editor](https://fbe.factorygamefan.com)로 렌더링 (게임 그래픽 © Wube Software)</sub>
 
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
-| 크기 | 621×107 타일 |
-| 엔티티 | 18997 |
+| 크기 | 643×107 타일 |
+| 엔티티 | 19592 |
 | 주요 설비 | `foundry` ×64 (tungsten-plate 16, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 6, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×42<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`passive-provider-chest` ×14<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`requester-chest` ×11<br>`steel-chest` ×3<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
@@ -49,6 +55,10 @@
 | Mall: turbo belt | 21×6 | 1 | 상자 (몰) | `tungsten-plate` 480, `express-transport-belt` 96, `lubricant` (fluid) 1,920 |
 | Mall: turbo underground | 21×6 | 1 | 상자 (몰) | `tungsten-plate` 1,829, `express-underground-belt` 91, `lubricant` (fluid) 1,829 |
 | Mall: turbo splitter | 23×6 | 1 | 상자 (몰) | `express-splitter` 60, `tungsten-plate` 900, `processing-unit` 120, `lubricant` (fluid) 4,800 |
+| Power | - | - | 산 중화 화학 공장 2대 + 증기 터빈 64대 (372 MW) | |
+| Landing pad | - | - | 수입품 11종 → 버스 줄 | |
+| Rocket silo | - | - | 로켓 부품(수입 파랑 회로·주조 LDS·수입 로켓 연료) + 수출 상자 | |
+| Stone sinks ×3 | - | - | 재활용기 14대씩, 돌 줄마다 하나 | |
 
 버스 (위 → 아래, 6줄 + 빈 2줄 묶음; 유체는 맨 아래):
 
@@ -62,7 +72,7 @@
 | 6 (fluid) | `lava` (fluid), `lava` (fluid), `sulfuric-acid` (fluid), `molten-iron` (fluid), `molten-copper` (fluid), `molten-copper` (fluid) |
 | 7 (fluid) | `heavy-oil` (fluid), `lubricant` (fluid), -, -, -, - |
 
-전체 18,997개 엔티티, 폭 620칸. 최대 전력 194 MW / 발전 372 MW. 버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다.
+전체 19,592개 엔티티, 폭 642칸. 최대 전력 194 MW / 발전 372 MW. 버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다.
 
 ### 로드맵
 
