@@ -79,6 +79,7 @@ python3 tools/attach_image.py my-factory ~/Desktop/shot.png --caption-ko "게임
 | <img src="blueprints/planet-vulcanus/images/preview.webp" width="160"> | [불카누스 올인원 단지](blueprints/planet-vulcanus/README.md)<br>`planet` `vulcanus` `space-age` `all-in-one` `stackable` | 용암 → 용융 금속 → 주조·텅스텐·금속 과학 분당 360, 윤활유, 몰(주조기·대형 채굴기·터보 벨트), 전력 372 MW, 착륙장 수입·로켓 수출, 돌 처리까지 버스 하나에 쌓는 셀로. | 643×107 | - |
 | <img src="blueprints/planet-fulgora/images/preview.webp" width="160"> | [풀가오라 올인원 단지](blueprints/planet-fulgora/README.md)<br>`planet` `fulgora` `space-age` `all-in-one` `stackable` | 고철 초당 160 → 재활용·분류 → 홀뮴·전해액·초전도체·슈퍼커패시터 → 전자기 과학 분당 약 100, 2차 재활용(철·구리·초록 회로·플라스틱), 로켓·수출, 전자기 공장 몰, 번개 발전·보호, 넘침 처리까지 버스 하나에. | 975×112 | - |
 | <img src="blueprints/planet-gleba/images/preview.webp" width="160"> | [글레바 올인원 단지](blueprints/planet-gleba/README.md)<br>`planet` `gleba` `space-age` `all-in-one` `stackable` `robots` | 로봇이 나르는 쌓는 셀: 과일 가공 → 바이오플럭스·영양분·펜타포드 알 → 농업 과학 분당 약 300, 철 박테리아 → 탄창, 탄소 섬유, 젤리 로켓 연료, 가열탑 전력(부패물 연료), 로켓·착륙장, 포탑 방어선까지. | 305×55 | - |
+| <img src="blueprints/planet-aquilo/images/preview.webp" width="160"> | [아킬로 올인원 단지](blueprints/planet-aquilo/README.md)<br>`planet` `aquilo` `space-age` `all-in-one` `stackable` `robots` `heating` | 얼어붙는 행성용 보온·로봇 공급 쌓는 셀: 암모니아 바다 → 암모니아·얼음·물, 리튬, 플루오로케톤 순환 → 극저온 과학 분당 약 96, 암모니아 로켓 연료, 얼음 플랫폼, 핵융합 전지, 가열탑 전력 겸 보온, 로켓·착륙장까지. 어는 건물마다 열 배관이 1칸 안에 있는지 생성할 때 검사합니다. | 392×120 | - |
 
 <!-- CATALOG:END -->
 

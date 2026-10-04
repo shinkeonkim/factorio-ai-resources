@@ -19,7 +19,7 @@
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
 | Size | 305×55 tiles |
-| Entities | 1290 |
+| Entities | 1293 |
 | Main machines | `requester-chest` ×147<br>`passive-provider-chest` ×60<br>`biochamber` ×54 (pentapod-egg 12, agricultural-science-pack 8, yumako-processing 6, bioflux 6, iron-bacteria-cultivation 4, burnt-spoilage 4, carbon-fiber 4, rocket-fuel-from-jelly 4, jellynut-processing 2, nutrients-from-bioflux 2, iron-bacteria 2)<br>`electric-furnace` ×4<br>`assembling-machine-3` ×2 (firearm-magazine 2)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
@@ -37,19 +37,19 @@ none
 
 | Line | Cell | Cells | Output (/min, late) | Inputs (/min, late) |
 |---|---|---:|---|---|
-| Yumako processing | 13×12 | 1 | chests (mall) | `yumako` 143 |
-| Jellynut processing | 13×4 | 1 | chests (mall) | `jellynut` 24 |
-| Bioflux | 13×12 | 1 | chests (mall) | `yumako-mash` 1,080, `jelly` 864 |
-| Nutrients | 13×4 | 1 | chests (mall) | `bioflux` 12 |
-| Pentapod eggs | 17×12 | 2 | chests (mall) | `pentapod-egg` 96, `nutrients` 2,880, `water` (fluid) 5,760 |
-| Agricultural science | 13×8 | 2 | chests (mall) | `bioflux` 240, `pentapod-egg` 240 |
-| Iron bacteria | 13×4 | 1 | chests (mall) | `jelly` 140 |
-| Iron bacteria cultivation | 13×8 | 1 | chests (mall) | `iron-bacteria` 48, `bioflux` 48 |
-| Iron plates (bacteria ore) | 13×8 | 1 | chests (mall) | `iron-ore` 150 |
-| Firearm magazines | 13×4 | 1 | chests (mall) | `iron-plate` 576 |
-| Carbon (burnt spoilage) | 13×8 | 1 | chests (mall) | `spoilage` 240 |
-| Carbon fiber | 13×8 | 1 | chests (mall) | `yumako-mash` 960, `carbon` 96 |
-| Rocket fuel (jelly) | 17×8 | 1 | chests (mall) | `water` (fluid) 1,440, `jelly` 1,440, `bioflux` 96 |
+| Yumako processing | 13×12 | 1 | `yumako-seed` 4, `yumako-mash` 428 | `yumako` 143 |
+| Jellynut processing | 13×4 | 1 | `jellynut-seed` 1, `jelly` 143 | `jellynut` 24 |
+| Bioflux | 13×12 | 1 | `bioflux` 432 | `yumako-mash` 1,080, `jelly` 864 |
+| Nutrients | 13×4 | 1 | `nutrients` 144 | `bioflux` 12 |
+| Pentapod eggs | 17×12 | 2 | `pentapod-egg` 288 | `pentapod-egg` 96, `nutrients` 2,880, `water` (fluid) 5,760 |
+| Agricultural science | 13×8 | 2 | `agricultural-science-pack` 360 | `bioflux` 240, `pentapod-egg` 240 |
+| Iron bacteria | 13×4 | 1 | `iron-bacteria` 4, `spoilage` 140 | `jelly` 140 |
+| Iron bacteria cultivation | 13×8 | 1 | `iron-bacteria` 288 | `iron-bacteria` 48, `bioflux` 48 |
+| Iron plates (bacteria ore) | 13×8 | 1 | `iron-plate` 150 | `iron-ore` 150 |
+| Firearm magazines | 13×4 | 1 | `firearm-magazine` 144 | `iron-plate` 576 |
+| Carbon (burnt spoilage) | 13×8 | 1 | `carbon` 60 | `spoilage` 240 |
+| Carbon fiber | 13×8 | 1 | `carbon-fiber` 144 | `yumako-mash` 960, `carbon` 96 |
+| Rocket fuel (jelly) | 17×8 | 1 | `rocket-fuel` 72 | `water` (fluid) 1,440, `jelly` 1,440, `bioflux` 96 |
 | Power | - | - | 2 heating towers → 8 heat exchangers → 16 turbines (fuel: spoilage, jellynut) | |
 | Rocket silo | - | - | robot-fed silo; exports via its cargo requests | |
 | Landing pad | - | - | imports blue circuits and LDS | |
@@ -61,7 +61,7 @@ Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
 |---|---|
 | 1 (fluid) | `water` (fluid), `water` (fluid), -, -, -, - |
 
-1,049 entities, 289 tiles wide. Peak power 38 MW / turbines 93 MW (with enough heating-tower fuel). Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).
+1,293 entities, 289 tiles wide. Peak power 40 MW / turbines 93 MW (with enough heating-tower fuel). Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).
 
 ### Roadmap
 

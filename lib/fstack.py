@@ -205,6 +205,8 @@ class FluidCell:
     def centre(self):
         cf = self.centre_fluid
         if cf:
+            if self.items_out and self.bots:
+                return "pipe+chest"                   # items to a provider chest between the two centre pipes
             return "pipe+belt" if self.items_out else "pipe"
         if self.sink == "chest" or self.bots:
             return "chest"
@@ -217,7 +219,7 @@ class FluidCell:
     # ---- geometry (distances from the centre column c, measured outwards)
     @property
     def d_port_c(self):
-        return 2 if self.centre == "pipe+belt" else 1
+        return 2 if self.centre in ("pipe+belt", "pipe+chest") else 1
 
     @property
     def d_mach(self):
@@ -258,7 +260,7 @@ class FluidCell:
         cf = self.centre_fluid
         for fl in self.fluids_out:
             if fl == cf:
-                out.append((fl, "fluid", self.c - 1 if self.centre == "pipe+belt" else self.c))
+                out.append((fl, "fluid", self.c - 1 if self.centre in ("pipe+belt", "pipe+chest") else self.c))
             else:
                 out.append((fl, "fluid", self.c - self.d_main(self.main_of(fl))))
         if self.items_out and self.centre in ("belt", "pipe+belt"):
@@ -384,6 +386,10 @@ def build_cell(bp, cell: FluidCell, tier: str, y0: int):
                 bp.add(t["ins"], X(cell.d_port_c), cy, to_belt)
                 bp.add(CHEST[tier], c, cy, **({} if cell.bots else {"bar": 4}))
                 continue
+            if cell.centre == "pipe+chest":                  # long-handed over the pipe into a provider chest
+                cy = cfree[0] if sgn < 0 else cfree[-1]
+                bp.add(LH, X(cell.d_port_c), cy, to_belt)
+                bp.add(CHEST[tier], c, cy)
             if cell.centre in ("belt", "pipe+belt"):
                 for _ in range(want.get("out", 0)):
                     name = t["ins"] if cell.centre == "belt" else LH
@@ -405,6 +411,8 @@ def build_cell(bp, cell: FluidCell, tier: str, y0: int):
             bp.add("pipe", c, y)
         elif cell.centre == "pipe+belt":
             bp.add("pipe", c - 1, y); bp.add("pipe", c + 1, y); bp.add(t["belt"], c, y, S)
+        elif cell.centre == "pipe+chest":
+            bp.add("pipe", c - 1, y); bp.add("pipe", c + 1, y)
 
 
 def analyse(cell: FluidCell, tier: str):
@@ -548,9 +556,11 @@ def build_cap(bp, cell: FluidCell, tier: str, rates_pm=None, rows=8):
             bp.add("pipe", c, y)
         elif cell.centre == "pipe+belt":
             bp.add("pipe", c - 1, y); bp.add("pipe", c + 1, y); bp.add(t["belt"], c, y, S)
+        elif cell.centre == "pipe+chest":
+            bp.add("pipe", c - 1, y); bp.add("pipe", c + 1, y)
     cf = cell.centre_fluid
     if cf and cf in cell.fluids_in:                           # the centre pipe is an input: fed from the bus
-        bp.add_marker(c - 1 if cell.centre == "pipe+belt" else c, rows, {cf: round(rates_pm.get(cf, 0))})
+        bp.add_marker(c - 1 if cell.centre in ("pipe+belt", "pipe+chest") else c, rows, {cf: round(rates_pm.get(cf, 0))})
 
 
 def stack(bp, cell, tier, n, rates_pm=None):
@@ -570,7 +580,7 @@ def join_top(bp, cell: FluidCell, cells: int):
     chain (it only connects at its ends, so nothing it passes over mixes in)."""
     yt = -cell.period * cells - 1
     c = cell.c
-    if cell.centre == "pipe+belt":
+    if cell.centre in ("pipe+belt", "pipe+chest"):
         for dx in (-1, 0, 1):
             bp.add("pipe", c + dx, yt)
     rows = 0

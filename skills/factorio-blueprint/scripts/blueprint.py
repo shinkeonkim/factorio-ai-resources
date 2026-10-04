@@ -274,6 +274,19 @@ class Blueprint:
             self._grid[c] = num
         return num
 
+    def remove(self, numbers) -> None:
+        """Delete entities by entity_number; renumbers the rest and their wires."""
+        drop = set(numbers)
+        keep = [e for e in self.entities if e["entity_number"] not in drop]
+        remap = {e["entity_number"]: i + 1 for i, e in enumerate(keep)}
+        meta = {remap[n]: m for n, m in self._meta.items() if n in remap}
+        for e in keep:
+            e["entity_number"] = remap[e["entity_number"]]
+        self.entities = keep
+        self._meta = meta
+        self._grid = {c: remap[n] for c, n in self._grid.items() if n in remap}
+        self.wires = [[remap[a], ca, remap[b], cb] for a, ca, b, cb in self.wires if a in remap and b in remap]
+
     def belt_line(self, name: str, x: int, y: int, direction: str, length: int) -> list[int]:
         """Straight run of belt starting at (x, y) going `direction`."""
         dx, dy = _VEC[direction]

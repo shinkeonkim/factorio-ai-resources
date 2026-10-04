@@ -165,19 +165,28 @@ def recycle_sort_stack(name, inputs, products, recyclers, tier="mid", rate_per_s
                  {i: rate.get(i, 0) for i, _ in products} | {TRASH: rate.get(TRASH, 0)}, gap=4)
 
 
+def compose_planet(mod, label, post=None):
+    """The whole complex as the module describes it (optional hooks: COVER, FLUID_PLAIN, POST, FINISH)."""
+    from lib.complex import compose
+    bp, rep = compose(label, mod.LAYOUT, mod.stacks(), tier=mod.BUS_TIER, cover=getattr(mod, "COVER", None),
+                      fluid_plain=getattr(mod, "FLUID_PLAIN", False))
+    if rep["warnings"]:
+        raise SystemExit("\n".join(rep["warnings"]))
+    for fn in (post or getattr(mod, "POST", None), getattr(mod, "FINISH", None)):
+        if fn:
+            fn(bp)
+    bp.connect_poles()
+    return bp, rep
+
+
 def write_planet(mod, script_file, label, description, specials, post=None):
     """blueprint.txt = the whole complex; variants/<line>.txt = each fluid-cell line alone (cap + 1 cell);
     variants/<file>.txt for every (file, stack) in `specials`."""
-    from lib.complex import compose
     from lib.fbp import Blueprint, save
-    from lib.fstack import as_stack
-    bp, rep = compose(label, mod.LAYOUT, mod.stacks(), tier=mod.BUS_TIER, cover=getattr(mod, "COVER", None))
-    if rep["warnings"]:
-        raise SystemExit("\n".join(rep["warnings"]))
+    from lib.fstack import as_stack as _fluid_stack
+    as_stack = getattr(mod, "CELL_STACK", _fluid_stack)
+    bp, rep = compose_planet(mod, label, post)
     bp.description = description
-    if post:
-        post(bp)
-    bp.connect_poles()
     save(bp, script_file)
     done = set()
     for key, _ in getattr(mod, "LINES", mod.PLAN):

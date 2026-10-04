@@ -77,7 +77,7 @@ def power_stack(units=2, tier="mid"):
                 bp.add(f["pole"], gx, yh - 4); bp.add(f["pole"], gx, yh - 10)
             bp.add(f["pole"], 1, yh - 3)
 
-    return Stack(f"Power: {units} heating towers, {8 * units} turbines", build, tier, [], {"water": 2.0}, gap=4)
+    return Stack(f"Power: {units} heating towers, {8 * units} turbines", build, tier, [], {"water": 103.0 * 4 * units}, gap=4)   # 103 water/s per exchanger
 
 
 def rocket_stack(tier="mid"):
@@ -160,6 +160,8 @@ def defend(bp, spacing=18, margin=6, tier="mid"):
                 bp.add("medium-electric-pole", x, y)
     return n
 
+
+POST = defend
 
 POWER_KW = {"biochamber": 500, "electric-furnace": 180, "assembling-machine-3": 375, "rocket-silo": 250,
             "roboport": 50, "fast-inserter": 46, "bulk-inserter": 79, "agricultural-tower": 200}

@@ -19,7 +19,7 @@
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
 | 크기 | 305×55 타일 |
-| 엔티티 | 1290 |
+| 엔티티 | 1293 |
 | 주요 설비 | `requester-chest` ×147<br>`passive-provider-chest` ×60<br>`biochamber` ×54 (pentapod-egg 12, agricultural-science-pack 8, yumako-processing 6, bioflux 6, iron-bacteria-cultivation 4, burnt-spoilage 4, carbon-fiber 4, rocket-fuel-from-jelly 4, jellynut-processing 2, nutrients-from-bioflux 2, iron-bacteria 2)<br>`electric-furnace` ×4<br>`assembling-machine-3` ×2 (firearm-magazine 2)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
@@ -37,19 +37,19 @@
 
 | 줄 | 셀 크기 | 셀 수 | 출력 (분당, 후반) | 입력 (분당, 후반) |
 |---|---|---:|---|---|
-| Yumako processing | 13×12 | 1 | 상자 (몰) | `yumako` 143 |
-| Jellynut processing | 13×4 | 1 | 상자 (몰) | `jellynut` 24 |
-| Bioflux | 13×12 | 1 | 상자 (몰) | `yumako-mash` 1,080, `jelly` 864 |
-| Nutrients | 13×4 | 1 | 상자 (몰) | `bioflux` 12 |
-| Pentapod eggs | 17×12 | 2 | 상자 (몰) | `pentapod-egg` 96, `nutrients` 2,880, `water` (fluid) 5,760 |
-| Agricultural science | 13×8 | 2 | 상자 (몰) | `bioflux` 240, `pentapod-egg` 240 |
-| Iron bacteria | 13×4 | 1 | 상자 (몰) | `jelly` 140 |
-| Iron bacteria cultivation | 13×8 | 1 | 상자 (몰) | `iron-bacteria` 48, `bioflux` 48 |
-| Iron plates (bacteria ore) | 13×8 | 1 | 상자 (몰) | `iron-ore` 150 |
-| Firearm magazines | 13×4 | 1 | 상자 (몰) | `iron-plate` 576 |
-| Carbon (burnt spoilage) | 13×8 | 1 | 상자 (몰) | `spoilage` 240 |
-| Carbon fiber | 13×8 | 1 | 상자 (몰) | `yumako-mash` 960, `carbon` 96 |
-| Rocket fuel (jelly) | 17×8 | 1 | 상자 (몰) | `water` (fluid) 1,440, `jelly` 1,440, `bioflux` 96 |
+| Yumako processing | 13×12 | 1 | `yumako-seed` 4, `yumako-mash` 428 | `yumako` 143 |
+| Jellynut processing | 13×4 | 1 | `jellynut-seed` 1, `jelly` 143 | `jellynut` 24 |
+| Bioflux | 13×12 | 1 | `bioflux` 432 | `yumako-mash` 1,080, `jelly` 864 |
+| Nutrients | 13×4 | 1 | `nutrients` 144 | `bioflux` 12 |
+| Pentapod eggs | 17×12 | 2 | `pentapod-egg` 288 | `pentapod-egg` 96, `nutrients` 2,880, `water` (fluid) 5,760 |
+| Agricultural science | 13×8 | 2 | `agricultural-science-pack` 360 | `bioflux` 240, `pentapod-egg` 240 |
+| Iron bacteria | 13×4 | 1 | `iron-bacteria` 4, `spoilage` 140 | `jelly` 140 |
+| Iron bacteria cultivation | 13×8 | 1 | `iron-bacteria` 288 | `iron-bacteria` 48, `bioflux` 48 |
+| Iron plates (bacteria ore) | 13×8 | 1 | `iron-plate` 150 | `iron-ore` 150 |
+| Firearm magazines | 13×4 | 1 | `firearm-magazine` 144 | `iron-plate` 576 |
+| Carbon (burnt spoilage) | 13×8 | 1 | `carbon` 60 | `spoilage` 240 |
+| Carbon fiber | 13×8 | 1 | `carbon-fiber` 144 | `yumako-mash` 960, `carbon` 96 |
+| Rocket fuel (jelly) | 17×8 | 1 | `rocket-fuel` 72 | `water` (fluid) 1,440, `jelly` 1,440, `bioflux` 96 |
 | Power | - | - | 가열탑 2기 → 열교환기 8 → 터빈 16 (연료: 부패물·젤리넛) | |
 | Rocket silo | - | - | 로봇이 재료를 넣는 사일로; 수출은 화물 요청으로 | |
 | Landing pad | - | - | 파랑 회로·LDS 수입 | |
@@ -61,7 +61,7 @@
 |---|---|
 | 1 (fluid) | `water` (fluid), `water` (fluid), -, -, -, - |
 
-전체 1,049개 엔티티, 폭 289칸. 최대 전력 38 MW / 터빈 93 MW (가열탑 연료가 충분할 때). 버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다.
+전체 1,293개 엔티티, 폭 289칸. 최대 전력 40 MW / 터빈 93 MW (가열탑 연료가 충분할 때). 버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다.
 
 ### 로드맵
 

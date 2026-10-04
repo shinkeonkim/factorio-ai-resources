@@ -10,5 +10,4 @@ if __name__ == "__main__":
                  "Water from offshore pumps at the west markers. Farms (variants/farm-*.txt) go on yumako / jellynut "
                  "soil inside the robot network. Put a few pentapod eggs and nutrients into the network to start.",
                  [("power", G.power_stack()), ("rocket-silo", G.rocket_stack()), ("landing-pad", G.pad_stack()),
-                  ("farm-yumako", G.farm_tile("yumako-seed")), ("farm-jellynut", G.farm_tile("jellynut-seed"))],
-                 post=G.defend)
+                  ("farm-yumako", G.farm_tile("yumako-seed")), ("farm-jellynut", G.farm_tile("jellynut-seed"))])

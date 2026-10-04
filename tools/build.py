@@ -159,8 +159,9 @@ def planet_section(name, lang):
     sys.path.insert(0, str(ROOT))
     mod = importlib.import_module(f"lib.planets.{name}")
     from lib.fstack import analyse as fan
-    from lib.complex import compose
+    from lib.planets.common import compose_planet
     ko = lang == "ko"
+    geo = getattr(mod, "CELL_GEO", lambda c: c)
     out = ["", "### " + ("단지 구성" if ko else "Complex"), "",
            ("| 줄 | 셀 크기 | 셀 수 | 출력 (분당, 후반) | 입력 (분당, 후반) |" if ko else
             "| Line | Cell | Cells | Output (/min, late) | Inputs (/min, late) |"), "|---|---|---:|---|---|"]
@@ -169,13 +170,12 @@ def planet_section(name, lang):
         a = fan(c, "late")
         outs = ", ".join(f"{icon(k, 'fluid' if k in c.fluids_out else 'item')} {v * 60 * n:,.0f}" for k, v in a["out_per_s"].items())
         ins = ", ".join(f"{icon(k, 'fluid' if k in c.fluids_in else 'item')} {2 * v * 60 * n:,.0f}" for k, v in a["in_per_side"].items())
-        if c.centre == "chest":
+        if c.centre == "chest" and not c.bots:
             outs = ("상자 (몰)" if ko else "chests (mall)")
-        out.append(f"| {c.name} | {c.width}×{c.period} | {n} | {outs} | {ins} |")
+        out.append(f"| {c.name} | {geo(c).width}×{geo(c).period} | {n} | {outs} | {ins} |")
     for nm, ko_txt, en_txt in getattr(mod, "SPECIAL", []):
         out.append(f"| {nm} | - | - | {ko_txt if ko else en_txt} | |")
-    bp, rep = compose(name, mod.LAYOUT, mod.stacks(), tier=mod.BUS_TIER, cover=getattr(mod, "COVER", None))
-    bp.connect_poles()
+    bp, rep = compose_planet(mod, name)
     out += ["", ("버스 (위 → 아래, 6줄 + 빈 2줄 묶음; 유체는 맨 아래):" if ko else "Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):"), "",
             ("| 묶음 | 줄 |" if ko else "| Group | Lanes |"), "|---|---|"]
     for g, grp in enumerate(mod.LAYOUT):

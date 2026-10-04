@@ -14,6 +14,9 @@
 - **Planet complexes** (lib/complex.py + lib/planets/<planet>.py): a bus with stacks on its north side, composed into
   one blueprint. The composer plans every bus tap/crossing (underground spans per row), refuses collisions and lane
   overloads, and adds a power spine. Producers must stand west of consumers.
+- **Aquilo (freezing)**: heated robot-fed cells (lib/hstack.py), plain-pipe fluid bus (`FLUID_PLAIN`), then
+  lib/heat.py fills/joins heat pipe to the heating towers and `check()` must be empty (every freezable entity has
+  warm heat pipe within one tile). Optional planet-module hooks: COVER, FLUID_PLAIN, POST, FINISH, CELL_STACK, CELL_GEO.
 - House rules for new factories: horizontal main bus of 6-lane groups + 2 empty rows (`lib/main_bus.py`,
   docs/guides/main-bus-6x2.md); upgrade in place yellow→red→blue with the same layout (underground spans ≤4,
   no long-handed on bottlenecks, small-pole spacing, 2×2 furnaces; docs/guides/upgrade-in-place.md);

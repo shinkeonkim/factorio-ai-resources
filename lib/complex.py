@@ -51,7 +51,8 @@ def _read(stack):
     return keep, feeds, lo, hi
 
 
-def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=lambda x: True, cover=None):
+def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=lambda x: True, cover=None,
+            fluid_plain=False):
     """cover = (entity, size, spacing): after composing, scatter that entity (e.g. lightning collectors on Fulgora)
     over the whole area on a `spacing` grid, each on the nearest free size x size spot."""
     belt, ug, spl = BUS_TIER[tier]
@@ -253,7 +254,7 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
     for ln in fl:
         others = [l2 for l2 in fl if l2["g"] == ln["g"] and l2["i"] > ln["i"]]
         avoid = {t for l2 in others for t in l2["taps"]} | {l2["src"] for l2 in others if l2["src"]}
-        _fluid_line(bp, ln, x_end, avoid, G, cap_bottom)
+        _fluid_line(bp, ln, x_end, avoid, G, cap_bottom, fluid_plain)
         if ln["src"] == 0:
             bp.add_marker(-1, ln["row"], {ln["item"]: 0})
     cap = {"solid": LANE_PER_S[tier], "fluid": FLUID_PER_S}
@@ -294,13 +295,21 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
     return bp, report
 
 
-def _fluid_line(bp, ln, x_end, avoid, G, cap_bottom):
+def _fluid_line(bp, ln, x_end, avoid, G, cap_bottom, plain=False):
+    """plain=True: a plain pipe all along (only when no other line is on a neighbouring row, e.g. Aquilo, where
+    pipe-to-ground costs 150 kW of heat each); risers stay pipe-to-ground, which only connect at their open end."""
     r = ln["row"]
     pts = [ln["src"]] + sorted(t for t in ln["taps"] if t > ln["src"])
     for k, p in enumerate(pts):
         bp.add("pipe", p, r)
         if k > 0 or ln["src"] != 0:
             _fluid_vertical(bp, p, ln, G, cap_bottom)
+    if plain:
+        stops = set(pts)
+        for x in range(pts[0] + 1, x_end):
+            if x not in stops and (x, r) not in bp._grid:
+                bp.add("pipe", x, r)
+        return
     for a, b in zip(pts, pts[1:] + [x_end]):
         xx = a + 1                                       # pairs: W-facing at xx ... E-facing at end
         while xx < b - 1:

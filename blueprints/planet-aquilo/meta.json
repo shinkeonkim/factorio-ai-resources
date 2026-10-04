@@ -1,0 +1,265 @@
+{
+  "id": "planet-aquilo",
+  "order": 63,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "space-age"
+  ],
+  "planet": "aquilo",
+  "tags": [
+    "planet",
+    "aquilo",
+    "space-age",
+    "all-in-one",
+    "stackable",
+    "robots",
+    "heating"
+  ],
+  "title": {
+    "ko": "아킬로 올인원 단지",
+    "en": "Aquilo all-in-one complex"
+  },
+  "summary": {
+    "ko": "얼어붙는 행성용 보온·로봇 공급 쌓는 셀: 암모니아 바다 → 암모니아·얼음·물, 리튬, 플루오로케톤 순환 → 극저온 과학 분당 약 96, 암모니아 로켓 연료, 얼음 플랫폼, 핵융합 전지, 가열탑 전력 겸 보온, 로켓·착륙장까지. 어는 건물마다 열 배관이 1칸 안에 있는지 생성할 때 검사합니다.",
+    "en": "Heated, robot-fed stackable cells for the frozen planet: ammonia ocean → ammonia, ice, water, lithium, the fluoroketone loop → about 96 cryogenic science/min, ammonia rocket fuel, ice platforms, fusion power cells, heating-tower power that also keeps everything warm, rocket and landing pad. Generation checks that every building that freezes has heat pipe within one tile."
+  },
+  "variants": [
+    {
+      "file": "variants/ammonia.txt",
+      "label": {
+        "ko": "암모니아 + 얼음 (분리) — 캡 + 셀 1개",
+        "en": "Ammonia + ice (separation) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/water.txt",
+      "label": {
+        "ko": "물 (얼음 녹이기) — 캡 + 셀 1개",
+        "en": "Water (ice melting) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/lithium.txt",
+      "label": {
+        "ko": "리튬 — 캡 + 셀 1개",
+        "en": "Lithium — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/lithium-plate.txt",
+      "label": {
+        "ko": "리튬 판 — 캡 + 셀 1개",
+        "en": "Lithium plate — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/solid-fuel.txt",
+      "label": {
+        "ko": "고체 연료 (암모니아 + 원유) — 캡 + 셀 1개",
+        "en": "Solid fuel (ammonia + crude oil) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/fluoroketone.txt",
+      "label": {
+        "ko": "플루오로케톤 (뜨거움) — 캡 + 셀 1개",
+        "en": "Fluoroketone (hot) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/cooling.txt",
+      "label": {
+        "ko": "플루오로케톤 냉각 — 캡 + 셀 1개",
+        "en": "Fluoroketone cooling — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/science.txt",
+      "label": {
+        "ko": "극저온 과학 — 캡 + 셀 1개",
+        "en": "Cryogenic science — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/rocket-fuel.txt",
+      "label": {
+        "ko": "로켓 연료 (암모니아) — 캡 + 셀 1개",
+        "en": "Rocket fuel (ammonia) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/ice-platform.txt",
+      "label": {
+        "ko": "얼음 플랫폼 — 캡 + 셀 1개",
+        "en": "Ice platform — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/fusion-cell.txt",
+      "label": {
+        "ko": "핵융합 전지 — 캡 + 셀 1개",
+        "en": "Fusion power cell — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/power.txt",
+      "label": {
+        "ko": "전력 + 보온: 가열탑 3 → 열교환기 12 → 터빈 24",
+        "en": "power + heat: 3 heating towers → 12 exchangers → 24 turbines"
+      }
+    },
+    {
+      "file": "variants/rocket-silo.txt",
+      "label": {
+        "ko": "로켓 사일로 (로봇 공급)",
+        "en": "rocket silo (robot-fed)"
+      }
+    },
+    {
+      "file": "variants/landing-pad.txt",
+      "label": {
+        "ko": "착륙장 (홀뮴 판·파랑 회로·LDS 수입)",
+        "en": "landing pad (imports holmium plates, blue circuits, LDS)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "단지 전체 (유체 버스 + 모든 줄 + 전력·보온)",
+    "en": "the whole complex (fluid bus + every line + power and heat)"
+  },
+  "outputs": [
+    {
+      "item": "cryogenic-science-pack",
+      "per_minute": "~96",
+      "where": {
+        "ko": "로켓 화물 요청 / 공급 상자",
+        "en": "rocket cargo requests / provider chests"
+      }
+    },
+    {
+      "item": "fusion-power-cell",
+      "per_minute": "~24",
+      "where": {
+        "ko": "공급 상자",
+        "en": "provider chests"
+      }
+    },
+    {
+      "item": "ice-platform",
+      "per_minute": "~10",
+      "where": {
+        "ko": "공급 상자",
+        "en": "provider chests"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "설계는 이 저장소에서 새로 만든 것입니다. 참고: factorioprints의 'Aquilo full production'(-OC9hBfLsZy61BDATFg1) — 열 배관을 건물 사이에 까는 방식, 플루오로케톤 순환, 로봇 공급.",
+    "en": "Designed in this repository. Reference: 'Aquilo full production' on factorioprints (-OC9hBfLsZy61BDATFg1) — heat pipes woven between buildings, the fluoroketone loop, robot supply."
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 도착",
+        "en": "0. Arrival"
+      },
+      "do": {
+        "ko": "얼음 플랫폼으로 암모니아 바다 위에 자리를 넓힙니다. 처음 건물은 열원이 없으면 얼어버리니, 로켓 연료와 열 배관·가열탑을 함께 가져옵니다.",
+        "en": "Ice platforms extend land over the ammonia ocean. Buildings freeze without a heat source, so bring rocket fuel, heat pipes and heating towers."
+      },
+      "research": [
+        "ammoniacal-solution-separation",
+        "ice-platform",
+        "heating-tower"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 전력·보온",
+        "en": "1. Power & heat"
+      },
+      "do": {
+        "ko": "전력 블록을 먼저 놓고 로켓 연료를 손으로 넣어 시동합니다. 같은 열 배관망이 모든 셀을 데웁니다(보온만 약 100 MW). 셀은 이 열망에 붙여야만 돌아갑니다.",
+        "en": "Place the power block first and hand-feed rocket fuel to start it. The same heat-pipe network warms every cell (about 100 MW of heat just for that); a cell only runs when joined to it."
+      },
+      "research": [
+        "heating-tower"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 암모니아 연료 자립",
+        "en": "2. Ammonia fuel"
+      },
+      "do": {
+        "ko": "암모니아 + 원유 → 고체 연료 → 암모니아 로켓 연료로 가열탑이 스스로 돌게 합니다.",
+        "en": "Ammonia + crude oil → solid fuel → ammonia rocket fuel keeps the heating towers running on their own."
+      },
+      "research": [
+        "solid-fuel-from-ammonia",
+        "ammonia-rocket-fuel"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 리튬·플루오로케톤",
+        "en": "3. Lithium & fluoroketone"
+      },
+      "do": {
+        "ko": "리튬 염수 → 리튬 → 리튬 판, 불소 분출구 → 뜨거운 플루오로케톤 → 냉각. 과학 셀이 뜨거운 것을 돌려보내므로 순환이 닫힙니다.",
+        "en": "Lithium brine → lithium → lithium plates; fluorine vents → hot fluoroketone → cooling. The science cells return the hot fluid, closing the loop."
+      },
+      "research": [
+        "lithium",
+        "lithium-plate",
+        "fluoroketone",
+        "cryogenic-plant"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "4. 극저온 과학",
+        "en": "4. Cryogenic science"
+      },
+      "do": {
+        "ko": "과학 셀 4개로 분당 약 96. 더 필요하면 과학 줄 위에 셀을 더 붙이고, 리튬 판·냉각 줄도 같이 늘립니다.",
+        "en": "Four science cells give about 96/min. For more, paste cells on top of the science line and grow the lithium plate and cooling lines with it."
+      },
+      "research": [
+        "cryogenic-science-pack"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "5. 핵융합·수출",
+        "en": "5. Fusion & exports"
+      },
+      "do": {
+        "ko": "핵융합 전지를 만들고 로켓으로 과학·전지를 내보냅니다. 착륙장이 홀뮴 판·파랑 회로·LDS를 받습니다.",
+        "en": "Make fusion power cells and ship science and cells by rocket; the landing pad receives holmium plates, blue circuits and LDS."
+      },
+      "research": [
+        "fusion-power-cell",
+        "rocket-silo"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "planet-gleba",
+      "why": {
+        "ko": "탄소 섬유(기초판)를 만드는 행성",
+        "en": "the planet that makes carbon fiber (foundation)"
+      }
+    },
+    {
+      "id": "planet-vulcanus",
+      "why": {
+        "ko": "텅스텐·주조",
+        "en": "tungsten and foundries"
+      }
+    }
+  ],
+  "images": []
+}
