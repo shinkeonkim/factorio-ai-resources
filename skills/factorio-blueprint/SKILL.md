@@ -121,6 +121,16 @@ Outputs don't need markers unless the user asks.
 5. Ratio table from calc.py (condensed) when the user asked about rates.
 Write the answer in the user's language.
 
+## House rules when working in factorio-ai-resources
+
+The repo's `docs/guides/` define how new factories should look; follow them unless the user says otherwise:
+- **Main bus**: horizontal, groups of 6 lanes separated by 2 empty rows; branches leave north with the
+  kit in `lib/main_bus.py` (`segment`, `tap`, `crossing`).
+- **Upgrade in place**: one layout for early → late — underground spans ≤ 4, no long-handed inserters on
+  throughput bottlenecks, pole spacing valid for small poles, 2×2 furnaces, fluid recipes on AM2+.
+- **Water**: Waterfill is used; mark the water inlet with a marker instead of long pipes.
+- To evaluate an existing print against these rules: `python3 tools/analyze_blueprint.py <file>`.
+
 ## Saving into the factorio-ai-resources repo
 
 When the working directory is (or contains) the `factorio-ai-resources` repository, finished blueprints

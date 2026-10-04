@@ -9,3 +9,6 @@ __pycache__/
 
 # local virtualenv for tools (pip install -r tools/requirements.txt)
 .venv/
+
+# user demo inputs (third-party books etc.) – analysed in docs/demo-analysis, not redistributed
+demo-resources/

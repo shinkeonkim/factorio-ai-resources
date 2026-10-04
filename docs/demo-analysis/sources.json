@@ -1,0 +1,11 @@
+{
+  "01-6x6-balancer":        {"file": "6x6 로드밸런서.txt", "kind": "single"},
+  "02-daiso-1":             {"file": "다이소1.txt", "kind": "single"},
+  "03-daiso-2":             {"file": "다이소2.txt", "kind": "single"},
+  "04-green-circuits":      {"file": "초록칩.txt", "kind": "single"},
+  "05-plastic-sulfuric":    {"file": "플라스틱+가스.txt", "kind": "book"},
+  "06-nuclear":             {"file": "원자력.txt", "kind": "single"},
+  "07-nilaus-base-in-a-book": {"file": "종합-팩이라-좀 분리가 필요함.txt", "kind": "book"},
+  "08-spaceships":          {"file": "우주선.txt", "kind": "book"},
+  "09-science-book-xtremezion": {"file": "우주팩 관련.txt", "kind": "book"}
+}

@@ -10,6 +10,7 @@ Factorio 블루프린트를 AI(Claude Code)와 함께 설계·관리하기 위�
 |---|---|
 | [`skills/factorio-blueprint/`](skills/factorio-blueprint/SKILL.md) | Claude Code 스킬: 비율 계산기(`calc.py`), 블루프린트 빌더·인코더·검사기(`blueprint.py`), 레이아웃 패턴 문서, 게임 데이터 |
 | [`blueprints/`](blueprints/README.md) | 블루프린트마다 폴더 하나: 문자열, 생성 스크립트, 한/영 문서, 미리보기 이미지 |
+| [`docs/`](docs/) | [메인버스 6+2 가이드](docs/guides/main-bus-6x2.md), [업그레이드형 설계 원칙](docs/guides/upgrade-in-place.md), [demo-resources 분석](docs/demo-analysis/README.md), [최근 최적화 설계 참고](docs/references/optimized-builds.md) |
 | `lib/` | 여러 블루프린트가 공유하는 생성 코드 (정제 콘크리트 모듈, 철도 시티블럭 역 도구) |
 | `tools/` | `build.py`(검증·미리보기·문서·카탈로그), `render_fbe.py`(게임 그래픽 미리보기), `render_preview.py`(도식 미리보기, 예비용), `new_blueprint.py`, `attach_image.py` |
 | `third_party/` | 저장소에 포함하지 않는 원본 입력 (철도 북 등) — [안내](third_party/README.md) |
@@ -49,6 +50,9 @@ python3 tools/attach_image.py my-factory ~/Desktop/shot.png --caption-ko "게임
 
 | 미리보기 | 블루프린트 | 설명 | 크기 | 입력 |
 |---|---|---|---|---|
+| <img src="blueprints/main-bus-6x2-segment/images/preview.webp" width="160"> | [메인버스 6+2 기본 구간](blueprints/main-bus-6x2-segment/README.md)<br>`main-bus` `kit` `upgradeable` | 6줄 묶음 3개를 빈칸 2줄로 띄운 가로 버스 구간 (32칸). 줄마다 아이템 표시 조합기 포함. | 33×22 | iron-plate 900/min, iron-plate 900/min, iron-plate 900/min, iron-plate 900/min, copper-plate 900/min, copper-plate 900/min, copper-plate 900/min, copper-plate 900/min, steel-plate 900/min, stone-brick 900/min, electronic-circuit 900/min, electronic-circuit 900/min, plastic-bar 900/min, advanced-circuit 900/min, coal 900/min, stone 900/min, sulfur 900/min, processing-unit 900/min |
+| <img src="blueprints/main-bus-6x2-tap/images/preview.webp" width="160"> | [메인버스 6+2 분기 조각](blueprints/main-bus-6x2-tap/README.md)<br>`main-bus` `kit` `upgradeable` | 6줄 묶음의 한 줄을 북쪽으로 빼는 조각. 줄 0~5 × 전부(full)/반(half, 스플리터) 12종. | 7×8 | - |
+| <img src="blueprints/main-bus-6x2-crossing/images/preview.webp" width="160"> | [메인버스 6+2 통과 조각](blueprints/main-bus-6x2-crossing/README.md)<br>`main-bus` `kit` `upgradeable` | 아래 묶음에서 올라오는 분기 벨트가 6줄 묶음을 세로로 가로지르게 하는 조각 (6줄 모두 1칸 잠수). | 7×9 | - |
 | <img src="blueprints/refined-concrete-60/images/preview.webp" width="160"> | [정제 콘크리트 60/분](blueprints/refined-concrete-60/README.md)<br>`production` `refined-concrete` | 돌·철광석·물로 정제 콘크리트를 분당 60개 만드는 소형 공장. 입출력은 모두 서쪽 끝. | 38×20 | water 1,800/min, iron-ore 66/min, stone 120/min |
 | <img src="blueprints/refined-concrete-240/images/preview.webp" width="160"> | [정제 콘크리트 240/분](blueprints/refined-concrete-240/README.md)<br>`production` `refined-concrete` | 60/분 설계를 길게 늘린 분당 240개 모듈 (조립기 24, 용광로 17). | 111×20 | water 8,700/min, iron-ore 264/min, stone 480/min |
 | <img src="blueprints/refined-concrete-1200/images/preview.webp" width="160"> | [정제 콘크리트 1200/분](blueprints/refined-concrete-1200/README.md)<br>`production` `refined-concrete` `large` | 240/분 모듈 5개를 세로로 쌓고 서쪽에 분배·수집 구간을 붙인 대형 공장. | 123×100 | stone 1,440/min, iron-ore 1,320/min, water 43,500/min, stone 960/min |
@@ -70,6 +74,7 @@ Playwright가 없거나 접속이 안 되면 도식 렌더러로 대체합니다
 
 ## 규칙
 
+- 공장은 **가로 메인버스(6줄 묶음 + 빈칸 2줄)**에서 분기로 입력을 받고, **같은 배치로 초반 → 중반 → 후반 업그레이드**되게 만듭니다([원칙](docs/guides/upgrade-in-place.md)). 물은 waterfill로 현장에서 만듭니다.
 - 모든 외부 입력에는 **일정 신호 조합기** 표시를 둡니다 (신호 = 넣을 아이템/유체, 값 = 분당 필요량). 문서의 입력 표는 이 표시에서 자동으로 만들어집니다.
 - `README.md` / `README.en.md`의 `AUTO` 구역과 이 카탈로그는 `tools/build.py`가 다시 씁니다. 직접 쓴 설명은 그 바깥에 둡니다.
 - CI(GitHub Actions)가 모든 블루프린트를 다시 생성·검증하고, 문서가 최신인지 확인합니다.

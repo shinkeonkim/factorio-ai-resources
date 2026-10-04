@@ -1,0 +1,48 @@
+{
+  "id": "main-bus-6x2-segment",
+  "order": 5,
+  "game": "2.0",
+  "mods": [
+    "base"
+  ],
+  "tags": [
+    "main-bus",
+    "kit",
+    "upgradeable"
+  ],
+  "title": {
+    "ko": "메인버스 6+2 기본 구간",
+    "en": "Main bus 6+2 segment"
+  },
+  "summary": {
+    "ko": "6줄 묶음 3개를 빈칸 2줄로 띄운 가로 버스 구간 (32칸). 줄마다 아이템 표시 조합기 포함.",
+    "en": "Horizontal bus segment: 3 groups of 6 lanes with 2 empty rows between them (32 tiles), lane labels included."
+  },
+  "variants": [
+    {
+      "file": "variants/red.txt",
+      "label": {
+        "ko": "빨강 벨트",
+        "en": "red belts"
+      }
+    },
+    {
+      "file": "variants/blue.txt",
+      "label": {
+        "ko": "파랑 벨트",
+        "en": "blue belts"
+      }
+    },
+    {
+      "file": "variants/turbo.txt",
+      "label": {
+        "ko": "터보 벨트",
+        "en": "turbo belts"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "노랑 벨트 (기본)",
+    "en": "yellow belts (default)"
+  }
+}

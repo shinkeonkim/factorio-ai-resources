@@ -11,6 +11,7 @@ calculation, blueprint-string generation, validation, preview images and bilingu
 |---|---|
 | [`skills/factorio-blueprint/`](skills/factorio-blueprint/SKILL.md) | Claude Code skill: ratio calculator (`calc.py`), blueprint builder/encoder/validator (`blueprint.py`), layout pattern docs, game data |
 | [`blueprints/`](blueprints/README.md) | One folder per blueprint: string, generator, Korean/English docs, preview images |
+| [`docs/`](docs/) | [Main bus 6+2 guide](docs/guides/main-bus-6x2.en.md), [upgrade-in-place rules](docs/guides/upgrade-in-place.en.md), [demo-resources analysis](docs/demo-analysis/README.en.md), [recent optimized builds](docs/references/optimized-builds.en.md) |
 | `lib/` | Generator code shared by several blueprints (refined-concrete module, rail city-block station kit) |
 | `tools/` | `build.py` (validate, previews, docs, catalog), `render_fbe.py` (game-sprite previews), `render_preview.py` (schematic fallback), `new_blueprint.py`, `attach_image.py` |
 | `third_party/` | Inputs not redistributed here (rail book, …) — [details](third_party/README.md) |
@@ -50,6 +51,9 @@ python3 tools/attach_image.py my-factory ~/Desktop/shot.png --caption-ko "게임
 
 | Preview | Blueprint | Summary | Size | Inputs |
 |---|---|---|---|---|
+| <img src="blueprints/main-bus-6x2-segment/images/preview.webp" width="160"> | [Main bus 6+2 segment](blueprints/main-bus-6x2-segment/README.en.md)<br>`main-bus` `kit` `upgradeable` | Horizontal bus segment: 3 groups of 6 lanes with 2 empty rows between them (32 tiles), lane labels included. | 33×22 | iron-plate 900/min, iron-plate 900/min, iron-plate 900/min, iron-plate 900/min, copper-plate 900/min, copper-plate 900/min, copper-plate 900/min, copper-plate 900/min, steel-plate 900/min, stone-brick 900/min, electronic-circuit 900/min, electronic-circuit 900/min, plastic-bar 900/min, advanced-circuit 900/min, coal 900/min, stone 900/min, sulfur 900/min, processing-unit 900/min |
+| <img src="blueprints/main-bus-6x2-tap/images/preview.webp" width="160"> | [Main bus 6+2 tap pieces](blueprints/main-bus-6x2-tap/README.en.md)<br>`main-bus` `kit` `upgradeable` | Takes one lane of a 6-lane group north: lanes 0-5 × full / half (splitter), 12 pieces. | 7×8 | - |
+| <img src="blueprints/main-bus-6x2-crossing/images/preview.webp" width="160"> | [Main bus 6+2 crossing piece](blueprints/main-bus-6x2-crossing/README.en.md)<br>`main-bus` `kit` `upgradeable` | Lets a branch from a lower group pass north through a 6-lane group (all six lanes dive one column). | 7×9 | - |
 | <img src="blueprints/refined-concrete-60/images/preview.webp" width="160"> | [Refined concrete 60/min](blueprints/refined-concrete-60/README.en.md)<br>`production` `refined-concrete` | Small factory turning stone, iron ore and water into 60 refined concrete/min. All I/O on the west edge. | 38×20 | water 1,800/min, iron-ore 66/min, stone 120/min |
 | <img src="blueprints/refined-concrete-240/images/preview.webp" width="160"> | [Refined concrete 240/min](blueprints/refined-concrete-240/README.en.md)<br>`production` `refined-concrete` | The 60/min design stretched into a 240/min module (24 assemblers, 17 furnaces). | 111×20 | water 8,700/min, iron-ore 264/min, stone 480/min |
 | <img src="blueprints/refined-concrete-1200/images/preview.webp" width="160"> | [Refined concrete 1200/min](blueprints/refined-concrete-1200/README.en.md)<br>`production` `refined-concrete` `large` | Five stacked 240/min modules plus a west-side manifold for inputs and output. | 123×100 | stone 1,440/min, iron-ore 1,320/min, water 43,500/min, stone 960/min |
@@ -72,6 +76,7 @@ schematic renderer (or pick it explicitly with `--renderer schematic`).
 
 ## Conventions
 
+- Factories take inputs from a **horizontal main bus (6-lane groups + 2 empty rows)** and are built to **upgrade in place early → mid → late** ([rules](docs/guides/upgrade-in-place.en.md)). Water is made on site with Waterfill.
 - Every external input is labelled with a **constant combinator** (signal = item/fluid to supply, count = required per minute). The input tables in the docs are generated from these markers.
 - The `AUTO` sections of each `README.md` / `README.en.md` and this catalog are rewritten by `tools/build.py`; hand-written text goes outside them.
 - CI (GitHub Actions) regenerates and validates every blueprint and checks that the docs are up to date.

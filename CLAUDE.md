@@ -4,6 +4,11 @@
   `~/.claude/skills` by `scripts/install-skills.sh` as a symlink, so edits here are live).
 - New blueprint → `python3 tools/new_blueprint.py <id> --title-ko … --title-en …`, write `generate.py`
   using `from lib.fbp import *` and `save(bp, __file__)`, then `python3 tools/build.py <id>`.
+- House rules for new factories: horizontal main bus of 6-lane groups + 2 empty rows (`lib/main_bus.py`,
+  docs/guides/main-bus-6x2.md); upgrade in place yellow→red→blue with the same layout (underground spans ≤4,
+  no long-handed on bottlenecks, small-pole spacing, 2×2 furnaces; docs/guides/upgrade-in-place.md);
+  water via Waterfill (mark the inlet, no long water pipes).
+- Analysing a blueprint/book: `python3 tools/analyze_blueprint.py <file>` (tiers, upgrade check, I/O).
 - Every external input gets a constant-combinator marker (`bp.add_marker`), count = per minute.
 - Write both `README.md` (Korean) and `README.en.md` (English); keep prose outside the AUTO block.
 - Shared generator code goes to `lib/`; never commit anything under `third_party/` except its README.

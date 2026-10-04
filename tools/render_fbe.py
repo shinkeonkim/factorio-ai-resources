@@ -109,7 +109,7 @@ def main():
     ap.add_argument("--max-px", type=int, default=1600)
     ap.add_argument("--focus", action="store_true", help="only the non-rail part (see render_preview.focus_box)")
     a = ap.parse_args()
-    text = pathlib.Path(a.blueprint).read_text()
+    text = encode(decode(pathlib.Path(a.blueprint).read_text()))   # normalise (padding, stray chars)
     if a.focus:
         from render_preview import focus_box
         obj = decode(text)
@@ -117,7 +117,10 @@ def main():
     with FBERenderer() as r:
         img = finish(r.render(text), a.max_px)
     out = pathlib.Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
-    img.save(out, optimize=True)
+    if out.suffix == ".webp":
+        img.save(out, quality=85, method=6)
+    else:
+        img.save(out, optimize=True)
     print(f"wrote {out} {img.size[0]}x{img.size[1]}")
 
 
