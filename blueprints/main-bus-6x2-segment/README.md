@@ -79,7 +79,7 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 
 - [메인버스 6+2 분기 조각](../main-bus-6x2-tap/README.md) — 버스에서 한 줄을 빼는 분기
 - [메인버스 6+2 통과 조각](../main-bus-6x2-crossing/README.md) — 아래 묶음 분기가 위 묶음을 건너는 조각
-- [빨강 과학 (업그레이드형 타일)](../science-red-upgradeable/README.md) — 첫 번째로 붙일 공장
+- [빨강 과학 (쌓는 셀)](../science-red-upgradeable/README.md) — 첫 번째로 붙일 공장
 
 ### 파일
 

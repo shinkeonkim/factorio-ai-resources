@@ -1,0 +1,155 @@
+{
+  "id": "cell-stone-wall",
+  "order": 38,
+  "game": "2.0",
+  "mods": [
+    "base"
+  ],
+  "tags": [
+    "intermediate",
+    "stackable",
+    "upgradeable"
+  ],
+  "cell": "wall",
+  "title": {
+    "ko": "벽 (쌓는 셀)",
+    "en": "Stone walls (stackable cell)"
+  },
+  "summary": {
+    "ko": "13×4 셀을 북쪽으로 쌓아 늘립니다. 입력 벽돌; 같은 배치로 노랑→빨강→파랑.",
+    "en": "13×4 cell stacked northwards; inputs stone brick; same layout yellow→red→blue."
+  },
+  "variants": [
+    {
+      "file": "variants/cell-early.txt",
+      "label": {
+        "ko": "셀 — 초반 (노랑·조립기 1·일반)",
+        "en": "cell — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/cell-mid.txt",
+      "label": {
+        "ko": "셀 — 중반 (빨강·조립기 2·고속)",
+        "en": "cell — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/cell-late.txt",
+      "label": {
+        "ko": "셀 — 후반 (파랑·조립기 3·벌크)",
+        "en": "cell — late (blue, AM3, bulk)"
+      }
+    },
+    {
+      "file": "variants/cap-early.txt",
+      "label": {
+        "ko": "캡(시작 조각) — 초반 (노랑·조립기 1·일반)",
+        "en": "cap (base piece) — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/cap-mid.txt",
+      "label": {
+        "ko": "캡(시작 조각) — 중반 (빨강·조립기 2·고속)",
+        "en": "cap (base piece) — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/cap-late.txt",
+      "label": {
+        "ko": "캡(시작 조각) — 후반 (파랑·조립기 3·벌크)",
+        "en": "cap (base piece) — late (blue, AM3, bulk)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "캡 + 셀 3개, 초반 (예시·미리보기)",
+    "en": "cap + 3 cells, early (example / preview)"
+  },
+  "outputs": [
+    {
+      "item": "stone-wall",
+      "per_minute": "-",
+      "where": {
+        "ko": "가운데 벨트, 캡 아래로 나감",
+        "en": "centre belt, leaves south under the cap"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "쌓는 셀 형태: 사용자 데모의 Nilaus 초록칩 모듈(Base-In-A-Book)을 기준으로 삼았습니다.",
+    "en": "Stackable-cell form modelled on the Nilaus green-circuit module from the user's demo (Base-In-A-Book)."
+  },
+  "allow_problems": true,
+  "allow_problems_reason": "variants/cell-*: the bottom row is powered by the gap row below (cap or next cell); generate.py validates cap + cells at every tier",
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 준비",
+        "en": "0. Prepare"
+      },
+      "do": {
+        "ko": "버스에서 분기할 입력: 벽돌. 캡 아래쪽 표시 조합기 자리마다(한쪽에 하나씩) 분기를 하나씩 엽니다.",
+        "en": "Bus taps needed: stone brick, one per marker at the bottom of the cap (one per side)."
+      },
+      "research": [
+        "stone-wall"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 시작 (초반)",
+        "en": "1. Start (early)"
+      },
+      "do": {
+        "ko": "캡 1개 + 셀 1개를 노랑 벨트·조립기 1로 놓습니다. 더 필요하면 셀 파일을 북쪽으로 드래그해 붙입니다. 쌓기 표의 최대 셀 수를 넘으면 입력 레인이 모자랍니다.",
+        "en": "Place the cap and one cell with yellow belts and AM1. Need more? Drag the cell file northwards; past the stacking table's max cells the input lanes run dry."
+      },
+      "research": [
+        "assembling-machine-1",
+        "underground-belt"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 중반",
+        "en": "2. Mid"
+      },
+      "do": {
+        "ko": "업그레이드 플래너로 빨강 벨트·조립기 2·고속 인서터·중형 전봇대. 셀당 출력이 1.5배, 최대 셀 수도 늘어납니다. 버스 분기도 빨강으로.",
+        "en": "Upgrade planner: red belts, AM2, fast inserters, medium poles. 1.5× output per cell and a higher stack limit; upgrade the taps too."
+      },
+      "research": [
+        "fast-transport-belt",
+        "assembling-machine-2",
+        "fast-inserter",
+        "medium-electric-pole"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 후반",
+        "en": "3. Late"
+      },
+      "do": {
+        "ko": "파랑 벨트·조립기 3·벌크 인서터. 셀당 출력이 초반의 2.5배입니다. 모듈을 꽂으면 입력이 표시 값보다 늘어납니다.",
+        "en": "Blue belts, AM3, bulk inserters: 2.5× the early output per cell. Modules push the inputs above the markers."
+      },
+      "research": [
+        "express-transport-belt",
+        "assembling-machine-3",
+        "bulk-inserter"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "science-military-upgradeable",
+      "why": {
+        "ko": "이 셀의 출력을 쓰는 과학",
+        "en": "the science that uses it"
+      }
+    }
+  ]
+}

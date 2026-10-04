@@ -52,7 +52,7 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 **다음에 지을 것**
 
 - [모듈 몰 (1·2단계, 4종)](../module-mall-t1-t2/README.md) — 모듈 몰
-- [빨강 과학 (업그레이드형 타일)](../science-red-upgradeable/README.md) — 몰이 만든 건물로 지을 첫 공장
+- [빨강 과학 (쌓는 셀)](../science-red-upgradeable/README.md) — 몰이 만든 건물로 지을 첫 공장
 
 ### 파일
 

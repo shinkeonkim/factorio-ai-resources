@@ -1,6 +1,6 @@
-# Green science (upgradeable tile)
+# Green science (stackable cell)
 
-> 12 science + 4 intermediate assemblers; same layout 60 → 90 → 150/min; three bus taps (iron ×2, green circuits).
+> 15×20 cell stacked northwards; inputs iron plate, electronic circuit; same layout yellow→red→blue.
 
 [한국어](README.md)
 
@@ -13,9 +13,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base) |
-| Size | 53×16 tiles |
-| Entities | 195 |
-| Main machines | `assembling-machine-1` ×16 (logistic-science-pack 12, iron-gear-wheel 2, transport-belt 1, inserter 1) |
+| Size | 15×69 tiles |
+| Entities | 500 |
+| Main machines | `assembling-machine-1` ×30 (logistic-science-pack 12, iron-gear-wheel 6, transport-belt 6, inserter 6) |
 | Validation | OK |
 
 ### Inputs
@@ -24,37 +24,53 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `iron-plate` | 450 | (2, 15) |
-| `electronic-circuit` | 150 | (0, 15) |
-| `iron-plate` | 225 | (5, 15) |
+| `iron-plate` | 113 | (2, 68) |
+| `electronic-circuit` | 25 | (1, 68) |
+| `iron-plate` | 113 | (12, 68) |
+| `electronic-circuit` | 25 | (13, 68) |
 
 ### Outputs
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `logistic-science-pack` | 60 / 90 / 150 | science belt, east end (y=0) |
+| `logistic-science-pack` | - | centre belt, leaves south under the cap |
+
+### Stacking
+
+One cell = **15×20** (width×height). A copy pasted directly north (20 rows up) continues every belt; the cell files snap to a 15×20 grid, so drag to place several. The cap (base piece) goes once at the bottom.
+
+| Stage | Output per cell (/min) | Max cells | Input per cell, one side (/min) | Notes |
+|---|---:|---:|---|---|
+| early (yellow, AM1, basic) | 20.0 | 10 | `electronic-circuit` 10, `iron-plate` 45 |  |
+| mid (red, AM2, fast) | 30.0 | 13 | `electronic-circuit` 15, `iron-plate` 68 |  |
+| late (blue, AM3, bulk) | 50.0 | 11 | `electronic-circuit` 25, `iron-plate` 113 |  |
+
+_Max cells = how many cells one lane of that tier's belt can feed (busiest input lane or the product lane). Each side has its own inputs, so every input needs one bus tap per side._
 
 ### Roadmap
 
 | Stage | When / research needed | What to do |
 |---|---|---|
-| 0. Prepare | `logistic-science-pack` (red) | Lay the bus groups this tile needs and open a tap (full/half) under each marker at the bottom edge. Needs two iron taps and green circuits. |
-| 1. Early (default file) | `automation` (red), `logistics` (red), `electronics` (on first craft) | Build with yellow belts, AM1, basic inserters and small poles: 60/min per tile. Need more? Place another tile. |
-| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. Same layout, 90/min. Upgrade the bus taps to red with it. |
-| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 150/min. Modules/beacons fit from here, but they raise the inputs above the markers, so switch the taps to full lanes. |
+| 0. Prepare | `logistic-science-pack` (red), `electronics` (on first craft) | Bus taps needed: iron plate, electronic circuit, one per marker at the bottom of the cap (one per side). |
+| 1. Start (early) | `automation` (red), `logistics` (red) | Place the cap and one cell with yellow belts and AM1. Need more? Drag the cell file northwards; past the stacking table's max cells the input lanes run dry. |
+| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. 1.5× output per cell and a higher stack limit; upgrade the taps too. |
+| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 2.5× the early output per cell. Modules push the inputs above the markers. |
 
 **Build next**
 
-- [Military science (upgradeable tile)](../science-military-upgradeable/README.en.md) — next science
-- [Chemical science (upgradeable tile)](../science-blue-upgradeable/README.en.md) — the post-oil science
+- [Military science (stackable cell)](../science-military-upgradeable/README.en.md) — next science
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | early (yellow, AM1, basic) |
-| [`variants/mid.txt`](variants/mid.txt) | mid (red, AM2, fast) |
-| [`variants/late.txt`](variants/late.txt) | late (blue, AM3, bulk) |
+| [`blueprint.txt`](blueprint.txt) | cap + 3 cells, early (example / preview) |
+| [`variants/cell-early.txt`](variants/cell-early.txt) | cell — early (yellow, AM1, basic) |
+| [`variants/cell-mid.txt`](variants/cell-mid.txt) | cell — mid (red, AM2, fast) |
+| [`variants/cell-late.txt`](variants/cell-late.txt) | cell — late (blue, AM3, bulk) |
+| [`variants/cap-early.txt`](variants/cap-early.txt) | cap (base piece) — early (yellow, AM1, basic) |
+| [`variants/cap-mid.txt`](variants/cap-mid.txt) | cap (base piece) — mid (red, AM2, fast) |
+| [`variants/cap-late.txt`](variants/cap-late.txt) | cap (base piece) — late (blue, AM3, bulk) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -74,25 +90,25 @@ python3 tools/build.py science-green-upgradeable
 
 ## Layout
 
-- Top: science belt (y=0) ← 12 green science assemblers ← feed belt (y=6).
-- Feed belt: **north lane = inserters**, **south lane = transport belts** — the two west clusters insert from opposite sides, which splits the lanes by itself.
-  - North cluster (y=2..4): gear B → (sideways) belt assembler → feed south lane; iron from the short y=0 belt.
-  - South cluster (y=8..10): gear A → (sideways) inserter assembler → feed north lane; iron + circuits from the two-lane y=12 belt.
-- Inputs: three columns at the bottom edge — green circuits (x=-15), iron A (x=-13), iron B (x=-12, crosses the y=12 belt with a 1-tile underground to reach the north cluster).
-- Ratio: green 12 : inserter 1 : belt 1 : gears 2.
+- Inner belt (normal inserters): far lane iron gear wheel (made in the cell), near lane iron plate
+- Outer belt (long-handed): far lane transport belt (made in the cell), near lane electronic circuit
+- Centre belt (flows south): logistic science pack
+
+Machine column (south → north, both halves):
+1. iron gear wheel → lane (used further north)
+2. transport belt → lane (used further north)
+3. logistic science pack → centre belt
+4. inserter → straight into the logistic science pack machine below → straight into the logistic science pack machine above
+5. logistic science pack → centre belt
+
+- Inputs run north along both edges, the product runs south (toward the bus) down the middle. Every line enters at the bottom edge and leaves at the top edge, so the next cell simply continues it.
+- Cap: bus taps come in at the markers on the bottom edge and are side-loaded onto their lanes. Marker counts are **late-tier demand per cell and side (per minute)**.
+- Every fourth row is a gap row with poles and the hand-over inserters between machines.
 
 ## Upgrading
 
-| Stage | Belts | Assemblers | Inserters | Poles | Per tile |
-|---|---|---|---|---|---|
-| early (default file) | yellow | AM1 | basic | small | 60/min |
-| mid (`variants/mid.txt`) | red | AM2 | fast | medium | 90/min |
-| late (`variants/late.txt`) | blue | AM3 | bulk | medium | 150/min |
-
-- 1-tile underground, no long-handed inserters, small-pole spacing.
-- Marker counts (iron A 450, iron B 225, circuits 150/min) are **late-tier** demand.
-- The inserter assembler has one output inserter: early (basic, 0.83/s) runs science at ~80%; fine from mid tier.
+Swap belts, assemblers, inserters and poles with the upgrade planner (same footprints). The only underground is the cap's 1-tile hop, and long-handed inserters only take the low-rate items from the outer belt. Per-tier output and stack limits are in the stacking table above.
 
 ## Credits
 
-Tileable-science idea from Christoffer Ramqvist's "Tileable Science Production", XtremeZion's Science Book and Nilaus' ratios; the layout itself is new.
+Stackable-cell form modelled on the Nilaus green-circuit module from the user's demo (Base-In-A-Book).

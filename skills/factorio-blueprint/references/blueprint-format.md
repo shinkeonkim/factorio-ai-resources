@@ -40,7 +40,8 @@ Exactly one key at the root: `blueprint`, `blueprint_book`, `upgrade_planner` or
   "tiles": [{"name": "refined-concrete", "position": {"x": 0, "y": 0}}],
   "wires": [[1, 5, 2, 5]],
   "snap-to-grid": {"x": 8, "y": 8},          // optional
-  "absolute-snapping": true,                // optional
+  "absolute-snapping": true,                // optional (omit = relative grid: dragged copies tile seamlessly)
+  // builder: bp.extra["snap-to-grid"] = {"x": width, "y": period} for stackable cells
   "version": 562949954076673
 }}
 ```

@@ -1,6 +1,6 @@
-# Utility science (upgradeable tile)
+# Utility science (stackable cell)
 
-> 14 science + 14 robot-frame assemblers (1:1, direct insertion); same layout 60 → 90 → 150/min; six bus taps.
+> 15×12 cell stacked northwards; inputs low density structure, processing unit, flying robot frame; same layout yellow→red→blue.
 
 [한국어](README.md)
 
@@ -13,9 +13,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base) |
-| Size | 69×18 tiles |
-| Entities | 404 |
-| Main machines | `assembling-machine-1` ×28 (utility-science-pack 14, flying-robot-frame 14) |
+| Size | 19×45 tiles |
+| Entities | 352 |
+| Main machines | `assembling-machine-1` ×18 (utility-science-pack 18) |
 | Validation | OK |
 
 ### Inputs
@@ -24,39 +24,55 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `processing-unit` | 100 | (2, 17) |
-| `low-density-structure` | 150 | (0, 17) |
-| `electronic-circuit` | 150 | (10, 17) |
-| `steel-plate` | 50 | (8, 17) |
-| `battery` | 100 | (18, 17) |
-| `electric-engine-unit` | 50 | (16, 17) |
+| `processing-unit` | 21 | (4, 44) |
+| `low-density-structure` | 32 | (0, 44) |
+| `flying-robot-frame` | 11 | (1, 44) |
+| `processing-unit` | 21 | (14, 44) |
+| `low-density-structure` | 32 | (18, 44) |
+| `flying-robot-frame` | 11 | (17, 44) |
 
 ### Outputs
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `utility-science-pack` | 60 / 90 / 150 | science belt, east end (y=0) |
+| `utility-science-pack` | - | centre belt, leaves south under the cap |
+
+### Stacking
+
+One cell = **15×12** (width×height). A copy pasted directly north (12 rows up) continues every belt; the cell files snap to a 15×12 grid, so drag to place several. The cap (base piece) goes once at the bottom.
+
+| Stage | Output per cell (/min) | Max cells | Input per cell, one side (/min) | Notes |
+|---|---:|---:|---|---|
+| early (yellow, AM1, basic) | 25.7 | 35 | `flying-robot-frame` 4, `low-density-structure` 13, `processing-unit` 9 |  |
+| mid (red, AM2, fast) | 38.6 | 46 | `flying-robot-frame` 6, `low-density-structure` 19, `processing-unit` 13 |  |
+| late (blue, AM3, bulk) | 64.3 | 42 | `flying-robot-frame` 11, `low-density-structure` 32, `processing-unit` 21 |  |
+
+_Max cells = how many cells one lane of that tier's belt can feed (busiest input lane or the product lane). Each side has its own inputs, so every input needs one bus tap per side._
 
 ### Roadmap
 
 | Stage | When / research needed | What to do |
 |---|---|---|
-| 0. Prepare | `utility-science-pack` (red·green·blue), `robotics` (red·green·blue), `low-density-structure` (red·green·blue), `processing-unit` (red·green·blue) | Lay the bus groups this tile needs and open a tap (full/half) under each marker at the bottom edge. Needs LDS, blue circuits, electric engines, batteries, steel and green circuits. |
-| 1. Early (default file) | `automation` (red), `logistics` (red), `electronics` (on first craft) | Build with yellow belts, AM1, basic inserters and small poles: 60/min per tile. Need more? Place another tile. |
-| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. Same layout, 90/min. Upgrade the bus taps to red with it. |
-| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 150/min. Modules/beacons fit from here, but they raise the inputs above the markers, so switch the taps to full lanes. |
+| 0. Prepare | `utility-science-pack` (red·green·blue) | The inputs (low density structure, processing unit, flying robot frame) come from intermediate cells: build those (see 'Build next') first and run each centre belt to this cap's markers (one per side). |
+| 1. Start (early) | `automation` (red), `logistics` (red) | Place the cap and one cell with yellow belts and AM1. Need more? Drag the cell file northwards; past the stacking table's max cells the input lanes run dry. |
+| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. 1.5× output per cell and a higher stack limit; upgrade the taps too. |
+| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 2.5× the early output per cell. Modules push the inputs above the markers. |
 
 **Build next**
 
-- [Production science (upgradeable tile)](../science-purple-upgradeable/README.en.md) — the other late science
+- [Flying robot frames (stackable cell)](../cell-robot-frame/README.en.md) — an input of this cell
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | early (yellow, AM1, basic) |
-| [`variants/mid.txt`](variants/mid.txt) | mid (red, AM2, fast) |
-| [`variants/late.txt`](variants/late.txt) | late (blue, AM3, bulk) |
+| [`blueprint.txt`](blueprint.txt) | cap + 3 cells, early (example / preview) |
+| [`variants/cell-early.txt`](variants/cell-early.txt) | cell — early (yellow, AM1, basic) |
+| [`variants/cell-mid.txt`](variants/cell-mid.txt) | cell — mid (red, AM2, fast) |
+| [`variants/cell-late.txt`](variants/cell-late.txt) | cell — late (blue, AM3, bulk) |
+| [`variants/cap-early.txt`](variants/cap-early.txt) | cap (base piece) — early (yellow, AM1, basic) |
+| [`variants/cap-mid.txt`](variants/cap-mid.txt) | cap (base piece) — mid (red, AM2, fast) |
+| [`variants/cap-late.txt`](variants/cap-late.txt) | cap (base piece) — late (blue, AM3, bulk) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -76,24 +92,29 @@ python3 tools/build.py science-yellow-upgradeable
 
 ## Layout
 
-- 14 science assemblers (y=2..4). Directly below them are 14 robot-frame assemblers (y=6..8), each feeding the one above with a single inserter.
-  - Frames take 20 s and science 21 s, so 1:1 works.
-- Science: LDS and blue circuits by long-handed from y=-1, output onto y=0.
-- Frames: electric engines and batteries from y=10 (fast), steel and green circuits from y=11 (long-handed).
-- All inputs come from bus groups 3 (circuits), 4 and 5.
+- Inner belt (normal inserters): far lane low density structure, near lane processing unit
+- Outer belt (long-handed): far lane flying robot frame, near lane -
+- Centre belt (flows south): utility science pack
+
+Machine column (south → north, both halves):
+1. utility science pack → centre belt
+2. utility science pack → centre belt
+3. utility science pack → centre belt
+
+- Inputs run north along both edges, the product runs south (toward the bus) down the middle. Every line enters at the bottom edge and leaves at the top edge, so the next cell simply continues it.
+- Cap: bus taps come in at the markers on the bottom edge and are side-loaded onto their lanes. Marker counts are **late-tier demand per cell and side (per minute)**.
+- Every fourth row is a gap row with poles and the hand-over inserters between machines.
+
+## Intermediate cells
+
+This science cell takes only three inputs; the intermediates come from their own cells. Send each one's centre belt into this cap, or onto the bus.
+
+- [Flying robot frames (stackable cell)](../cell-robot-frame/README.en.md)
 
 ## Upgrading
 
-| Stage | Belts | Assemblers | Inserters | Poles | Per tile |
-|---|---|---|---|---|---|
-| early (default file) | yellow | AM1 | basic | small | 60/min |
-| mid (`variants/mid.txt`) | red | AM2 | fast | medium | 90/min |
-| late (`variants/late.txt`) | blue | AM3 | bulk | medium | 150/min |
-
-- Underground spans ≤3, small-pole spacing.
-- Long-handed inserters are used only where a machine needs well under 1.2 items/s (their base speed), so they never limit an upgraded tile.
-- Marker counts are **late-tier** demand: LDS 150, blue circuits 100, electric engines 50, batteries 100, steel 50, green circuits 150/min.
+Swap belts, assemblers, inserters and poles with the upgrade planner (same footprints). The only underground is the cap's 1-tile hop, and long-handed inserters only take the low-rate items from the outer belt. Per-tier output and stack limits are in the stacking table above.
 
 ## Credits
 
-Tileable-science idea from Christoffer Ramqvist's "Tileable Science Production", XtremeZion's Science Book and Nilaus' ratios; the layout itself is new.
+Stackable-cell form modelled on the Nilaus green-circuit module from the user's demo (Base-In-A-Book).

@@ -225,6 +225,7 @@ class Blueprint:
         self.game = game
         self.label = label
         self.description = description
+        self.extra = {}            # extra top-level blueprint fields, e.g. {"snap-to-grid": {"x": 13, "y": 12}}
         self.icons = icons
         self.version = version or DEFAULT_VERSION[game]
         self.entities: list[dict] = []        # raw blueprint entity dicts
@@ -403,6 +404,7 @@ class Blueprint:
             bp["wires"] = self.wires
         if self.tiles:
             bp["tiles"] = self.tiles
+        bp.update(self.extra)
         return {"blueprint": bp}
 
     def to_string(self) -> str:

@@ -91,6 +91,38 @@ TRIGGER = {"craft-item": ("아이템을 처음 만들면", "on first craft"), "m
            "capture-spawner": ("둥지를 잡으면", "on capturing a spawner")}
 
 
+def stack_section(name, lang):
+    """Stacking table for a stackable cell (lib/cells.py), from the same analysis that built it."""
+    sys.path.insert(0, str(ROOT))
+    from lib.cells import CELLS
+    from lib.stack import TIERS as STIERS, analyse
+    cell = CELLS[name]
+    ko = lang == "ko"
+    out = ["", "### " + ("쌓기" if ko else "Stacking"), "",
+           (f"셀 하나 = **{cell.width}×{cell.period}** (가로×세로). 같은 셀을 바로 북쪽({cell.period}칸 위)에 붙이면 "
+            f"벨트가 그대로 이어집니다. 셀 파일은 {cell.width}×{cell.period} 격자에 맞춰 붙으니 드래그로 여러 개를 놓으세요. "
+            "캡(시작 조각)은 맨 아래 한 번만 놓습니다." if ko else
+            f"One cell = **{cell.width}×{cell.period}** (width×height). A copy pasted directly north ({cell.period} rows up) "
+            f"continues every belt; the cell files snap to a {cell.width}×{cell.period} grid, so drag to place several. "
+            "The cap (base piece) goes once at the bottom."), "",
+           ("| 단계 | 셀당 출력 (분당) | 최대 셀 수 | 셀당 입력, 한쪽 (분당) | 비고 |" if ko else
+            "| Stage | Output per cell (/min) | Max cells | Input per cell, one side (/min) | Notes |"),
+           "|---|---:|---:|---|---|"]
+    for tier, t in STIERS.items():
+        a = analyse(cell, tier)
+        inputs = ", ".join(f"{icon(i)} {v * 60:.0f}" for i, v in sorted(a["lane_per_side"].items()))
+        note = ""
+        if a["limited"]:
+            note = ("인서터 제한: " if ko else "inserter-limited: ") + ", ".join(
+                f"{r} {u * 100:.0f}%" for r, u in a["limited"].items())
+        out.append(f"| {t['label'][lang]} | {a['out_per_s'] * 60:.1f} | {a['max_cells']} | {inputs} | {note} |")
+    out += ["", ("_최대 셀 수 = 그 단계 벨트의 레인 하나로 버틸 수 있는 셀 수(가장 바쁜 입력 레인이나 출력 레인 기준). "
+                 "양쪽이 따로 입력을 받으므로 버스 분기는 한쪽마다 하나씩 필요합니다._" if ko else
+                 "_Max cells = how many cells one lane of that tier's belt can feed (busiest input lane or the product "
+                 "lane). Each side has its own inputs, so every input needs one bus tap per side._")]
+    return out
+
+
 def trigger_text(trig, lang):
     if not trig:
         return "-"
@@ -217,6 +249,8 @@ def auto_section(d: pathlib.Path, meta: dict, st: dict, lang: str) -> str:
         out += [f"| {icon(o['item'])} | {o.get('per_minute', '-')} | {o.get('where', {}).get(lang, '')} |" for o in meta["outputs"]]
     else:
         out.append(t["none"])
+    if meta.get("cell"):
+        out += stack_section(meta["cell"], lang)
     if meta.get("roadmap"):
         out += ["", f"### {t['roadmap']}", "", f"| {t['stage']} | {t['research']} | {t['todo']} |", "|---|---|---|"]
         for st_ in meta["roadmap"]:

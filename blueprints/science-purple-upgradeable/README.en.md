@@ -1,6 +1,6 @@
-# Production science (upgradeable tile)
+# Production science (stackable cell)
 
-> 14 science + 6 rail, 3 stick, 4 electric-furnace and 10 productivity-module assemblers; same layout 60 → 90 → 150/min; nine bus taps.
+> 15×12 cell stacked northwards; inputs rail, electric furnace, productivity module; same layout yellow→red→blue.
 
 [한국어](README.md)
 
@@ -13,9 +13,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base) |
-| Size | 115×30 tiles |
-| Entities | 735 |
-| Main machines | `assembling-machine-1` ×37 (production-science-pack 14, productivity-module 10, rail 6, electric-furnace 4, iron-stick 3) |
+| Size | 19×45 tiles |
+| Entities | 352 |
+| Main machines | `assembling-machine-1` ×18 (production-science-pack 18) |
 | Validation | OK |
 
 ### Inputs
@@ -24,42 +24,58 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `steel-plate` | 500 | (49, 29) |
-| `stone-brick` | 500 | (47, 29) |
-| `advanced-circuit` | 250 | (53, 29) |
-| `electronic-circuit` | 250 | (71, 29) |
-| `advanced-circuit` | 250 | (69, 29) |
-| `steel-plate` | 750 | (2, 29) |
-| `stone` | 750 | (0, 29) |
-| `iron-plate` | 375 | (5, 29) |
+| `electric-furnace` | 11 | (4, 44) |
+| `rail` | 321 | (0, 44) |
+| `productivity-module` | 11 | (1, 44) |
+| `electric-furnace` | 11 | (14, 44) |
+| `rail` | 321 | (18, 44) |
+| `productivity-module` | 11 | (17, 44) |
 
 ### Outputs
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `production-science-pack` | 60 / 90 / 150 | science belt, east end (y=0) |
+| `production-science-pack` | - | centre belt, leaves south under the cap |
+
+### Stacking
+
+One cell = **15×12** (width×height). A copy pasted directly north (12 rows up) continues every belt; the cell files snap to a 15×12 grid, so drag to place several. The cap (base piece) goes once at the bottom.
+
+| Stage | Output per cell (/min) | Max cells | Input per cell, one side (/min) | Notes |
+|---|---:|---:|---|---|
+| early (yellow, AM1, basic) | 25.7 | 3 | `electric-furnace` 4, `productivity-module` 4, `rail` 129 |  |
+| mid (red, AM2, fast) | 38.6 | 4 | `electric-furnace` 6, `productivity-module` 6, `rail` 193 |  |
+| late (blue, AM3, bulk) | 64.3 | 4 | `electric-furnace` 11, `productivity-module` 11, `rail` 321 |  |
+
+_Max cells = how many cells one lane of that tier's belt can feed (busiest input lane or the product lane). Each side has its own inputs, so every input needs one bus tap per side._
 
 ### Roadmap
 
 | Stage | When / research needed | What to do |
 |---|---|---|
-| 0. Prepare | `production-science-pack` (red·green·blue), `productivity-module` (red·green), `advanced-material-processing-2` (red·green·blue), `railway` (red·green) | Lay the bus groups this tile needs and open a tap (full/half) under each marker at the bottom edge. Needs steel, stone, bricks, iron and green/red circuits. |
-| 1. Early (default file) | `automation` (red), `logistics` (red), `electronics` (on first craft) | Build with yellow belts, AM1, basic inserters and small poles: 60/min per tile. Need more? Place another tile. The rail row fills both lanes of y=6; do not take rails from it elsewhere. |
-| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. Same layout, 90/min. Upgrade the bus taps to red with it. |
-| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 150/min. Modules/beacons fit from here, but they raise the inputs above the markers, so switch the taps to full lanes. |
+| 0. Prepare | `production-science-pack` (red·green·blue) | The inputs (rail, electric furnace, productivity module) come from intermediate cells: build those (see 'Build next') first and run each centre belt to this cap's markers (one per side). |
+| 1. Start (early) | `automation` (red), `logistics` (red) | Place the cap and one cell with yellow belts and AM1. Need more? Drag the cell file northwards; past the stacking table's max cells the input lanes run dry. |
+| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. 1.5× output per cell and a higher stack limit; upgrade the taps too. |
+| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 2.5× the early output per cell. Modules push the inputs above the markers. |
 
 **Build next**
 
-- [Utility science (upgradeable tile)](../science-yellow-upgradeable/README.en.md) — next science
-- [Module mall (tier 1-2, 4 kinds)](../module-mall-t1-t2/README.en.md) — module supply
+- [Rails (stackable cell)](../cell-rail/README.en.md) — an input of this cell
+- [Electric furnaces (stackable cell)](../cell-electric-furnace/README.en.md) — an input of this cell
+- [Productivity modules (stackable cell)](../cell-productivity-module/README.en.md) — an input of this cell
+- [Utility science (stackable cell)](../science-yellow-upgradeable/README.en.md) — next science
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | early (yellow, AM1, basic) |
-| [`variants/mid.txt`](variants/mid.txt) | mid (red, AM2, fast) |
-| [`variants/late.txt`](variants/late.txt) | late (blue, AM3, bulk) |
+| [`blueprint.txt`](blueprint.txt) | cap + 3 cells, early (example / preview) |
+| [`variants/cell-early.txt`](variants/cell-early.txt) | cell — early (yellow, AM1, basic) |
+| [`variants/cell-mid.txt`](variants/cell-mid.txt) | cell — mid (red, AM2, fast) |
+| [`variants/cell-late.txt`](variants/cell-late.txt) | cell — late (blue, AM3, bulk) |
+| [`variants/cap-early.txt`](variants/cap-early.txt) | cap (base piece) — early (yellow, AM1, basic) |
+| [`variants/cap-mid.txt`](variants/cap-mid.txt) | cap (base piece) — mid (red, AM2, fast) |
+| [`variants/cap-late.txt`](variants/cap-late.txt) | cap (base piece) — late (blue, AM3, bulk) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -79,29 +95,31 @@ python3 tools/build.py science-purple-upgradeable
 
 ## Layout
 
-- 14 science assemblers (y=2..4) → y=0. Rails come from y=6 by fast inserters; furnaces and modules from y=7 by long-handed.
-- y=7 is split by lane.
-  - North lane: productivity modules, put in from below by 10 assemblers (y=9..11, x=3..32).
-  - South lane: electric furnaces. Four assemblers (west) put them on their own y=7 segment. It drops to y=8, passes under the rails column and side-loads y=7 at x=1.
-  - The two items are kept on separate lanes because sharing one lane can deadlock.
-- Rail row (y=21..23, west): `R S R R S R R S R`. Stick assemblers hand sticks sideways to the rail assemblers next to them.
-  - Rails leave on y=19 in two segments. The west one climbs into the start of y=6 (north lane) and the east one side-loads y=6 (south lane).
-  - So rails fill both lanes: 25/s are needed at the late tier, more than one lane carries.
-- Inputs: rail row from y=25 (steel, stone) and y=26 (iron). Furnaces from y=13 (steel, bricks) and y=14 (red circuits). Modules from y=13 (green, red circuits).
+- Inner belt (normal inserters): far lane rail, near lane electric furnace
+- Outer belt (long-handed): far lane productivity module, near lane -
+- Centre belt (flows south): production science pack
+
+Machine column (south → north, both halves):
+1. production science pack → centre belt
+2. production science pack → centre belt
+3. production science pack → centre belt
+
+- Inputs run north along both edges, the product runs south (toward the bus) down the middle. Every line enters at the bottom edge and leaves at the top edge, so the next cell simply continues it.
+- Cap: bus taps come in at the markers on the bottom edge and are side-loaded onto their lanes. Marker counts are **late-tier demand per cell and side (per minute)**.
+- Every fourth row is a gap row with poles and the hand-over inserters between machines.
+
+## Intermediate cells
+
+This science cell takes only three inputs; the intermediates come from their own cells. Send each one's centre belt into this cap, or onto the bus.
+
+- [Rails (stackable cell)](../cell-rail/README.en.md)
+- [Electric furnaces (stackable cell)](../cell-electric-furnace/README.en.md)
+- [Productivity modules (stackable cell)](../cell-productivity-module/README.en.md)
 
 ## Upgrading
 
-| Stage | Belts | Assemblers | Inserters | Poles | Per tile |
-|---|---|---|---|---|---|
-| early (default file) | yellow | AM1 | basic | small | 60/min |
-| mid (`variants/mid.txt`) | red | AM2 | fast | medium | 90/min |
-| late (`variants/late.txt`) | blue | AM3 | bulk | medium | 150/min |
-
-- Underground spans ≤3, small-pole spacing.
-- Long-handed inserters are used only where a machine needs well under 1.2 items/s (their base speed), so they never limit an upgraded tile.
-- Marker counts are **late-tier** demand: steel 750 + 500, stone 750, iron 375, bricks 500, red circuits 250 + 250, green circuits 250/min.
-- The furnace assemblers' red-circuit long-handed inserter needs about 1.04/s at the late tier, close to its base 1.2/s. Inserter capacity research gives it headroom.
+Swap belts, assemblers, inserters and poles with the upgrade planner (same footprints). The only underground is the cap's 1-tile hop, and long-handed inserters only take the low-rate items from the outer belt. Per-tier output and stack limits are in the stacking table above.
 
 ## Credits
 
-Tileable-science idea from Christoffer Ramqvist's "Tileable Science Production", XtremeZion's Science Book and Nilaus' ratios; the layout itself is new.
+Stackable-cell form modelled on the Nilaus green-circuit module from the user's demo (Base-In-A-Book).

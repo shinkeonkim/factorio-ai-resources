@@ -1,6 +1,6 @@
-# Military science (upgradeable tile)
+# Military science (stackable cell)
 
-> 10 science + 3 wall, 3 piercing, 2 magazine and 8 grenade assemblers; same layout 60 → 90 → 150/min; six bus taps (bricks, iron ×2, copper, steel, coal).
+> 15×12 cell stacked northwards; inputs piercing rounds magazine, grenade, stone wall; same layout yellow→red→blue.
 
 [한국어](README.md)
 
@@ -13,9 +13,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base) |
-| Size | 68×26 tiles |
-| Entities | 500 |
-| Main machines | `assembling-machine-1` ×26 (military-science-pack 10, grenade 8, stone-wall 3, piercing-rounds-magazine 3, firearm-magazine 2) |
+| Size | 19×45 tiles |
+| Entities | 352 |
+| Main machines | `assembling-machine-1` ×18 (military-science-pack 18) |
 | Validation | OK |
 
 ### Inputs
@@ -24,39 +24,58 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `stone-brick` | 750 | (1, 25) |
-| `iron-plate` | 600 | (7, 25) |
-| `copper-plate` | 150 | (12, 25) |
-| `steel-plate` | 38 | (10, 25) |
-| `coal` | 750 | (27, 25) |
-| `iron-plate` | 375 | (31, 25) |
+| `grenade` | 22 | (4, 44) |
+| `piercing-rounds-magazine` | 22 | (0, 44) |
+| `stone-wall` | 45 | (1, 44) |
+| `grenade` | 22 | (14, 44) |
+| `piercing-rounds-magazine` | 22 | (18, 44) |
+| `stone-wall` | 45 | (17, 44) |
 
 ### Outputs
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `military-science-pack` | 60 / 90 / 150 | science belt, east end (y=0) |
+| `military-science-pack` | - | centre belt, leaves south under the cap |
+
+### Stacking
+
+One cell = **15×12** (width×height). A copy pasted directly north (12 rows up) continues every belt; the cell files snap to a 15×12 grid, so drag to place several. The cap (base piece) goes once at the bottom.
+
+| Stage | Output per cell (/min) | Max cells | Input per cell, one side (/min) | Notes |
+|---|---:|---:|---|---|
+| early (yellow, AM1, basic) | 36.0 | 24 | `grenade` 9, `piercing-rounds-magazine` 9, `stone-wall` 18 |  |
+| mid (red, AM2, fast) | 54.0 | 33 | `grenade` 13, `piercing-rounds-magazine` 13, `stone-wall` 27 |  |
+| late (blue, AM3, bulk) | 90.0 | 30 | `grenade` 22, `piercing-rounds-magazine` 22, `stone-wall` 45 |  |
+
+_Max cells = how many cells one lane of that tier's belt can feed (busiest input lane or the product lane). Each side has its own inputs, so every input needs one bus tap per side._
 
 ### Roadmap
 
 | Stage | When / research needed | What to do |
 |---|---|---|
-| 0. Prepare | `military-science-pack` (red·green), `military-2` (red·green), `stone-wall` (red) | Lay the bus groups this tile needs and open a tap (full/half) under each marker at the bottom edge. Needs bricks, iron, copper, steel and coal. |
-| 1. Early (default file) | `automation` (red), `logistics` (red), `electronics` (on first craft) | Build with yellow belts, AM1, basic inserters and small poles: 60/min per tile. Need more? Place another tile. Military science only feeds weapon research, so it can run on demand. |
-| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. Same layout, 90/min. Upgrade the bus taps to red with it. |
-| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 150/min. Modules/beacons fit from here, but they raise the inputs above the markers, so switch the taps to full lanes. |
+| 0. Prepare | `military-science-pack` (red·green) | The inputs (piercing rounds magazine, grenade, stone wall) come from intermediate cells: build those (see 'Build next') first and run each centre belt to this cap's markers (one per side). |
+| 1. Start (early) | `automation` (red), `logistics` (red) | Place the cap and one cell with yellow belts and AM1. Need more? Drag the cell file northwards; past the stacking table's max cells the input lanes run dry. |
+| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. 1.5× output per cell and a higher stack limit; upgrade the taps too. |
+| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 2.5× the early output per cell. Modules push the inputs above the markers. |
 
 **Build next**
 
-- [Chemical science (upgradeable tile)](../science-blue-upgradeable/README.en.md) — next science
+- [Piercing rounds (stackable cell)](../cell-piercing-rounds/README.en.md) — an input of this cell
+- [Grenades (stackable cell)](../cell-grenade/README.en.md) — an input of this cell
+- [Stone walls (stackable cell)](../cell-stone-wall/README.en.md) — an input of this cell
+- [Chemical science (stackable cell)](../science-blue-upgradeable/README.en.md) — next science
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | early (yellow, AM1, basic) |
-| [`variants/mid.txt`](variants/mid.txt) | mid (red, AM2, fast) |
-| [`variants/late.txt`](variants/late.txt) | late (blue, AM3, bulk) |
+| [`blueprint.txt`](blueprint.txt) | cap + 3 cells, early (example / preview) |
+| [`variants/cell-early.txt`](variants/cell-early.txt) | cell — early (yellow, AM1, basic) |
+| [`variants/cell-mid.txt`](variants/cell-mid.txt) | cell — mid (red, AM2, fast) |
+| [`variants/cell-late.txt`](variants/cell-late.txt) | cell — late (blue, AM3, bulk) |
+| [`variants/cap-early.txt`](variants/cap-early.txt) | cap (base piece) — early (yellow, AM1, basic) |
+| [`variants/cap-mid.txt`](variants/cap-mid.txt) | cap (base piece) — mid (red, AM2, fast) |
+| [`variants/cap-late.txt`](variants/cap-late.txt) | cap (base piece) — late (blue, AM3, bulk) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -76,27 +95,31 @@ python3 tools/build.py science-military-upgradeable
 
 ## Layout
 
-- 10 science assemblers (y=2..4) → science belt (y=0).
-  - North: walls by long-handed from y=-1. Three wall assemblers (north-west) take bricks from y=-7 and put walls on y=-1.
-  - South: piercing rounds (y=6 north lane, fast) + grenades (y=7, long-handed).
-- Piercing cluster (south-west): `P F P F P` at pitch 4. Magazine assemblers feed the piercing assemblers on both sides directly.
-  - Each magazine needs 4 iron, so every magazine assembler takes iron with three inserters (2/s at the early tier).
-  - Iron comes from the y=6 south lane; steel and copper for piercing from y=12.
-- 8 grenade assemblers (y=9..11): coal from y=13 (fast), iron from y=14 (long-handed), output onto y=7.
-- Ratio: military 10 : grenade 8 : piercing 3 : magazine 2 : wall 3.
+- Inner belt (normal inserters): far lane piercing rounds magazine, near lane grenade
+- Outer belt (long-handed): far lane stone wall, near lane -
+- Centre belt (flows south): military science pack
+
+Machine column (south → north, both halves):
+1. military science pack → centre belt
+2. military science pack → centre belt
+3. military science pack → centre belt
+
+- Inputs run north along both edges, the product runs south (toward the bus) down the middle. Every line enters at the bottom edge and leaves at the top edge, so the next cell simply continues it.
+- Cap: bus taps come in at the markers on the bottom edge and are side-loaded onto their lanes. Marker counts are **late-tier demand per cell and side (per minute)**.
+- Every fourth row is a gap row with poles and the hand-over inserters between machines.
+
+## Intermediate cells
+
+This science cell takes only three inputs; the intermediates come from their own cells. Send each one's centre belt into this cap, or onto the bus.
+
+- [Piercing rounds (stackable cell)](../cell-piercing-rounds/README.en.md)
+- [Grenades (stackable cell)](../cell-grenade/README.en.md)
+- [Stone walls (stackable cell)](../cell-stone-wall/README.en.md)
 
 ## Upgrading
 
-| Stage | Belts | Assemblers | Inserters | Poles | Per tile |
-|---|---|---|---|---|---|
-| early (default file) | yellow | AM1 | basic | small | 60/min |
-| mid (`variants/mid.txt`) | red | AM2 | fast | medium | 90/min |
-| late (`variants/late.txt`) | blue | AM3 | bulk | medium | 150/min |
-
-- Underground spans ≤3, small-pole spacing.
-- Long-handed inserters are used only where a machine needs well under 1.2 items/s (their base speed), so they never limit an upgraded tile.
-- Marker counts are **late-tier** demand: bricks 750, iron (magazines) 600, copper 150, steel 38, coal 750, iron (grenades) 375/min.
+Swap belts, assemblers, inserters and poles with the upgrade planner (same footprints). The only underground is the cap's 1-tile hop, and long-handed inserters only take the low-rate items from the outer belt. Per-tier output and stack limits are in the stacking table above.
 
 ## Credits
 
-Tileable-science idea from Christoffer Ramqvist's "Tileable Science Production", XtremeZion's Science Book and Nilaus' ratios; the layout itself is new.
+Stackable-cell form modelled on the Nilaus green-circuit module from the user's demo (Base-In-A-Book).

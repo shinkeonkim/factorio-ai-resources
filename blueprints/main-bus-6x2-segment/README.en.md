@@ -79,7 +79,7 @@ none
 
 - [Main bus 6+2 tap pieces](../main-bus-6x2-tap/README.en.md) — take one lane off the bus
 - [Main bus 6+2 crossing piece](../main-bus-6x2-crossing/README.en.md) — let a lower group's branch cross a group
-- [Red science (upgradeable tile)](../science-red-upgradeable/README.en.md) — the first factory to hang off it
+- [Red science (stackable cell)](../science-red-upgradeable/README.en.md) — the first factory to hang off it
 
 ### Files
 

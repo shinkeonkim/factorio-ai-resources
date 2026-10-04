@@ -45,7 +45,7 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 **Build next**
 
-- [Production science (upgradeable tile)](../science-purple-upgradeable/README.en.md) — the science that consumes productivity modules
+- [Production science (stackable cell)](../science-purple-upgradeable/README.en.md) — the science that consumes productivity modules
 - [Upgradeable mall (Daiso redesign)](../mall-upgradeable/README.en.md) — the building mall
 
 ### Files

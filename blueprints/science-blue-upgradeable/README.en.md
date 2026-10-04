@@ -1,6 +1,6 @@
-# Chemical science (upgradeable tile)
+# Chemical science (stackable cell)
 
-> 24 science assemblers in two rows; same layout 60 → 90 → 150/min; three bus taps (engines, red circuits, sulfur).
+> 15×12 cell stacked northwards; inputs engine unit, advanced circuit, sulfur; same layout yellow→red→blue.
 
 [한국어](README.md)
 
@@ -13,9 +13,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base) |
-| Size | 50×18 tiles |
-| Entities | 336 |
-| Main machines | `assembling-machine-1` ×24 (chemical-science-pack 24) |
+| Size | 19×45 tiles |
+| Entities | 352 |
+| Main machines | `assembling-machine-1` ×18 (chemical-science-pack 18) |
 | Validation | OK |
 
 ### Inputs
@@ -24,37 +24,55 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `advanced-circuit` | 225 | (2, 17) |
-| `engine-unit` | 150 | (0, 17) |
-| `sulfur` | 75 | (7, 17) |
+| `advanced-circuit` | 28 | (4, 44) |
+| `engine-unit` | 19 | (0, 44) |
+| `sulfur` | 9 | (1, 44) |
+| `advanced-circuit` | 28 | (14, 44) |
+| `engine-unit` | 19 | (18, 44) |
+| `sulfur` | 9 | (17, 44) |
 
 ### Outputs
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `chemical-science-pack` | 60 / 90 / 150 | science belt, east end (y=0) |
+| `chemical-science-pack` | - | centre belt, leaves south under the cap |
+
+### Stacking
+
+One cell = **15×12** (width×height). A copy pasted directly north (12 rows up) continues every belt; the cell files snap to a 15×12 grid, so drag to place several. The cap (base piece) goes once at the bottom.
+
+| Stage | Output per cell (/min) | Max cells | Input per cell, one side (/min) | Notes |
+|---|---:|---:|---|---|
+| early (yellow, AM1, basic) | 15.0 | 40 | `advanced-circuit` 11, `engine-unit` 8, `sulfur` 4 |  |
+| mid (red, AM2, fast) | 22.5 | 53 | `advanced-circuit` 17, `engine-unit` 11, `sulfur` 6 |  |
+| late (blue, AM3, bulk) | 37.5 | 48 | `advanced-circuit` 28, `engine-unit` 19, `sulfur` 9 |  |
+
+_Max cells = how many cells one lane of that tier's belt can feed (busiest input lane or the product lane). Each side has its own inputs, so every input needs one bus tap per side._
 
 ### Roadmap
 
 | Stage | When / research needed | What to do |
 |---|---|---|
-| 0. Prepare | `chemical-science-pack` (red·green), `engine` (red·green), `advanced-circuit` (red·green), `sulfur-processing` (red·green) | Lay the bus groups this tile needs and open a tap (full/half) under each marker at the bottom edge. Needs oil (sulfur), engines and red circuits on the bus. |
-| 1. Early (default file) | `automation` (red), `logistics` (red), `electronics` (on first craft) | Build with yellow belts, AM1, basic inserters and small poles: 60/min per tile. Need more? Place another tile. |
-| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. Same layout, 90/min. Upgrade the bus taps to red with it. |
-| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 150/min. Modules/beacons fit from here, but they raise the inputs above the markers, so switch the taps to full lanes. |
+| 0. Prepare | `chemical-science-pack` (red·green) | Bus taps needed: engine unit, advanced circuit, sulfur, one per marker at the bottom of the cap (one per side). |
+| 1. Start (early) | `automation` (red), `logistics` (red) | Place the cap and one cell with yellow belts and AM1. Need more? Drag the cell file northwards; past the stacking table's max cells the input lanes run dry. |
+| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. 1.5× output per cell and a higher stack limit; upgrade the taps too. |
+| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 2.5× the early output per cell. Modules push the inputs above the markers. |
 
 **Build next**
 
-- [Production science (upgradeable tile)](../science-purple-upgradeable/README.en.md) — next science
-- [Utility science (upgradeable tile)](../science-yellow-upgradeable/README.en.md) — next science
+- [Production science (stackable cell)](../science-purple-upgradeable/README.en.md) — next science
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | early (yellow, AM1, basic) |
-| [`variants/mid.txt`](variants/mid.txt) | mid (red, AM2, fast) |
-| [`variants/late.txt`](variants/late.txt) | late (blue, AM3, bulk) |
+| [`blueprint.txt`](blueprint.txt) | cap + 3 cells, early (example / preview) |
+| [`variants/cell-early.txt`](variants/cell-early.txt) | cell — early (yellow, AM1, basic) |
+| [`variants/cell-mid.txt`](variants/cell-mid.txt) | cell — mid (red, AM2, fast) |
+| [`variants/cell-late.txt`](variants/cell-late.txt) | cell — late (blue, AM3, bulk) |
+| [`variants/cap-early.txt`](variants/cap-early.txt) | cap (base piece) — early (yellow, AM1, basic) |
+| [`variants/cap-mid.txt`](variants/cap-mid.txt) | cap (base piece) — mid (red, AM2, fast) |
+| [`variants/cap-late.txt`](variants/cap-late.txt) | cap (base piece) — late (blue, AM3, bulk) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -74,24 +92,23 @@ python3 tools/build.py science-blue-upgradeable
 
 ## Layout
 
-- Two rows (12 + 12) share the two belts between them.
-  - y=6: engines on the north lane, red circuits on the south lane. The top row picks with fast inserters, the bottom row with long-handed.
-  - y=7: sulfur. The top row picks with long-handed, the bottom row with fast inserters.
-- Output: the top row onto y=0, the bottom row onto y=13. y=13 climbs at the east end (x=37) and side-loads the south lane of y=0.
-- Engines, red circuits and sulfur all come from the bus. Engines are in group 5 of the [6+2 bus](../../docs/guides/main-bus-6x2.en.md).
+- Inner belt (normal inserters): far lane engine unit, near lane advanced circuit
+- Outer belt (long-handed): far lane sulfur, near lane -
+- Centre belt (flows south): chemical science pack
+
+Machine column (south → north, both halves):
+1. chemical science pack → centre belt
+2. chemical science pack → centre belt
+3. chemical science pack → centre belt
+
+- Inputs run north along both edges, the product runs south (toward the bus) down the middle. Every line enters at the bottom edge and leaves at the top edge, so the next cell simply continues it.
+- Cap: bus taps come in at the markers on the bottom edge and are side-loaded onto their lanes. Marker counts are **late-tier demand per cell and side (per minute)**.
+- Every fourth row is a gap row with poles and the hand-over inserters between machines.
 
 ## Upgrading
 
-| Stage | Belts | Assemblers | Inserters | Poles | Per tile |
-|---|---|---|---|---|---|
-| early (default file) | yellow | AM1 | basic | small | 60/min |
-| mid (`variants/mid.txt`) | red | AM2 | fast | medium | 90/min |
-| late (`variants/late.txt`) | blue | AM3 | bulk | medium | 150/min |
-
-- Underground spans ≤3, small-pole spacing.
-- Long-handed inserters are used only where a machine needs well under 1.2 items/s (their base speed), so they never limit an upgraded tile.
-- Marker counts are **late-tier** demand: engines 150, red circuits 225, sulfur 75/min.
+Swap belts, assemblers, inserters and poles with the upgrade planner (same footprints). The only underground is the cap's 1-tile hop, and long-handed inserters only take the low-rate items from the outer belt. Per-tier output and stack limits are in the stacking table above.
 
 ## Credits
 
-Tileable-science idea from Christoffer Ramqvist's "Tileable Science Production", XtremeZion's Science Book and Nilaus' ratios; the layout itself is new.
+Stackable-cell form modelled on the Nilaus green-circuit module from the user's demo (Base-In-A-Book).

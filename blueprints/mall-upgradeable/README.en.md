@@ -52,7 +52,7 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 **Build next**
 
 - [Module mall (tier 1-2, 4 kinds)](../module-mall-t1-t2/README.en.md) — module mall
-- [Red science (upgradeable tile)](../science-red-upgradeable/README.en.md) — the first factory to build from it
+- [Red science (stackable cell)](../science-red-upgradeable/README.en.md) — the first factory to build from it
 
 ### Files
 

@@ -38,7 +38,7 @@
 **다음에 지을 것**
 
 - [메인버스 6+2 통과 조각](../main-bus-6x2-crossing/README.md) — 분기가 다른 묶음을 지나가야 할 때
-- [빨강 과학 (업그레이드형 타일)](../science-red-upgradeable/README.md) — 분기 2개로 시작하는 공장
+- [빨강 과학 (쌓는 셀)](../science-red-upgradeable/README.md) — 분기 2개로 시작하는 공장
 
 ### 파일
 

@@ -4,6 +4,11 @@
   `~/.claude/skills` by `scripts/install-skills.sh` as a symlink, so edits here are live).
 - New blueprint → `python3 tools/new_blueprint.py <id> --title-ko … --title-en …`, write `generate.py`
   using `from lib.fbp import *` and `save(bp, __file__)`, then `python3 tools/build.py <id>`.
+- **Factories are stackable cells** (lib/stack.py, specs in lib/cells.py): fixed width × period, inputs run north
+  along both edges, the product runs south down the middle, every line enters at the bottom edge and leaves at the
+  top edge, so pasting the cell one period further north extends production (model: the Nilaus green-circuit
+  module). Each folder ships cap + 3 cells (example), cell-<tier> (snaps to its grid) and cap-<tier>; build.py adds
+  the stacking table. Complex products get their intermediates from their own cells, not one big layout.
 - House rules for new factories: horizontal main bus of 6-lane groups + 2 empty rows (`lib/main_bus.py`,
   docs/guides/main-bus-6x2.md); upgrade in place yellow→red→blue with the same layout (underground spans ≤4,
   no long-handed on bottlenecks, small-pole spacing, 2×2 furnaces; docs/guides/upgrade-in-place.md);

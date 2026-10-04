@@ -38,7 +38,7 @@ none
 **Build next**
 
 - [Main bus 6+2 crossing piece](../main-bus-6x2-crossing/README.en.md) — when a branch must pass another group
-- [Red science (upgradeable tile)](../science-red-upgradeable/README.en.md) — a factory that starts with two taps
+- [Red science (stackable cell)](../science-red-upgradeable/README.en.md) — a factory that starts with two taps
 
 ### Files
 

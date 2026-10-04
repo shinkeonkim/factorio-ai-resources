@@ -45,7 +45,7 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 
 **다음에 지을 것**
 
-- [보라 과학 (업그레이드형 타일)](../science-purple-upgradeable/README.md) — 생산 모듈을 쓰는 과학
+- [보라 과학 (쌓는 셀)](../science-purple-upgradeable/README.md) — 생산 모듈을 쓰는 과학
 - [업그레이드형 몰 (다이소 재설계)](../mall-upgradeable/README.md) — 건물 몰
 
 ### 파일
