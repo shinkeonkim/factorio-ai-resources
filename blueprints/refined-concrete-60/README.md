@@ -6,7 +6,9 @@
 
 <!-- AUTO:START (tools/build.py가 생성하는 구역입니다. 직접 수정하지 마세요) -->
 
-![미리보기](images/preview.png)
+![미리보기](images/preview.webp)
+
+<sub>이미지: [Factorio Blueprint Editor](https://fbe.factorygamefan.com)로 렌더링 (게임 그래픽 © Wube Software)</sub>
 
 | 항목 | 값 |
 |---|---|

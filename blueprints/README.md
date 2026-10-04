@@ -11,8 +11,8 @@ blueprints/<id>/
 ├── README.md        # 한국어 문서
 ├── README.en.md     # English doc
 └── images/
-    ├── preview.png  # 자동 생성 (tools/build.py)
-    ├── detail.png   # 자동 생성: 큰 철도 블럭에서 설비 부분만 확대
+    ├── preview.webp  # 자동 생성 (tools/build.py)
+    ├── detail.webp   # 자동 생성: 큰 철도 블럭에서 설비 부분만 확대
     └── *.png        # tools/attach_image.py 로 첨부한 스크린샷
 ```
 

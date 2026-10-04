@@ -6,3 +6,6 @@ __pycache__/
 *.pyc
 .DS_Store
 *.json.cache
+
+# local virtualenv for tools (pip install -r tools/requirements.txt)
+.venv/

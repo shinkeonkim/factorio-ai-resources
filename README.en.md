@@ -12,7 +12,7 @@ calculation, blueprint-string generation, validation, preview images and bilingu
 | [`skills/factorio-blueprint/`](skills/factorio-blueprint/SKILL.md) | Claude Code skill: ratio calculator (`calc.py`), blueprint builder/encoder/validator (`blueprint.py`), layout pattern docs, game data |
 | [`blueprints/`](blueprints/README.md) | One folder per blueprint: string, generator, Korean/English docs, preview images |
 | `lib/` | Generator code shared by several blueprints (refined-concrete module, rail city-block station kit) |
-| `tools/` | `build.py` (validate, previews, docs, catalog), `render_preview.py`, `new_blueprint.py`, `attach_image.py` |
+| `tools/` | `build.py` (validate, previews, docs, catalog), `render_fbe.py` (game-sprite previews), `render_preview.py` (schematic fallback), `new_blueprint.py`, `attach_image.py` |
 | `third_party/` | Inputs not redistributed here (rail book, …) — [details](third_party/README.md) |
 | `scripts/install-skills.sh` | Installs the skills into `~/.claude/skills` |
 
@@ -22,9 +22,10 @@ calculation, blueprint-string generation, validation, preview images and bilingu
 git clone https://github.com/shinkeonkim/factorio-ai-resources.git
 cd factorio-ai-resources
 scripts/install-skills.sh          # symlink install (--copy to copy instead)
-pip install pillow                 # for preview rendering
+python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt
+.venv/bin/python -m playwright install chromium   # headless browser for game-sprite previews
 
-python3 tools/build.py             # validate everything, render previews, refresh docs
+.venv/bin/python tools/build.py    # validate everything, render previews, refresh docs
 pbcopy < blueprints/refined-concrete-60/blueprint.txt   # then "Import string" in game
 ```
 
@@ -49,18 +50,25 @@ python3 tools/attach_image.py my-factory ~/Desktop/shot.png --caption-ko "게임
 
 | Preview | Blueprint | Summary | Size | Inputs |
 |---|---|---|---|---|
-| <img src="blueprints/refined-concrete-60/images/preview.png" width="160"> | [Refined concrete 60/min](blueprints/refined-concrete-60/README.en.md)<br>`production` `refined-concrete` | Small factory turning stone, iron ore and water into 60 refined concrete/min. All I/O on the west edge. | 38×20 | water 1,800/min, iron-ore 66/min, stone 120/min |
-| <img src="blueprints/refined-concrete-240/images/preview.png" width="160"> | [Refined concrete 240/min](blueprints/refined-concrete-240/README.en.md)<br>`production` `refined-concrete` | The 60/min design stretched into a 240/min module (24 assemblers, 17 furnaces). | 111×20 | water 8,700/min, iron-ore 264/min, stone 480/min |
-| <img src="blueprints/refined-concrete-1200/images/preview.png" width="160"> | [Refined concrete 1200/min](blueprints/refined-concrete-1200/README.en.md)<br>`production` `refined-concrete` `large` | Five stacked 240/min modules plus a west-side manifold for inputs and output. | 123×100 | stone 1,440/min, iron-ore 1,320/min, water 43,500/min, stone 960/min |
-| <img src="blueprints/module-mall-t1-t2/images/preview.png" width="160"> | [Module mall (tier 1-2, 4 kinds)](blueprints/module-mall-t1-t2/README.en.md)<br>`mall` `modules` | Speed, efficiency, productivity and quality modules tier 1-2 from bus circuits into chests. | 52×9 | electronic-circuit 200/min, processing-unit 50/min, advanced-circuit 250/min |
-| <img src="blueprints/rail-ramp-support/images/preview.png" width="160"> | [Rail ramp & support factory](blueprints/rail-ramp-support/README.en.md)<br>`mall` `rail` `elevated-rails` | Small factory making rail ramps and rail supports from iron ore, stone and refined concrete (steel-limited). | 46×15 | iron-ore 225/min, stone 4/min, refined-concrete 160/min |
-| <img src="blueprints/rail-city-block-2x2/images/preview.png" width="160"> | [Rail city block 2×2](blueprints/rail-city-block-2x2/README.en.md)<br>`rail` `city-block` | The 182-tile empty rail block tiled 2×2 (364-tile grid, shared streets merged). | 466×465 | - |
-| <img src="blueprints/rail-city-block-3x3/images/preview.png" width="160"> | [Rail city block 3×3](blueprints/rail-city-block-3x3/README.en.md)<br>`rail` `city-block` | The 182-tile empty rail block tiled 3×3 (546-tile grid). | 648×647 | - |
-| <img src="blueprints/rail-buffer-station/images/preview.png" width="160"> | [Rail buffer station block](blueprints/rail-buffer-station/README.en.md)<br>`rail` `city-block` `station` `buffer` | One item: north stop unloads into 24 chests, south stop loads; train limits follow the stock. | 284×283 | iron-plate ≤900/min |
-| <img src="blueprints/rail-mining-station/images/preview.png" width="160"> | [Rail mining provider block](blueprints/rail-mining-station/README.en.md)<br>`rail` `city-block` `station` `mining` | 64 electric drills inside the block feeding a loading station. | 284×283 | - |
-| <img src="blueprints/rail-smelter-station/images/preview.png" width="160"> | [Rail smelter provider block](blueprints/rail-smelter-station/README.en.md)<br>`rail` `city-block` `station` `smelting` | North stop unloads ore, 42 electric furnaces smelt it, south stop loads plates. | 284×283 | iron-ore ~900/min |
+| <img src="blueprints/refined-concrete-60/images/preview.webp" width="160"> | [Refined concrete 60/min](blueprints/refined-concrete-60/README.en.md)<br>`production` `refined-concrete` | Small factory turning stone, iron ore and water into 60 refined concrete/min. All I/O on the west edge. | 38×20 | water 1,800/min, iron-ore 66/min, stone 120/min |
+| <img src="blueprints/refined-concrete-240/images/preview.webp" width="160"> | [Refined concrete 240/min](blueprints/refined-concrete-240/README.en.md)<br>`production` `refined-concrete` | The 60/min design stretched into a 240/min module (24 assemblers, 17 furnaces). | 111×20 | water 8,700/min, iron-ore 264/min, stone 480/min |
+| <img src="blueprints/refined-concrete-1200/images/preview.webp" width="160"> | [Refined concrete 1200/min](blueprints/refined-concrete-1200/README.en.md)<br>`production` `refined-concrete` `large` | Five stacked 240/min modules plus a west-side manifold for inputs and output. | 123×100 | stone 1,440/min, iron-ore 1,320/min, water 43,500/min, stone 960/min |
+| <img src="blueprints/module-mall-t1-t2/images/preview.webp" width="160"> | [Module mall (tier 1-2, 4 kinds)](blueprints/module-mall-t1-t2/README.en.md)<br>`mall` `modules` | Speed, efficiency, productivity and quality modules tier 1-2 from bus circuits into chests. | 52×9 | electronic-circuit 200/min, processing-unit 50/min, advanced-circuit 250/min |
+| <img src="blueprints/rail-ramp-support/images/preview.webp" width="160"> | [Rail ramp & support factory](blueprints/rail-ramp-support/README.en.md)<br>`mall` `rail` `elevated-rails` | Small factory making rail ramps and rail supports from iron ore, stone and refined concrete (steel-limited). | 46×15 | iron-ore 225/min, stone 4/min, refined-concrete 160/min |
+| <img src="blueprints/rail-city-block-2x2/images/preview.webp" width="160"> | [Rail city block 2×2](blueprints/rail-city-block-2x2/README.en.md)<br>`rail` `city-block` | The 182-tile empty rail block tiled 2×2 (364-tile grid, shared streets merged). | 466×465 | - |
+| <img src="blueprints/rail-city-block-3x3/images/preview.webp" width="160"> | [Rail city block 3×3](blueprints/rail-city-block-3x3/README.en.md)<br>`rail` `city-block` | The 182-tile empty rail block tiled 3×3 (546-tile grid). | 648×647 | - |
+| <img src="blueprints/rail-buffer-station/images/preview.webp" width="160"> | [Rail buffer station block](blueprints/rail-buffer-station/README.en.md)<br>`rail` `city-block` `station` `buffer` | One item: north stop unloads into 24 chests, south stop loads; train limits follow the stock. | 284×283 | iron-plate ≤900/min |
+| <img src="blueprints/rail-mining-station/images/preview.webp" width="160"> | [Rail mining provider block](blueprints/rail-mining-station/README.en.md)<br>`rail` `city-block` `station` `mining` | 64 electric drills inside the block feeding a loading station. | 284×283 | - |
+| <img src="blueprints/rail-smelter-station/images/preview.webp" width="160"> | [Rail smelter provider block](blueprints/rail-smelter-station/README.en.md)<br>`rail` `city-block` `station` `smelting` | North stop unloads ore, 42 electric furnaces smelt it, south stop loads plates. | 284×283 | iron-ore ~900/min |
 
 <!-- CATALOG:END -->
+
+## Preview images
+
+`tools/build.py` opens [Factorio Blueprint Editor](https://fbe.factorygamefan.com) (FactoryGameFan's fork, 2.0 + Space Age)
+in headless Chromium and renders each blueprint with the real game sprites; big rail blocks also get a
+`detail.webp` cropped to the non-rail part. Without Playwright or network access it falls back to the
+schematic renderer (or pick it explicitly with `--renderer schematic`).
 
 ## Conventions
 

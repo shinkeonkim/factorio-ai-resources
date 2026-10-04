@@ -34,8 +34,8 @@ def main():
         raise SystemExit(f"unknown blueprint {a.id}")
     src = pathlib.Path(a.image).expanduser()
     name = a.name or re.sub(r"[^a-z0-9._-]+", "-", src.name.lower())
-    if name in ("preview.png", "detail.png"):
-        raise SystemExit("preview.png / detail.png are reserved for generated images")
+    if name in ("preview.webp", "detail.webp"):
+        raise SystemExit("preview.webp / detail.webp are reserved for generated images")
     dst = d / "images" / name
     dst.parent.mkdir(exist_ok=True)
     img = Image.open(src)

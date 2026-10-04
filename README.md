@@ -11,7 +11,7 @@ Factorio 블루프린트를 AI(Claude Code)와 함께 설계·관리하기 위�
 | [`skills/factorio-blueprint/`](skills/factorio-blueprint/SKILL.md) | Claude Code 스킬: 비율 계산기(`calc.py`), 블루프린트 빌더·인코더·검사기(`blueprint.py`), 레이아웃 패턴 문서, 게임 데이터 |
 | [`blueprints/`](blueprints/README.md) | 블루프린트마다 폴더 하나: 문자열, 생성 스크립트, 한/영 문서, 미리보기 이미지 |
 | `lib/` | 여러 블루프린트가 공유하는 생성 코드 (정제 콘크리트 모듈, 철도 시티블럭 역 도구) |
-| `tools/` | `build.py`(검증·미리보기·문서·카탈로그), `render_preview.py`, `new_blueprint.py`, `attach_image.py` |
+| `tools/` | `build.py`(검증·미리보기·문서·카탈로그), `render_fbe.py`(게임 그래픽 미리보기), `render_preview.py`(도식 미리보기, 예비용), `new_blueprint.py`, `attach_image.py` |
 | `third_party/` | 저장소에 포함하지 않는 원본 입력 (철도 북 등) — [안내](third_party/README.md) |
 | `scripts/install-skills.sh` | 스킬을 `~/.claude/skills`에 설치 |
 
@@ -21,9 +21,10 @@ Factorio 블루프린트를 AI(Claude Code)와 함께 설계·관리하기 위�
 git clone https://github.com/shinkeonkim/factorio-ai-resources.git
 cd factorio-ai-resources
 scripts/install-skills.sh          # 스킬을 심볼릭 링크로 설치 (--copy 로 복사 설치)
-pip install pillow                 # 미리보기 렌더링용
+python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt
+.venv/bin/python -m playwright install chromium   # 게임 그래픽 미리보기용 (헤드리스 브라우저)
 
-python3 tools/build.py             # 전체 검증 + 미리보기 + 문서 갱신
+.venv/bin/python tools/build.py    # 전체 검증 + 미리보기 + 문서 갱신
 pbcopy < blueprints/refined-concrete-60/blueprint.txt   # 게임에서 '문자열 가져오기'
 ```
 
@@ -48,18 +49,24 @@ python3 tools/attach_image.py my-factory ~/Desktop/shot.png --caption-ko "게임
 
 | 미리보기 | 블루프린트 | 설명 | 크기 | 입력 |
 |---|---|---|---|---|
-| <img src="blueprints/refined-concrete-60/images/preview.png" width="160"> | [정제 콘크리트 60/분](blueprints/refined-concrete-60/README.md)<br>`production` `refined-concrete` | 돌·철광석·물로 정제 콘크리트를 분당 60개 만드는 소형 공장. 입출력은 모두 서쪽 끝. | 38×20 | water 1,800/min, iron-ore 66/min, stone 120/min |
-| <img src="blueprints/refined-concrete-240/images/preview.png" width="160"> | [정제 콘크리트 240/분](blueprints/refined-concrete-240/README.md)<br>`production` `refined-concrete` | 60/분 설계를 길게 늘린 분당 240개 모듈 (조립기 24, 용광로 17). | 111×20 | water 8,700/min, iron-ore 264/min, stone 480/min |
-| <img src="blueprints/refined-concrete-1200/images/preview.png" width="160"> | [정제 콘크리트 1200/분](blueprints/refined-concrete-1200/README.md)<br>`production` `refined-concrete` `large` | 240/분 모듈 5개를 세로로 쌓고 서쪽에 분배·수집 구간을 붙인 대형 공장. | 123×100 | stone 1,440/min, iron-ore 1,320/min, water 43,500/min, stone 960/min |
-| <img src="blueprints/module-mall-t1-t2/images/preview.png" width="160"> | [모듈 몰 (1·2단계, 4종)](blueprints/module-mall-t1-t2/README.md)<br>`mall` `modules` | 속도·효율·생산성·품질 모듈 1·2단계를 메인버스의 녹/적/청 회로로 만들어 상자에 쌓는 몰. | 52×9 | electronic-circuit 200/min, processing-unit 50/min, advanced-circuit 250/min |
-| <img src="blueprints/rail-ramp-support/images/preview.png" width="160"> | [철도 경사로·지지대 공장](blueprints/rail-ramp-support/README.md)<br>`mall` `rail` `elevated-rails` | 철광석·돌·정제 콘크리트로 철도 경사로와 지지대를 만드는 소형 공장 (강철 병목). | 46×15 | iron-ore 225/min, stone 4/min, refined-concrete 160/min |
-| <img src="blueprints/rail-city-block-2x2/images/preview.png" width="160"> | [철도 시티블럭 2×2](blueprints/rail-city-block-2x2/README.md)<br>`rail` `city-block` | 182칸 빈 철도 블럭을 2×2로 확장 (364칸 그리드, 경계 거리 병합). | 466×465 | - |
-| <img src="blueprints/rail-city-block-3x3/images/preview.png" width="160"> | [철도 시티블럭 3×3](blueprints/rail-city-block-3x3/README.md)<br>`rail` `city-block` | 182칸 빈 철도 블럭을 3×3으로 확장 (546칸 그리드). | 648×647 | - |
-| <img src="blueprints/rail-buffer-station/images/preview.png" width="160"> | [철도 버퍼 역 블럭](blueprints/rail-buffer-station/README.md)<br>`rail` `city-block` `station` `buffer` | 한 아이템을 위 역에서 하역해 상자 24개에 쌓고 아래 역에서 적재. 열차 제한은 재고로 자동 설정. | 284×283 | iron-plate ≤900/min |
-| <img src="blueprints/rail-mining-station/images/preview.png" width="160"> | [철도 채굴 공급 역 블럭](blueprints/rail-mining-station/README.md)<br>`rail` `city-block` `station` `mining` | 블럭 안을 채굴기 64대로 채우고 수집 벨트로 적재 역에 실어 보내는 공급 블럭. | 284×283 | - |
-| <img src="blueprints/rail-smelter-station/images/preview.png" width="160"> | [철도 제련 공급 역 블럭](blueprints/rail-smelter-station/README.md)<br>`rail` `city-block` `station` `smelting` | 위 역에서 광석을 하역해 전기 용광로 42대로 제련하고 아래 역에서 판을 적재. | 284×283 | iron-ore ~900/min |
+| <img src="blueprints/refined-concrete-60/images/preview.webp" width="160"> | [정제 콘크리트 60/분](blueprints/refined-concrete-60/README.md)<br>`production` `refined-concrete` | 돌·철광석·물로 정제 콘크리트를 분당 60개 만드는 소형 공장. 입출력은 모두 서쪽 끝. | 38×20 | water 1,800/min, iron-ore 66/min, stone 120/min |
+| <img src="blueprints/refined-concrete-240/images/preview.webp" width="160"> | [정제 콘크리트 240/분](blueprints/refined-concrete-240/README.md)<br>`production` `refined-concrete` | 60/분 설계를 길게 늘린 분당 240개 모듈 (조립기 24, 용광로 17). | 111×20 | water 8,700/min, iron-ore 264/min, stone 480/min |
+| <img src="blueprints/refined-concrete-1200/images/preview.webp" width="160"> | [정제 콘크리트 1200/분](blueprints/refined-concrete-1200/README.md)<br>`production` `refined-concrete` `large` | 240/분 모듈 5개를 세로로 쌓고 서쪽에 분배·수집 구간을 붙인 대형 공장. | 123×100 | stone 1,440/min, iron-ore 1,320/min, water 43,500/min, stone 960/min |
+| <img src="blueprints/module-mall-t1-t2/images/preview.webp" width="160"> | [모듈 몰 (1·2단계, 4종)](blueprints/module-mall-t1-t2/README.md)<br>`mall` `modules` | 속도·효율·생산성·품질 모듈 1·2단계를 메인버스의 녹/적/청 회로로 만들어 상자에 쌓는 몰. | 52×9 | electronic-circuit 200/min, processing-unit 50/min, advanced-circuit 250/min |
+| <img src="blueprints/rail-ramp-support/images/preview.webp" width="160"> | [철도 경사로·지지대 공장](blueprints/rail-ramp-support/README.md)<br>`mall` `rail` `elevated-rails` | 철광석·돌·정제 콘크리트로 철도 경사로와 지지대를 만드는 소형 공장 (강철 병목). | 46×15 | iron-ore 225/min, stone 4/min, refined-concrete 160/min |
+| <img src="blueprints/rail-city-block-2x2/images/preview.webp" width="160"> | [철도 시티블럭 2×2](blueprints/rail-city-block-2x2/README.md)<br>`rail` `city-block` | 182칸 빈 철도 블럭을 2×2로 확장 (364칸 그리드, 경계 거리 병합). | 466×465 | - |
+| <img src="blueprints/rail-city-block-3x3/images/preview.webp" width="160"> | [철도 시티블럭 3×3](blueprints/rail-city-block-3x3/README.md)<br>`rail` `city-block` | 182칸 빈 철도 블럭을 3×3으로 확장 (546칸 그리드). | 648×647 | - |
+| <img src="blueprints/rail-buffer-station/images/preview.webp" width="160"> | [철도 버퍼 역 블럭](blueprints/rail-buffer-station/README.md)<br>`rail` `city-block` `station` `buffer` | 한 아이템을 위 역에서 하역해 상자 24개에 쌓고 아래 역에서 적재. 열차 제한은 재고로 자동 설정. | 284×283 | iron-plate ≤900/min |
+| <img src="blueprints/rail-mining-station/images/preview.webp" width="160"> | [철도 채굴 공급 역 블럭](blueprints/rail-mining-station/README.md)<br>`rail` `city-block` `station` `mining` | 블럭 안을 채굴기 64대로 채우고 수집 벨트로 적재 역에 실어 보내는 공급 블럭. | 284×283 | - |
+| <img src="blueprints/rail-smelter-station/images/preview.webp" width="160"> | [철도 제련 공급 역 블럭](blueprints/rail-smelter-station/README.md)<br>`rail` `city-block` `station` `smelting` | 위 역에서 광석을 하역해 전기 용광로 42대로 제련하고 아래 역에서 판을 적재. | 284×283 | iron-ore ~900/min |
 
 <!-- CATALOG:END -->
+
+## 미리보기 이미지
+
+`tools/build.py`는 [Factorio Blueprint Editor](https://fbe.factorygamefan.com)(FactoryGameFan 포크, 2.0·Space Age 지원)를
+헤드리스 Chromium으로 열어 실제 게임 스프라이트로 렌더링합니다. 큰 철도 블럭은 설비 부분만 잘라낸 `detail.webp`도 만듭니다.
+Playwright가 없거나 접속이 안 되면 도식 렌더러로 대체합니다(`--renderer schematic`로 직접 고를 수도 있습니다).
 
 ## 규칙
 

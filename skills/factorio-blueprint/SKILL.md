@@ -130,7 +130,7 @@ live there instead of loose files:
    `save(bp, __file__)`; variants via `save(obj, __file__, "variants/<name>.txt")`).
 3. Fill `meta.json` (outputs, mods, tags) and write the prose sections of both `README.md` (Korean)
    and `README.en.md` (English) outside the AUTO block.
-4. `python3 tools/build.py <id>` → validates, renders `images/preview.png` (+ `detail.png` for big rail
+4. `python3 tools/build.py <id>` → validates, renders `images/preview.webp` (+ `detail.webp` for big rail
    blocks) and refreshes the docs and the root catalog. Screenshots: `tools/attach_image.py`.
 Shared generator code belongs in `lib/`; third-party inputs in git-ignored `third_party/`.
 

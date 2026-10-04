@@ -6,11 +6,13 @@
 
 <!-- AUTO:START (tools/build.py가 생성하는 구역입니다. 직접 수정하지 마세요) -->
 
-![미리보기](images/preview.png)
+![미리보기](images/preview.webp)
 
 **상세 (레일 제외 설비 부분)**
 
-![상세 (레일 제외 설비 부분)](images/detail.png)
+![상세 (레일 제외 설비 부분)](images/detail.webp)
+
+<sub>이미지: [Factorio Blueprint Editor](https://fbe.factorygamefan.com)로 렌더링 (게임 그래픽 © Wube Software)</sub>
 
 | 항목 | 값 |
 |---|---|

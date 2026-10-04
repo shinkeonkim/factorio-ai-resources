@@ -24,7 +24,7 @@ jobs:
           missing=0
           for d in blueprints/*/; do
             [ -f "$d/meta.json" ] || continue
-            [ -f "$d/images/preview.png" ] || { echo "::error::missing $d/images/preview.png"; missing=1; }
+            [ -f "$d/images/preview.webp" ] || { echo "::error::missing $d/images/preview.webp"; missing=1; }
           done
           exit $missing
       - name: Skill self-test (examples build and validate)

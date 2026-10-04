@@ -9,4 +9,5 @@
 - Shared generator code goes to `lib/`; never commit anything under `third_party/` except its README.
 - Rail city-block stations: take rail geometry from the user's book (`third_party/rail-book.txt` via
   `lib/rail_city_block.py`); do not invent rail positions.
-- Before committing: `python3 tools/build.py --regen` (renders previews too) and make sure validation passes.
+- Before committing: `.venv/bin/python tools/build.py --regen` (renders game-sprite previews via FBE; needs
+  `pip install -r tools/requirements.txt` + `playwright install chromium`) and make sure validation passes.

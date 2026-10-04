@@ -11,9 +11,15 @@ It does not cover third-party material:
   are extracted from Wube Software's public [factorio-data](https://github.com/wube/factorio-data)
   repository. Factorio is a trademark of Wube Software Ltd.; this project is not affiliated with Wube.
 
+- Preview images (`blueprints/*/images/preview.webp`, `detail.webp`) are rendered with
+  [Factorio Blueprint Editor](https://github.com/FactoryGameFan/factorio-blueprint-editor) and contain Factorio
+  game graphics © Wube Software Ltd.; they are included for illustration only.
+
 **한국어.** MIT 라이선스는 이 저장소에서 직접 만든 코드·문서·블루프린트에 적용됩니다. 다음 제3자 자료에는 적용되지 않습니다.
 
 - `blueprints/rail-*`는 저장소 소유자가 제공한 철도 블루프린트 북('Rails' 북 안의 "Mixed Elev. Cityblock", 원작자 미상)의
   레일·정거장·신호 배치를 재사용합니다. 해당 부분은 원작자의 저작물이며, 원본 북은 저장소에 포함하지 않습니다(`third_party/`는 git 제외).
 - `skills/factorio-blueprint/data/`의 레시피·엔티티 크기·기계 수치는 Wube Software의 공개 저장소
-  [factorio-data](https://github.com/wube/factorio-data)에서 추출했습니다. Factorio는 Wube Software Ltd.의 상표이며, 이 프로젝트는 Wube와 관련이 없습니다.
+  [factorio-data](https://github.com/wube/factorio-data)에서 추출했습니다.
+- 미리보기 이미지(`preview.webp`, `detail.webp`)는 [Factorio Blueprint Editor](https://github.com/FactoryGameFan/factorio-blueprint-editor)로
+  렌더링했으며 Wube Software의 게임 그래픽이 들어 있습니다. 설명용으로만 포함합니다. Factorio는 Wube Software Ltd.의 상표이며, 이 프로젝트는 Wube와 관련이 없습니다.
