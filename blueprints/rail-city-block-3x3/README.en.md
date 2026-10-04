@@ -1,6 +1,6 @@
-# Rail city block 3×3
+# Big rail block 3×3 (empty interior)
 
-> The 182-tile empty rail block tiled 3×3 (546-tile grid).
+> One block the size of 3×3 1×1 blocks: intersections only at the four corners, straight edges, a large empty interior.
 
 [한국어](README.md)
 
@@ -14,7 +14,7 @@
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
 | Size | 648×647 tiles |
-| Entities | 8356 |
+| Entities | 3797 |
 | Main machines | - |
 | Validation | OK |
 
@@ -50,7 +50,19 @@ Required source files (not in the repo): `third_party/empty-block.txt`
 
 <!-- AUTO:END -->
 
-{'ko': '## 구조\n\n2×2와 같은 방식으로 3×3 복제했습니다. 자세한 내용은 [2×2 문서](../rail-city-block-2x2/README.md)를 보세요.\n', 'en': '## Layout\n\nSame method as 2×2, tiled 3×3. See the [2×2 doc](../rail-city-block-2x2/README.en.md).\n'}
+## Layout
+
+- Tiling the 1×1 block (182 tiles) 3×3 leaves 4 inner intersection(s) and splits the area into 9 blocks. This blueprint is instead **one big block with perimeter streets only**.
+- Corners: the 1×1 corner areas (±64 tiles around each crossing: intersection, ramps, merge curves) are copied verbatim.
+- Edges: long straight streets with the 1×1's straight-section pattern:
+  - horizontal: signals every 14, elevated supports every 14, big poles ≤28 apart
+  - vertical: elevated signals every 12, ground signals every 14, supports every 6, medium poles ≤9 apart
+- Snap grid 546 with the 1×1's absolute offset, so it lines up with 1×1 blocks. All poles are wired.
+
+## Notes
+
+- Where a 1×1 block borders a straight edge, the 1×1's T-junction is built over this block's straight street. Combine big blocks with big blocks, or check the shared edge.
+
 ## Credits
 
 Rail, stop and signal layout come unchanged from a user-supplied rail blueprint book (the **Mixed Elev. Cityblock** book inside a 'Rails' book; original author unknown). The original book is not in this repository; place it in `third_party/` to run the generator.

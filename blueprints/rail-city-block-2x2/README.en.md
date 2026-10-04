@@ -1,6 +1,6 @@
-# Rail city block 2×2
+# Big rail block 2×2 (empty interior)
 
-> The 182-tile empty rail block tiled 2×2 (364-tile grid, shared streets merged).
+> One block the size of 2×2 1×1 blocks: intersections only at the four corners, straight edges, a large empty interior.
 
 [한국어](README.md)
 
@@ -14,7 +14,7 @@
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
 | Size | 466×465 tiles |
-| Entities | 4515 |
+| Entities | 2823 |
 | Main machines | - |
 | Validation | OK |
 
@@ -50,7 +50,19 @@ Required source files (not in the repo): `third_party/empty-block.txt`
 
 <!-- AUTO:END -->
 
-{'ko': '## 구조\n\n- 원본 Empty Block(절대 스냅 182×182, 기준점 (-8,-22))을 182칸씩 복제하고, 맞닿는 블럭이 공유하는 경계 거리 엔티티는 하나로 합쳤습니다.\n- 스냅 그리드만 364로 바뀌고 기준점은 같아서, 기존 1×1 블럭과 같은 격자에 찍힙니다.\n- 같은 칸에 방향이 다른 레일이 겹치는 곳은 원본 교차로의 교차·분기 레일입니다.\n', 'en': '## Layout\n\n- The original Empty Block (absolute snapping 182×182, offset (-8,-22)) is copied every 182 tiles; entities on shared border streets are merged.\n- Only the snap grid changes (364); the offset is unchanged, so it lands on the same grid as 1×1 blocks.\n- Rails stacked on one tile with different directions are the original junction crossings/switches.\n'}
+## Layout
+
+- Tiling the 1×1 block (182 tiles) 2×2 leaves 1 inner intersection(s) and splits the area into 4 blocks. This blueprint is instead **one big block with perimeter streets only**.
+- Corners: the 1×1 corner areas (±64 tiles around each crossing: intersection, ramps, merge curves) are copied verbatim.
+- Edges: long straight streets with the 1×1's straight-section pattern:
+  - horizontal: signals every 14, elevated supports every 14, big poles ≤28 apart
+  - vertical: elevated signals every 12, ground signals every 14, supports every 6, medium poles ≤9 apart
+- Snap grid 364 with the 1×1's absolute offset, so it lines up with 1×1 blocks. All poles are wired.
+
+## Notes
+
+- Where a 1×1 block borders a straight edge, the 1×1's T-junction is built over this block's straight street. Combine big blocks with big blocks, or check the shared edge.
+
 ## Credits
 
 Rail, stop and signal layout come unchanged from a user-supplied rail blueprint book (the **Mixed Elev. Cityblock** book inside a 'Rails' book; original author unknown). The original book is not in this repository; place it in `third_party/` to run the generator.

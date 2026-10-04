@@ -50,7 +50,16 @@ def decode(s: str) -> dict:
         return json.loads(s)
     if s[0] != "0":
         raise ValueError(f"unknown blueprint string version byte {s[0]!r} (expected '0')")
-    return json.loads(zlib.decompress(base64.b64decode(s[1:])).decode("utf-8"))
+    return json.loads(zlib.decompress(base64.b64decode(_b64_body(s))).decode("utf-8"))
+
+
+def _b64_body(s: str) -> str:
+    """Base64 part of a blueprint string, tolerant of copy/paste damage: whitespace inside, missing
+    '=' padding, or one stray trailing character (length = 1 mod 4 is never valid base64)."""
+    body = "".join(s[1:].split())
+    if len(body) % 4 == 1:
+        body = body[:-1]
+    return body + "=" * (-len(body) % 4)
 
 
 def repair(s: str, window: int = 400) -> tuple[str, int] | None:
@@ -59,7 +68,7 @@ def repair(s: str, window: int = 400) -> tuple[str, int] | None:
     checksum passes. Returns (fixed_string, position) or None."""
     import string
     s = s.strip()
-    raw = base64.b64decode(s[1:])
+    raw = base64.b64decode(_b64_body(s))
     try:
         zlib.decompress(raw)
         return s, -1

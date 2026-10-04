@@ -14,12 +14,12 @@
     "empty-block.txt"
   ],
   "title": {
-    "ko": "철도 시티블럭 3×3",
-    "en": "Rail city block 3×3"
+    "ko": "철도 큰 블럭 3×3 (가운데 빈 공간)",
+    "en": "Big rail block 3×3 (empty interior)"
   },
   "summary": {
-    "ko": "182칸 빈 철도 블럭을 3×3으로 확장 (546칸 그리드).",
-    "en": "The 182-tile empty rail block tiled 3×3 (546-tile grid)."
+    "ko": "1×1 블럭 3×3개 크기의 한 블럭. 교차로는 네 모서리에만 있고 가장자리는 긴 직선이라 가운데 532칸 안팎의 큰 공간이 생깁니다.",
+    "en": "One block the size of 3×3 1×1 blocks: intersections only at the four corners, straight edges, a large empty interior."
   },
   "credits": {
     "ko": "레일·정거장·신호 배치는 사용자가 제공한 철도 블루프린트 북('Rails' 북의 **Mixed Elev. Cityblock**, 원작자 미상)을 그대로 사용합니다. 이 저장소에는 원본 북이 들어 있지 않으며, 생성기를 돌리려면 `third_party/`에 원본을 두어야 합니다.",

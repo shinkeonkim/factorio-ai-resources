@@ -182,3 +182,114 @@ def drill_band(ov, x0, y0, pairs, direction, belt=BELT, drill="electric-mining-d
     else:
         ov.belt_line(belt, x0 + w - 1, y0 + 3, W, w)  # last tile points at x0-1
     return 4 * pairs
+
+
+# ---------------------------------------------------------------------------------------------------
+# Big blocks: one N x N block whose interior is empty (perimeter streets only)
+# ---------------------------------------------------------------------------------------------------
+CELL = 182
+CORNERS = {"nw": (1, 1), "ne": (183, 1), "sw": (1, 183), "se": (183, 183)}   # street crossings of the 1x1
+ZONE = 64             # half-size of the corner area copied verbatim (intersection + ramps + merges)
+MARGIN = 6            # keep generated signals/supports this far from a corner area
+
+
+def _key(e):
+    rest = {k: v for k, v in e.items() if k not in ("entity_number", "position")}
+    return (e["name"], e["position"]["x"], e["position"]["y"], json.dumps(rest, sort_keys=True))
+
+
+def big_block(src: dict, n: int) -> dict:
+    """Perimeter-only N x N block from the 1x1 'Empty Block' `src` (blueprint dict, not wrapped).
+
+    Corners: the 1x1 corner areas (|dx|,|dy| <= ZONE around each street crossing) are copied to the
+    four corners of the big block. Edges: the straight street between corners is regenerated with the
+    same pattern the 1x1 uses on its straight sections:
+      horizontal  rails y=-3 (elevated) / y=5 (ground), signals every 14 (elev y=-4.5 dir E, ground
+                  y=6.5 dir W), supports every 14 on the elevated line, big poles every 28 at y=1
+      vertical    rails x=-3 / x=5, elevated signals every 12 (x=-4.5 dir N), ground every 14
+                  (x=6.5 dir S), supports every 6, medium poles every 9 at x=-0.5
+    No interior streets or intersections; power is re-stitched with copper wire afterwards."""
+    span = CELL * (n - 1)
+    shift = {"nw": (0, 0), "ne": (span, 0), "sw": (0, span), "se": (span, span)}
+    ents, index, wires = [], {}, set()
+
+    def add(e):
+        k = _key(e)
+        if k in index:
+            return index[k]
+        f = dict(e); f["entity_number"] = len(ents) + 1
+        ents.append(f); index[k] = f["entity_number"]
+        return f["entity_number"]
+
+    for name, (cx, cy) in CORNERS.items():
+        dx, dy = shift[name]
+        remap = {}
+        for e in src["entities"]:
+            x, y = e["position"]["x"], e["position"]["y"]
+            if abs(x - cx) <= ZONE and abs(y - cy) <= ZONE:
+                remap[e["entity_number"]] = add({**e, "position": {"x": x + dx, "y": y + dy}})
+        for a, ca, b, cb in src.get("wires", []):
+            if a in remap and b in remap:
+                w = (remap[a], ca, remap[b], cb)
+                if (w[2], w[3], w[0], w[1]) not in wires:
+                    wires.add(w)
+
+    def gap(lo_corner, hi_corner_shifted):
+        """inclusive coordinate range along an edge between two corner areas"""
+        return lo_corner + ZONE + 1, hi_corner_shifted - ZONE - 1
+
+    def phase(lo, period, rem):
+        """first value >= lo with value % period == rem (keeps the 1x1's rail-grid alignment)"""
+        return lo + (rem - lo) % period
+
+    def even(a, b, maxgap):
+        """points strictly between anchors a and b, evenly spaced, gaps <= maxgap"""
+        k = max(0, math.ceil((b - a) / maxgap) - 1)
+        return [a + (b - a) * (i + 1) / (k + 1) for i in range(k)]
+
+    def anchors(name, axis, line, lo, hi, tol=4):
+        """pole coordinates (along `axis`) of corner-area poles near a street line: last <= lo, first >= hi"""
+        other = "y" if axis == "x" else "x"
+        vals = [e["position"][axis] for e in ents if e["name"] == name and abs(e["position"][other] - line) <= tol]
+        return max(v for v in vals if v <= lo), min(v for v in vals if v >= hi)
+
+    def hline(y0, xa, xb):          # horizontal street: elevated rail y0-3, ground rail y0+5
+        for x in range(xa | 1, xb + 1, 2):
+            add({"name": "straight-rail", "position": {"x": x, "y": y0 + 5}, "direction": 4})
+            add({"name": "elevated-straight-rail", "position": {"x": x, "y": y0 - 3}, "direction": 4})
+        for x in range(phase(xa + MARGIN, 14, 49 % 14), xb - MARGIN + 1, 14):
+            add({"name": "rail-signal", "position": {"x": x + 0.5, "y": y0 - 4.5}, "direction": 4})
+            add({"name": "rail-signal", "position": {"x": x + 1.5, "y": y0 + 6.5}, "direction": 12})
+        for x in range(phase(xa + MARGIN, 14, 50 % 14), xb - MARGIN + 1, 14):
+            add({"name": "rail-support", "position": {"x": x, "y": y0 - 3}, "direction": 4})
+        a, b = anchors("big-electric-pole", "x", y0 + 2, xa, xb)
+        for x in even(a, b, 28):
+            add({"name": "big-electric-pole", "position": {"x": round(x), "y": y0 + 1}})
+
+    def vline(x0, ya, yb):          # vertical street: elevated rail x0-3, ground rail x0+5
+        for y in range(ya | 1, yb + 1, 2):
+            add({"name": "straight-rail", "position": {"x": x0 + 5, "y": y}})
+            add({"name": "elevated-straight-rail", "position": {"x": x0 - 3, "y": y}})
+        for y in range(phase(ya + MARGIN, 12, 72 % 12), yb - MARGIN + 1, 12):
+            add({"name": "rail-signal", "position": {"x": x0 - 4.5, "y": y + 0.5}})
+        for y in range(phase(ya + MARGIN, 14, 77 % 14), yb - MARGIN + 1, 14):
+            add({"name": "rail-signal", "position": {"x": x0 + 6.5, "y": y + 0.5}, "direction": 8})
+        for y in range(phase(ya, 6, 0), yb + 1, 6):
+            add({"name": "rail-support", "position": {"x": x0 - 3, "y": y}})
+        a, b = anchors("medium-electric-pole", "y", x0 - 0.5, ya, yb, tol=0.1)
+        for y in even(a, b, 9):
+            add({"name": "medium-electric-pole", "position": {"x": x0 - 0.5, "y": math.floor(y) + 0.5}})
+
+    if n > 1:
+        xa, xb = gap(CORNERS["nw"][0], CORNERS["ne"][0] + span)
+        hline(0, xa, xb); hline(CELL * n, xa, xb)
+        ya, yb = gap(CORNERS["nw"][1], CORNERS["sw"][1] + span)
+        vline(0, ya, yb); vline(CELL * n, ya, yb)
+
+    bp = {k: v for k, v in src.items() if k not in ("entities", "wires")}
+    bp["label"] = f"Big Block {n}x{n} (empty interior)"
+    bp["snap-to-grid"] = {"x": CELL * n, "y": CELL * n}
+    bp["entities"] = ents
+    bp["wires"] = [list(w) for w in sorted(wires)]
+    stitch_power(bp)
+    return bp
