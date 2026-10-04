@@ -31,6 +31,6 @@ Links go to the original authors; ✅ marks ideas used in this repository's upgr
 
 ## Order of adoption here (plan)
 
-1. Upgradeable science lines — ✅ [red](../../blueprints/science-red-upgradeable/README.en.md) and [green](../../blueprints/science-green-upgradeable/README.en.md) done; military, blue, purple, yellow next — ideas from demos 09 (XtremeZion) and 07 (Nilaus) rebuilt for the 6+2 bus
+1. Upgradeable science lines — ✅ [red](../../blueprints/science-red-upgradeable/README.en.md), [green](../../blueprints/science-green-upgradeable/README.en.md), [military](../../blueprints/science-military-upgradeable/README.en.md), [blue](../../blueprints/science-blue-upgradeable/README.en.md), [purple](../../blueprints/science-purple-upgradeable/README.en.md) and [yellow](../../blueprints/science-yellow-upgradeable/README.en.md) done. Every tile makes the same 60/90/150 per minute, so place them 1:1:1:1:1:1 — ideas from demos 09 (XtremeZion) and 07 (Nilaus) rebuilt for the 6+2 bus
 2. Upgradeable mall (Daiso) — from demos 02/03
 3. Space Age planet blocks follow the principles above, separately
