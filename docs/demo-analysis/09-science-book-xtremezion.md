@@ -30,4 +30,4 @@
 
 XtremeZion의 핵심 아이디어 — **과학팩별 독립 타일, 직접 삽입 위주, 같은 블럭 반복** — 를 가져오되,
 6+2 버스 분기로 입력을 받고 노랑→빨강→파랑을 같은 배치로 쓰는 과학 라인으로 다시 설계합니다.
-1차 대상: 빨강·초록(→ 이 저장소의 업그레이드형 과학 블루프린트).
+✅ 6종 완료: [빨강](../../blueprints/science-red-upgradeable/README.md), [초록](../../blueprints/science-green-upgradeable/README.md), [군사](../../blueprints/science-military-upgradeable/README.md), [파랑](../../blueprints/science-blue-upgradeable/README.md), [보라](../../blueprints/science-purple-upgradeable/README.md), [노랑](../../blueprints/science-yellow-upgradeable/README.md). 모두 타일당 분당 60/90/150이라 1:1로 놓습니다.

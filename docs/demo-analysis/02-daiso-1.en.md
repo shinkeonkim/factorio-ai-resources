@@ -29,4 +29,4 @@ cables (9), circuits (6), pipes (7) and sticks (4) are made at the bottom and fe
 
 - Horizontal mall fed by **2-3 bus branches** (iron+copper / steel+brick+circuits),
 - underground gaps ≤4 and fast-inserter slots instead of long-handed, so the **same layout goes yellow→red→blue**.
-- Merge with Daiso 2 into one design (→ upgradeable mall).
+- Merged with Daiso 2 into one design → ✅ [upgradeable mall](../../blueprints/mall-upgradeable/README.en.md).

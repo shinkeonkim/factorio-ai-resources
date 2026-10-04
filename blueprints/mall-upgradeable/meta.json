@@ -1,0 +1,76 @@
+{
+  "id": "mall-upgradeable",
+  "order": 40,
+  "game": "2.0",
+  "mods": [
+    "base"
+  ],
+  "tags": [
+    "mall",
+    "upgradeable",
+    "main-bus"
+  ],
+  "title": {
+    "ko": "업그레이드형 몰 (다이소 재설계)",
+    "en": "Upgradeable mall (Daiso redesign)"
+  },
+  "summary": {
+    "ko": "셀 20개짜리 거리 두 종류(물류·채굴 / 전력·유체·기차). 같은 배치로 노랑→빨강→파랑, 상자는 철→패시브 공급. 버스 분기 2-3줄.",
+    "en": "Two 20-cell streets (logistics & mining / power, fluids & trains); same layout yellow→red→blue, chests iron→passive provider; 2-3 bus taps."
+  },
+  "variants": [
+    {
+      "file": "variants/logistics-mid.txt",
+      "label": {
+        "ko": "물류·채굴 거리, 중반",
+        "en": "logistics street, mid"
+      }
+    },
+    {
+      "file": "variants/logistics-late.txt",
+      "label": {
+        "ko": "물류·채굴 거리, 후반",
+        "en": "logistics street, late"
+      }
+    },
+    {
+      "file": "variants/power-fluids-trains-early.txt",
+      "label": {
+        "ko": "전력·유체·기차 거리, 초반",
+        "en": "power/fluids/trains street, early"
+      }
+    },
+    {
+      "file": "variants/power-fluids-trains-mid.txt",
+      "label": {
+        "ko": "전력·유체·기차 거리, 중반",
+        "en": "power/fluids/trains street, mid"
+      }
+    },
+    {
+      "file": "variants/power-fluids-trains-late.txt",
+      "label": {
+        "ko": "전력·유체·기차 거리, 후반",
+        "en": "power/fluids/trains street, late"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "물류·채굴 거리, 초반 (노랑·조립기 1·일반)",
+    "en": "logistics street, early (yellow, AM1, basic)"
+  },
+  "outputs": [
+    {
+      "item": "(chests)",
+      "per_minute": "-",
+      "where": {
+        "ko": "북쪽 줄 y=-2, 남쪽 줄 y=11의 상자 (2칸 제한)",
+        "en": "chests at y=-2 (north row) and y=11 (south row), 2 slots each"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "사용자의 다이소1·다이소2 몰(데모 02·03)을 분석해 6+2 버스와 업그레이드 규칙에 맞게 새로 설계했습니다.",
+    "en": "Redesigned from the user's Daiso 1 and Daiso 2 malls (demos 02 and 03) for the 6+2 bus and the upgrade rules."
+  }
+}

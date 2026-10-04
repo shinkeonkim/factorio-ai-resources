@@ -73,7 +73,7 @@ P["02-daiso-1"] = dict(
 
 - 입력을 **버스 분기 2~3줄**(철·구리 / 강철·돌벽돌·회로)로 받는 가로형 몰로 바꾸고,
 - 지하 벨트 간격 ≤4, 롱암을 고속 인서터 자리로 바꿔 **같은 배치로 노랑→빨강→파랑** 업그레이드되게 합니다.
-- 다이소 2와 합쳐 한 설계로 정리합니다(→ 업그레이드형 몰).
+- 다이소 2와 합쳐 한 설계로 정리했습니다 → ✅ [업그레이드형 몰](../../blueprints/mall-upgradeable/README.md).
 """,
     en="""## What it is
 
@@ -97,7 +97,7 @@ cables (9), circuits (6), pipes (7) and sticks (4) are made at the bottom and fe
 
 - Horizontal mall fed by **2-3 bus branches** (iron+copper / steel+brick+circuits),
 - underground gaps ≤4 and fast-inserter slots instead of long-handed, so the **same layout goes yellow→red→blue**.
-- Merge with Daiso 2 into one design (→ upgradeable mall).
+- Merged with Daiso 2 into one design → ✅ [upgradeable mall](../../blueprints/mall-upgradeable/README.en.md).
 """)
 
 P["03-daiso-2"] = dict(
@@ -411,7 +411,7 @@ P["09-science-book-xtremezion"] = dict(
 
 XtremeZion의 핵심 아이디어 — **과학팩별 독립 타일, 직접 삽입 위주, 같은 블럭 반복** — 를 가져오되,
 6+2 버스 분기로 입력을 받고 노랑→빨강→파랑을 같은 배치로 쓰는 과학 라인으로 다시 설계합니다.
-1차 대상: 빨강·초록(→ 이 저장소의 업그레이드형 과학 블루프린트).
+✅ 6종 완료: [빨강](../../blueprints/science-red-upgradeable/README.md), [초록](../../blueprints/science-green-upgradeable/README.md), [군사](../../blueprints/science-military-upgradeable/README.md), [파랑](../../blueprints/science-blue-upgradeable/README.md), [보라](../../blueprints/science-purple-upgradeable/README.md), [노랑](../../blueprints/science-yellow-upgradeable/README.md). 모두 타일당 분당 60/90/150이라 1:1로 놓습니다.
 """,
     en="""## What it is
 
@@ -437,7 +437,7 @@ are nominal without modules/beacons, so they read lower than the labels).
 
 Take XtremeZion's core ideas — **one independent tile per science, mostly direct insertion, repeat the same
 block** — and rebuild them as science lines fed by 6+2 bus taps that run yellow→red→blue in the same layout.
-First targets: red and green science (→ this repo's upgradeable science blueprints).
+✅ All six done: [red](../../blueprints/science-red-upgradeable/README.en.md), [green](../../blueprints/science-green-upgradeable/README.en.md), [military](../../blueprints/science-military-upgradeable/README.en.md), [blue](../../blueprints/science-blue-upgradeable/README.en.md), [purple](../../blueprints/science-purple-upgradeable/README.en.md), [yellow](../../blueprints/science-yellow-upgradeable/README.en.md). Every tile makes 60/90/150 per minute, so they are placed 1:1.
 """)
 
 

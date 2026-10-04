@@ -31,4 +31,4 @@ are nominal without modules/beacons, so they read lower than the labels).
 
 Take XtremeZion's core ideas — **one independent tile per science, mostly direct insertion, repeat the same
 block** — and rebuild them as science lines fed by 6+2 bus taps that run yellow→red→blue in the same layout.
-First targets: red and green science (→ this repo's upgradeable science blueprints).
+✅ All six done: [red](../../blueprints/science-red-upgradeable/README.en.md), [green](../../blueprints/science-green-upgradeable/README.en.md), [military](../../blueprints/science-military-upgradeable/README.en.md), [blue](../../blueprints/science-blue-upgradeable/README.en.md), [purple](../../blueprints/science-purple-upgradeable/README.en.md), [yellow](../../blueprints/science-yellow-upgradeable/README.en.md). Every tile makes 60/90/150 per minute, so they are placed 1:1.
