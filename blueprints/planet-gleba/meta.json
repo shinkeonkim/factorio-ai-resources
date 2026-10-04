@@ -1,0 +1,269 @@
+{
+  "id": "planet-gleba",
+  "order": 62,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "space-age"
+  ],
+  "planet": "gleba",
+  "tags": [
+    "planet",
+    "gleba",
+    "space-age",
+    "all-in-one",
+    "stackable",
+    "robots"
+  ],
+  "title": {
+    "ko": "글레바 올인원 단지",
+    "en": "Gleba all-in-one complex"
+  },
+  "summary": {
+    "ko": "로봇이 나르는 쌓는 셀: 과일 가공 → 바이오플럭스·영양분·펜타포드 알 → 농업 과학 분당 약 300, 철 박테리아 → 탄창, 탄소 섬유, 젤리 로켓 연료, 가열탑 전력(부패물 연료), 로켓·착륙장, 포탑 방어선까지.",
+    "en": "Robot-fed stackable cells: fruit processing → bioflux, nutrients, pentapod eggs → about 300 agricultural science/min, iron bacteria → magazines, carbon fiber, rocket fuel from jelly, heating-tower power burning spoilage, rocket and landing pad, and a turret ring."
+  },
+  "variants": [
+    {
+      "file": "variants/yumako-processing.txt",
+      "label": {
+        "ko": "유마코 가공 — 캡 + 셀 1개",
+        "en": "Yumako processing — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/jellynut-processing.txt",
+      "label": {
+        "ko": "젤리넛 가공 — 캡 + 셀 1개",
+        "en": "Jellynut processing — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/bioflux.txt",
+      "label": {
+        "ko": "바이오플럭스 — 캡 + 셀 1개",
+        "en": "Bioflux — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/nutrients.txt",
+      "label": {
+        "ko": "영양분 — 캡 + 셀 1개",
+        "en": "Nutrients — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/eggs.txt",
+      "label": {
+        "ko": "펜타포드 알 — 캡 + 셀 1개",
+        "en": "Pentapod eggs — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/science.txt",
+      "label": {
+        "ko": "농업 과학 — 캡 + 셀 1개",
+        "en": "Agricultural science — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/iron-bacteria.txt",
+      "label": {
+        "ko": "철 박테리아 — 캡 + 셀 1개",
+        "en": "Iron bacteria — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/iron-cultivation.txt",
+      "label": {
+        "ko": "철 박테리아 배양 — 캡 + 셀 1개",
+        "en": "Iron bacteria cultivation — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/iron-plate.txt",
+      "label": {
+        "ko": "철판 (박테리아 광석) — 캡 + 셀 1개",
+        "en": "Iron plates (bacteria ore) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/magazine.txt",
+      "label": {
+        "ko": "탄창 — 캡 + 셀 1개",
+        "en": "Firearm magazines — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/carbon.txt",
+      "label": {
+        "ko": "탄소 (태운 부패물) — 캡 + 셀 1개",
+        "en": "Carbon (burnt spoilage) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/carbon-fiber.txt",
+      "label": {
+        "ko": "탄소 섬유 — 캡 + 셀 1개",
+        "en": "Carbon fiber — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/rocket-fuel.txt",
+      "label": {
+        "ko": "로켓 연료 (젤리) — 캡 + 셀 1개",
+        "en": "Rocket fuel (jelly) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/power.txt",
+      "label": {
+        "ko": "전력: 가열탑 2 → 열교환기 8 → 터빈 16",
+        "en": "power: 2 heating towers → 8 exchangers → 16 turbines"
+      }
+    },
+    {
+      "file": "variants/rocket-silo.txt",
+      "label": {
+        "ko": "로켓 사일로 (로봇 공급)",
+        "en": "rocket silo (robot-fed)"
+      }
+    },
+    {
+      "file": "variants/landing-pad.txt",
+      "label": {
+        "ko": "착륙장",
+        "en": "landing pad"
+      }
+    },
+    {
+      "file": "variants/farm-yumako.txt",
+      "label": {
+        "ko": "농장 타일: 유마코 (토양 위에)",
+        "en": "farm tile: yumako (on its soil)"
+      }
+    },
+    {
+      "file": "variants/farm-jellynut.txt",
+      "label": {
+        "ko": "농장 타일: 젤리넛 (토양 위에)",
+        "en": "farm tile: jellynut (on its soil)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "단지 전체 (물 버스 + 모든 줄 + 방어선)",
+    "en": "the whole complex (water bus + every line + defence ring)"
+  },
+  "outputs": [
+    {
+      "item": "agricultural-science-pack",
+      "per_minute": "~300",
+      "where": {
+        "ko": "로켓 화물 요청 (1시간 안에 부패)",
+        "en": "rocket cargo requests (spoils within an hour)"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "설계는 이 저장소에서 새로 만든 것입니다. 참고: Nir Adar의 'Gleba Book'(factorioprints -OvbAwW4CJ0WvO5NsBBm) — 알 유지·영양분 부트스트랩, 로봇 기반 농업 과학 방식, 가열탑 전력.",
+    "en": "Designed in this repository. Reference: Nir Adar's 'Gleba Book' (factorioprints -OvbAwW4CJ0WvO5NsBBm) — keeping eggs alive, nutrient bootstrap, robot-based agricultural science, heating-tower power."
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 도착",
+        "en": "0. Arrival"
+      },
+      "do": {
+        "ko": "유마코·젤리넛을 손으로 캐면 가공·바이오플럭스 연구가 열립니다. 물가 근처, 유마코·젤리넛 토양 옆에 자리를 잡습니다.",
+        "en": "Hand-harvesting yumako and jellynut unlocks processing and bioflux. Settle near water, next to yumako and jellynut soil."
+      },
+      "research": [
+        "yumako-processing",
+        "jellynut-processing",
+        "bioflux"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 농장·전력",
+        "en": "1. Farms & power"
+      },
+      "do": {
+        "ko": "농장 타일(농업 탑 + 씨앗 요청 + 수확물 제공 상자)을 각 토양 위에 22칸 간격으로, 가열탑 전력 줄을 놓습니다. 부패물과 젤리넛을 태우므로 쌓이는 부패물이 곧 연료입니다.",
+        "en": "Place farm tiles (tower + seed requester + harvest provider) on each soil every 22 tiles, and the heating-tower power line — it burns spoilage and jellynut, so spoilage becomes fuel."
+      },
+      "research": [
+        "agricultural-tower",
+        "heating-tower"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 영양분 부트스트랩",
+        "en": "2. Nutrient bootstrap"
+      },
+      "do": {
+        "ko": "생물 반응기는 영양분을 태워야 돌아갑니다. 처음엔 손으로 영양분 몇 묶음을 공급 상자에 넣어 시작하세요.",
+        "en": "Biochambers burn nutrients to run: start by dropping a few stacks of nutrients into a provider chest."
+      },
+      "research": [
+        "nutrients-from-bioflux",
+        "biochamber"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 알·과학",
+        "en": "3. Eggs & science"
+      },
+      "do": {
+        "ko": "펜타포드 알은 처음 하나가 필요합니다(둥지에서 얻음). 알 기계는 네트워크에 알이 40개 미만일 때만 재료를 받아서 알이 쌓여 부패(→ 적 부화)하지 않습니다. 농업 과학은 1시간 안에 부패하니 바로 로켓으로.",
+        "en": "Pentapod eggs need a first egg (from a nest). Egg machines only take inputs while the network holds fewer than 40 eggs, so eggs never pile up and hatch. Agricultural science spoils within an hour — ship it promptly."
+      },
+      "research": [
+        "pentapod-egg",
+        "agricultural-science-pack"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "4. 철·방어",
+        "en": "4. Iron & defence"
+      },
+      "do": {
+        "ko": "철 박테리아(젤리) → 배양 → 1분 뒤 철광석 → 전기로 → 탄창. 단지 둘레 포탑이 탄창을 로봇으로 받습니다. 로켓·테슬라 포탑이 생기면 바꿉니다.",
+        "en": "Iron bacteria (from jelly) → cultivation → iron ore after a minute → electric furnaces → magazines for the turret ring (robot-fed). Upgrade to rocket or tesla turrets when available."
+      },
+      "research": [
+        "iron-bacteria",
+        "iron-bacteria-cultivation"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "5. 수출",
+        "en": "5. Exports"
+      },
+      "do": {
+        "ko": "탄소 섬유(아킬로 기초판 재료), 젤리 로켓 연료, 파랑 회로·LDS 수입으로 로켓 부품.",
+        "en": "Carbon fiber (for Aquilo foundation), rocket fuel from jelly, and imported blue circuits / LDS for rocket parts."
+      },
+      "research": [
+        "carbon-fiber",
+        "rocket-fuel-from-jelly",
+        "rocket-silo"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "planet-fulgora",
+      "why": {
+        "ko": "전자기 과학 행성",
+        "en": "the electromagnetic science planet"
+      }
+    }
+  ]
+}

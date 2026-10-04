@@ -165,7 +165,7 @@ def recycle_sort_stack(name, inputs, products, recyclers, tier="mid", rate_per_s
                  {i: rate.get(i, 0) for i, _ in products} | {TRASH: rate.get(TRASH, 0)}, gap=4)
 
 
-def write_planet(mod, script_file, label, description, specials):
+def write_planet(mod, script_file, label, description, specials, post=None):
     """blueprint.txt = the whole complex; variants/<line>.txt = each fluid-cell line alone (cap + 1 cell);
     variants/<file>.txt for every (file, stack) in `specials`."""
     from lib.complex import compose
@@ -175,6 +175,8 @@ def write_planet(mod, script_file, label, description, specials):
     if rep["warnings"]:
         raise SystemExit("\n".join(rep["warnings"]))
     bp.description = description
+    if post:
+        post(bp)
     bp.connect_poles()
     save(bp, script_file)
     done = set()

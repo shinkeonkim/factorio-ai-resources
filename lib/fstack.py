@@ -47,6 +47,7 @@ PORTS = {
     "assembling-machine-3": {"in": [(0, -1, "N")], "out": [(0, 1, "S")]},
     "oil-refinery": {"in": [(-1, 2, "S"), (1, 2, "S")], "out": [(-2, -2, "N"), (0, -2, "N"), (2, -2, "N")]},
     "electromagnetic-plant": {"in": [(-1.5, 0.5, "W"), (1.5, -0.5, "E")], "out": [(0.5, 1.5, "S"), (-0.5, -1.5, "N")]},
+    "electric-furnace": {"in": [], "out": []},           # furnaces pick their recipe from the input
 }
 SPEED = {k: v["speed"] for k, v in MACHINES.items()}
 PROD = {k: v.get("base_productivity", 0) for k, v in MACHINES.items()}
@@ -95,6 +96,9 @@ class FluidCell:
     outer: tuple | None = None
     tiers: tuple = ("mid", "late", "end")
     sink: str = "belt"               # "chest": item product into a chest in the centre column (mall cells)
+    bots: bool = False               # robot-fed: a requester chest per input inserter instead of belts (Gleba)
+    fuel: str | None = None          # burner fuel to request as well (biochambers burn nutrients)
+    limit: tuple | None = None       # (item, count): input inserters run only while the network holds < count
 
     # ---- recipe facts
     @property
@@ -202,7 +206,7 @@ class FluidCell:
         cf = self.centre_fluid
         if cf:
             return "pipe+belt" if self.items_out else "pipe"
-        if self.sink == "chest":
+        if self.sink == "chest" or self.bots:
             return "chest"
         return "belt" if self.items_out else "none"
 
@@ -266,6 +270,15 @@ def _amount(lst, name):
     return next(x.get("amount", 1) * x.get("probability", 1) for x in lst if x["name"] == name)
 
 
+def _bot_requests(cell):
+    want = {i["name"]: 3 * i["amount"] for i in cell.r["ingredients"] if i.get("type") != "fluid"}
+    if cell.fuel:
+        want[cell.fuel] = want.get(cell.fuel, 0) + 10
+    return {"sections": [{"index": 1, "filters": [
+        {"index": k + 1, "name": it, "quality": "normal", "comparator": "=", "count": n}
+        for k, (it, n) in enumerate(want.items())]}]}
+
+
 def rates(cell: FluidCell):
     """per machine at 100 %: crafts/s, item/fluid in and out per second (base productivity included)."""
     cr = SPEED[cell.machine] / cell.r["energy_required"]
@@ -286,6 +299,9 @@ def slots(cell: FluidCell):
                 lanes[item] = belt
     load = {"inner": 0.0, "outer": 0.0}
     for item in cell.items_in:
+        if cell.bots:
+            load["inner"] += rt["in"][item]
+            continue
         if item not in lanes:
             raise ValueError(f"{cell.name}: {item} is not on a lane")
         load[lanes[item]] += rt["in"][item]
@@ -320,7 +336,8 @@ def build_cell(bp, cell: FluidCell, tier: str, y0: int):
         f = L["facing"][sgn]
         ports = L["ports"][sgn]
         for y in range(y0, y0 + P):
-            bp.add(t["belt"], X(cell.d_inner), y, N)
+            if not cell.bots:
+                bp.add(t["belt"], X(cell.d_inner), y, N)
             if cell.outer:
                 bp.add(t["belt"], X(cell.d_outer), y, N)
             for i in range(len(cell.mains)):
@@ -329,7 +346,7 @@ def build_cell(bp, cell: FluidCell, tier: str, y0: int):
         for k in range(cell.n):
             top = y0 + P - cell.extra_row - s - (s + 1) * k             # machine rows top .. top+s-1
             left = X(cell.d_mach + s - 1) if sgn < 0 else X(cell.d_mach)
-            bp.add(cell.machine, left, top, f, recipe=cell.recipe)
+            bp.add(cell.machine, left, top, f, **({} if "furnace" in cell.machine else {"recipe": cell.recipe}))
             used_b, used_c = set(), set()
             for p in ports:
                 ent = cell.d_entry(cell.main_of(p.fluid)) if p.side != "centre" else None
@@ -352,12 +369,20 @@ def build_cell(bp, cell: FluidCell, tier: str, y0: int):
             free = [top + r for r in range(s) if top + r not in used_b]
             for role, name in (("inner", t["ins"]), ("outer", LH)):
                 for _ in range(want.get(role, 0)):
-                    bp.add(name, X(cell.d_port_b), free.pop(0), to_belt)
+                    row = free.pop(0)
+                    extra = {}
+                    if cell.bots and cell.limit:
+                        extra["control_behavior"] = {"connect_to_logistic_network": True, "logistic_condition": {
+                            "first_signal": {"type": "item", "name": cell.limit[0]}, "constant": cell.limit[1],
+                            "comparator": "<"}}
+                    bp.add(name, X(cell.d_port_b), row, to_belt, **extra)
+                    if cell.bots:                                   # its requester chest on the outer side
+                        bp.add("requester-chest", X(cell.d_inner), row, request_filters=_bot_requests(cell))
             cfree = [top + r for r in range(s) if top + r not in used_c]
             if cell.centre == "chest":                       # west chest on the first free row, east on the second
                 cy = cfree[0] if sgn < 0 else cfree[1]
                 bp.add(t["ins"], X(cell.d_port_c), cy, to_belt)
-                bp.add(CHEST[tier], c, cy, bar=4)
+                bp.add(CHEST[tier], c, cy, **({} if cell.bots else {"bar": 4}))
                 continue
             if cell.centre in ("belt", "pipe+belt"):
                 for _ in range(want.get("out", 0)):
@@ -572,6 +597,10 @@ def as_stack(cell: FluidCell, cells: int, tier: str = "mid", name=None):
     def build(bp, t):
         stack(bp, cell, t, cells, late_rates(cell))
         join_top(bp, cell, cells)
+        if cell.bots:                                          # logistic coverage: cap and top of the stack
+            bp.add("roboport", cell.c - 2, 2)
+            bp.add("roboport", cell.c - 2, -cell.period * cells - 6)
+            bp.add(TIERS[t]["pole"], cell.c + 2, -cell.period * cells - 2)
 
     products = cell.products()
     a = analyse(cell, "late")
