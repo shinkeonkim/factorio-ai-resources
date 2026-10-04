@@ -1,0 +1,55 @@
+{
+  "id": "science-red-upgradeable",
+  "order": 30,
+  "game": "2.0",
+  "mods": [
+    "base"
+  ],
+  "tags": [
+    "science",
+    "upgradeable",
+    "main-bus"
+  ],
+  "title": {
+    "ko": "빨강 과학 (업그레이드형 타일)",
+    "en": "Red science (upgradeable tile)"
+  },
+  "summary": {
+    "ko": "과학 조립기 10 + 톱니 1. 같은 배치로 분당 60 → 90 → 150. 6+2 버스에서 철·구리 분기 2줄로 입력.",
+    "en": "10 science + 1 gear assembler; same layout 60 → 90 → 150/min; fed by two 6+2 bus taps (iron, copper)."
+  },
+  "variants": [
+    {
+      "file": "variants/mid.txt",
+      "label": {
+        "ko": "중반 (빨강·조립기 2·고속)",
+        "en": "mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/late.txt",
+      "label": {
+        "ko": "후반 (파랑·조립기 3·벌크)",
+        "en": "late (blue, AM3, bulk)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "초반 (노랑·조립기 1·일반)",
+    "en": "early (yellow, AM1, basic)"
+  },
+  "outputs": [
+    {
+      "item": "automation-science-pack",
+      "per_minute": "60 / 90 / 150",
+      "where": {
+        "ko": "과학 벨트 동쪽 끝 (y=0)",
+        "en": "science belt, east end (y=0)"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "타일형 과학 아이디어: Christoffer Ramqvist \"Tileable Science Production\", XtremeZion Science Book, Nilaus Base-In-A-Book 비율 참고. 설계 자체는 이 저장소에서 새로 만든 것입니다.",
+    "en": "Tileable-science idea from Christoffer Ramqvist's \"Tileable Science Production\", XtremeZion's Science Book and Nilaus' ratios; the layout itself is new."
+  }
+}

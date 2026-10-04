@@ -31,6 +31,6 @@ demo-resources에 없는 영역을 보강하기 위해 조사한 커뮤니티 �
 
 ## 이 저장소에 반영할 순서 (계획)
 
-1. 업그레이드형 과학 라인(빨강·초록·군사·파랑·보라·노랑) — 데모 09(XtremeZion)·07(Nilaus) 아이디어를 6+2 버스 기준으로 재설계
+1. 업그레이드형 과학 라인 — ✅ [빨강](../../blueprints/science-red-upgradeable/README.md)·[초록](../../blueprints/science-green-upgradeable/README.md) 완료, 군사·파랑·보라·노랑 진행 예정 — 데모 09(XtremeZion)·07(Nilaus) 아이디어를 6+2 버스 기준으로 재설계
 2. 업그레이드형 몰(다이소) — 데모 02·03 분석 기반
 3. Space Age 행성 블럭은 위 링크의 원칙을 따라 별도 진행
