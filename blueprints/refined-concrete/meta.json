@@ -1,0 +1,155 @@
+{
+  "id": "refined-concrete",
+  "order": 10,
+  "game": "2.0",
+  "mods": [
+    "base"
+  ],
+  "tags": [
+    "concrete",
+    "stackable",
+    "upgradeable"
+  ],
+  "cell": "refined-concrete",
+  "title": {
+    "ko": "정제 콘크리트 (쌓는 셀)",
+    "en": "Refined concrete (stackable cell)"
+  },
+  "summary": {
+    "ko": "21×12 셀을 북쪽으로 쌓아 늘립니다. 입력 벽돌, 철광석, 강철, 철판; 같은 배치로 노랑→빨강→파랑.",
+    "en": "21×12 cell stacked northwards; inputs stone brick, iron ore, steel plate, iron plate; same layout yellow→red→blue."
+  },
+  "variants": [
+    {
+      "file": "variants/cell-early.txt",
+      "label": {
+        "ko": "셀 — 초반 (노랑·조립기 1·일반)",
+        "en": "cell — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/cell-mid.txt",
+      "label": {
+        "ko": "셀 — 중반 (빨강·조립기 2·고속)",
+        "en": "cell — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/cell-late.txt",
+      "label": {
+        "ko": "셀 — 후반 (파랑·조립기 3·벌크)",
+        "en": "cell — late (blue, AM3, bulk)"
+      }
+    },
+    {
+      "file": "variants/cap-early.txt",
+      "label": {
+        "ko": "캡(시작 조각) — 초반 (노랑·조립기 1·일반)",
+        "en": "cap (base piece) — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/cap-mid.txt",
+      "label": {
+        "ko": "캡(시작 조각) — 중반 (빨강·조립기 2·고속)",
+        "en": "cap (base piece) — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/cap-late.txt",
+      "label": {
+        "ko": "캡(시작 조각) — 후반 (파랑·조립기 3·벌크)",
+        "en": "cap (base piece) — late (blue, AM3, bulk)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "캡 + 셀 3개, 초반 (예시·미리보기)",
+    "en": "cap + 3 cells, early (example / preview)"
+  },
+  "outputs": [
+    {
+      "item": "refined-concrete",
+      "per_minute": "-",
+      "where": {
+        "ko": "가운데 벨트, 캡 아래로 나감",
+        "en": "centre belt, leaves south under the cap"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "쌓는 셀 형태: 사용자 데모의 Nilaus 초록칩 모듈(Base-In-A-Book)을 기준으로 삼았습니다.",
+    "en": "Stackable-cell form modelled on the Nilaus green-circuit module from the user's demo (Base-In-A-Book)."
+  },
+  "allow_problems": true,
+  "allow_problems_reason": "variants/cell-*: the bottom row is powered by the gap row below (cap or next cell); generate.py validates cap + cells at every tier",
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 연구",
+        "en": "0. Research"
+      },
+      "do": {
+        "ko": "콘크리트 연구가 콘크리트와 정제 콘크리트를 같이 엽니다. 유체 레시피라 조립기 2가 필요합니다.",
+        "en": "Concrete research unlocks both concrete and refined concrete; fluid recipes need assembling machine 2."
+      },
+      "research": [
+        "refined-concrete",
+        "assembling-machine-2"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 시작",
+        "en": "1. Start"
+      },
+      "do": {
+        "ko": "캡 + 셀 1개. 벽돌·강철·철판은 버스에서, 철광석은 광석 라인에서, 물은 캡 아래 Waterfill + 해양 펌프로(한쪽마다). 더 필요하면 셀을 북쪽으로 붙입니다.",
+        "en": "Cap + one cell. Bricks, steel and iron plates from the bus, iron ore from an ore line, water from Waterfill + an offshore pump under the cap (one per side). Add cells northwards for more."
+      },
+      "research": [
+        "underground-belt",
+        "pipe-to-ground"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 중반",
+        "en": "2. Mid"
+      },
+      "do": {
+        "ko": "빨강 벨트·고속 인서터·중형 전봇대 (조립기는 이미 2).",
+        "en": "Red belts, fast inserters, medium poles (assemblers are AM2 already)."
+      },
+      "research": [
+        "fast-transport-belt",
+        "fast-inserter",
+        "medium-electric-pole"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 후반",
+        "en": "3. Late"
+      },
+      "do": {
+        "ko": "파랑 벨트·조립기 3·벌크 인서터. 셀당 정제 콘크리트 출력이 약 1.7배.",
+        "en": "Blue belts, AM3, bulk inserters: about 1.7× refined concrete per cell."
+      },
+      "research": [
+        "express-transport-belt",
+        "assembling-machine-3",
+        "bulk-inserter"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "rail-ramp-support",
+      "why": {
+        "ko": "정제 콘크리트를 쓰는 셀",
+        "en": "the cell that uses refined concrete"
+      }
+    }
+  ]
+}

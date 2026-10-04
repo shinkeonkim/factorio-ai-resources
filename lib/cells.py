@@ -54,3 +54,16 @@ MODULE_MALL = [
     Cell("Modules: productivity & quality", ["productivity-module", "productivity-module-2"],
          east=["quality-module", "quality-module-2"], **_MOD),
 ]
+
+# --- refined concrete (fluid): concrete faces N, refined concrete faces S, they share the water row between them ---
+CELLS["refined-concrete"] = Cell("Refined concrete", ["concrete", "refined-concrete", "iron-stick"],
+                                 inner=("stone-brick", "iron-ore"), outer=("steel-plate", "iron-plate"),
+                                 water=True, facing=["N", "S", "N"], product="refined-concrete")
+CELLS["concrete"] = Cell("Concrete", ["concrete", "concrete"], inner=("stone-brick", "iron-ore"),
+                         water=True, facing=["N", "S"])
+
+# --- rail ramps & supports: chest cell fed by refined concrete, steel and rails ----------------------------------
+RAMPS = [
+    Cell("Ramps & supports", ["rail-support", "rail-ramp"], east=["rail-ramp", "rail-support"],
+         inner=("steel-plate", "refined-concrete"), outer=("rail", None), sink="chest"),
+]

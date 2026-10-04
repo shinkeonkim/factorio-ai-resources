@@ -81,6 +81,8 @@
     "ko": "쌓는 셀 형태: 사용자 데모의 Nilaus 초록칩 모듈(Base-In-A-Book)을 기준으로 삼았습니다.",
     "en": "Stackable-cell form modelled on the Nilaus green-circuit module from the user's demo (Base-In-A-Book)."
   },
+  "allow_problems": true,
+  "allow_problems_reason": "variants/cell-*: the bottom row is powered by the gap row below (cap or next cell); generate.py validates cap + cells at every tier",
   "roadmap": [
     {
       "stage": {
@@ -149,7 +151,5 @@
         "en": "next science"
       }
     }
-  ],
-  "allow_problems": true,
-  "allow_problems_reason": "variants/cell-*: the bottom row is powered by the gap row below (cap or next cell); generate.py validates cap + cells at every tier"
+  ]
 }

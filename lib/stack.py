@@ -65,6 +65,9 @@ class Cell:
     east: list | None = None                # east half's column if it differs (malls); same length as column
     sink: str = "belt"                      # "belt": product onto the centre belt; "chest": every product into a
                                             # chest in the centre column (malls), neighbours may still take it
+    water: bool = False                     # water mains at d=10 on both edges; see build_cell
+    facing: list | None = None              # per machine (south -> north) N/S; fluid machines that share a water
+                                            # row face each other (lower one N, upper one S)
 
     def half(self, side):
         """This cell as seen from one half (side = -1 west, +1 east)."""
@@ -79,7 +82,7 @@ class Cell:
 
     @property
     def c(self):
-        return 7 if self.outer else 6
+        return 10 if self.water else 7 if self.outer else 6
 
     @property
     def width(self):
@@ -146,9 +149,23 @@ def plan(cell: Cell):
     return jobs
 
 
+def machine_for(cell, recipe, tier):
+    """Entity for a recipe at a tier: per-recipe override, else the tier's assembler — but fluid recipes
+    need at least assembling-machine-2."""
+    ent = cell.machine.get(recipe, TIERS[tier]["am"])
+    if ent == "assembling-machine-1" and "crafting-with-fluid" in RECIPES[recipe].get("categories", []):
+        ent = "assembling-machine-2"
+    return ent
+
+
+def water_rows(cell):
+    """Gap-row indices k (between machine k and k+1) that carry water: lower machine faces N, upper faces S."""
+    f = cell.facing or [N] * len(cell.column)
+    return [k for k in range(len(cell.column) - 1) if f[k] == N and f[k + 1] == S] if cell.water else []
+
+
 def _rate(cell, tier):
-    t = TIERS[tier]
-    return [SPEED[cell.machine.get(r, t["am"])] / RECIPES[r]["energy_required"] for r in cell.column]
+    return [SPEED[machine_for(cell, r, tier)] / RECIPES[r]["energy_required"] for r in cell.column]
 
 
 def _role_load(cell, tier, k, role):
@@ -256,8 +273,9 @@ def build_cell(bp, cell: Cell, tier: str, y0: int):
         for k, j in enumerate(jobs):
             top = y0 + P - 3 - 4 * k                             # machine rows top .. top+2
             r = j["recipe"]
-            ent = cell.machine.get(r, t["am"])
-            bp.add(ent, X(4) if sgn < 0 else X(2), top, **({} if "furnace" in ent else {"recipe": r}))
+            ent = machine_for(cell, r, tier)
+            face = (cell.facing or [N] * len(cell.column))[k]
+            bp.add(ent, X(4) if sgn < 0 else X(2), top, face, **({} if "furnace" in ent else {"recipe": r}))
             rows = [top + 1, top, top + 2]                       # belt-side slots, lane output first
             for role in ("lane_inner", "lane_outer", "outer", "inner"):
                 for _ in range(cnt[k].get(role, 0)):
@@ -278,10 +296,23 @@ def build_cell(bp, cell: Cell, tier: str, y0: int):
                 if (sgn, gy) in gap_used:
                     raise ValueError(f"{cell.name}: two hand-overs in one gap row")
                 gap_used.add((sgn, gy))
-                for i in range(cnt[k][str(role)]):
-                    bp.add(t["ins"], X([3, 4, 2][i]), gy, S if n > k else N)   # S = picks from the south
-                    if i == 2 and sgn > 0:                       # c+2 is outside the c-1 / c+5 poles' reach
+                spots = [2] if min(k, n) in water_rows(cell) else [3, 4, 2]     # water row: d=3,4 hold pipes
+                for i in range(min(cnt[k][str(role)], len(spots))):
+                    bp.add(t["ins"], X(spots[i]), gy, S if n > k else N)   # S = picks from the south
+                    if spots[i] == 2 and sgn > 0:                # c+2 is outside the c-1 / c+5 poles' reach
                         bp.add(t["pole"], c + 1, gy)
+    if cell.water:                                               # water mains + one tap per shared water row
+        for sgn in (-1, 1):
+            X = lambda d: c + sgn * d
+            out_dir, in_dir = (W, E) if sgn < 0 else (E, W)
+            for y in range(y0, y0 + P):
+                bp.add("pipe", X(10), y)
+            for k in water_rows(cell):
+                gy = y0 + P - 4 - 4 * k                          # gap row above machine k
+                bp.add("pipe", X(9), gy)
+                bp.add("pipe-to-ground", X(8), gy, out_dir)      # above-ground side faces the main
+                bp.add("pipe-to-ground", X(4), gy, in_dir)       # surfaces next to the machines' ports
+                bp.add("pipe", X(3), gy)                         # feeds the machine below (N) and above (S)
     for g in range(y0, y0 + P, 4):                               # gap rows: poles
         for dx in (-5, -1, 5):
             bp.add(t["pole"], c + dx, g)
@@ -309,6 +340,11 @@ def build_cap(bp, cell: Cell, tier: str, rates=None):
     if cell.sink == "belt":
         for y in range(0, 8):
             bp.add(t["belt"], c, y, S)
+    if cell.water:
+        for sgn in (-1, 1):
+            for y in range(0, 8):
+                bp.add("pipe", c + sgn * 10, y)
+            bp.add_marker(c + sgn * 10, 8, {"water": round(rates.get("water", 0))}, )
     get = lambda belt, side: next((i for i, v in lanes.items() if v == (belt, side)), None)
     inner_far, inner_near = get("inner", "far"), get("inner", "near")
     outer_far, outer_near = get("outer", "far"), get("outer", "near")
@@ -380,8 +416,13 @@ def analyse(cell: Cell, tier: str):
         for item, a in _ingredients(col[k]).items():
             if item in cap_items:
                 raw[item] = raw.get(item, 0) + rate[k] * u * a
+    fluid = {}
+    for k, u in enumerate(util):
+        for x in RECIPES[col[k]]["ingredients"]:
+            if x.get("type") == "fluid":
+                fluid[x["name"]] = fluid.get(x["name"], 0) + rate[k] * u * x["amount"]
     lane = LANE[t["belt"]]
     max_cells = math.floor(min([lane / v for v in raw.values() if v > 0] + [lane / side_out]))
     limited = {col[k]: round(util[k] / free[k], 3) for k in range(len(col)) if free[k] > 0 and util[k] < free[k] * 0.999}
     return {"util": [round(u, 3) for u in util], "out_per_s": 2 * side_out, "lane_per_side": raw,
-            "max_cells": max_cells, "limited": limited, "counts": cnt}
+            "max_cells": max_cells, "limited": limited, "counts": cnt, "fluid_per_side": fluid}

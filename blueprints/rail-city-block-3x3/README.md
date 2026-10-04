@@ -37,7 +37,7 @@
 
 **다음에 지을 것**
 
-- [철도 경사로·지지대 공장](../rail-ramp-support/README.md) — 경사로·지지대 공급
+- [레일 경사로·지지대 (쌓는 셀)](../rail-ramp-support/README.md) — 경사로·지지대 공급
 - [철도 제련 공급 역 블럭](../rail-smelter-station/README.md) — 큰 공간에 맞는 역
 
 ### 파일

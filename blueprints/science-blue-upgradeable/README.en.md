@@ -105,6 +105,7 @@ Machine column (south → north, both halves):
 - Cap: bus taps come in at the markers on the bottom edge and are side-loaded onto their lanes. Marker counts are **late-tier demand per cell and side (per minute)**.
 - Every fourth row is a gap row with poles and the hand-over inserters between machines.
 
+
 ## Upgrading
 
 Swap belts, assemblers, inserters and poles with the upgrade planner (same footprints). The only underground is the cap's 1-tile hop, and long-handed inserters only take the low-rate items from the outer belt. Per-tier output and stack limits are in the stacking table above.

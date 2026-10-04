@@ -12,7 +12,7 @@ EXAMPLE_CELLS = 3
 
 def _late_rates(cell):
     a = analyse(cell, "late")
-    return {k: v * 60 for k, v in a["lane_per_side"].items()}
+    return {k: v * 60 for k, v in {**a["lane_per_side"], **a["fluid_per_side"]}.items()}
 
 
 def example(cell, tier="early", n=EXAMPLE_CELLS):

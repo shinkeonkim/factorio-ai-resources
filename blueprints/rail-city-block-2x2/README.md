@@ -37,7 +37,7 @@
 
 **다음에 지을 것**
 
-- [철도 경사로·지지대 공장](../rail-ramp-support/README.md) — 경사로·지지대 공급
+- [레일 경사로·지지대 (쌓는 셀)](../rail-ramp-support/README.md) — 경사로·지지대 공급
 - [철도 버퍼 역 블럭](../rail-buffer-station/README.md) — 가운데에 넣을 역
 - [철도 큰 블럭 3×3 (가운데 빈 공간)](../rail-city-block-3x3/README.md) — 더 큰 블럭
 

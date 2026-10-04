@@ -1,6 +1,6 @@
-# Rail ramp & support factory
+# Rail ramps & supports (stackable cell)
 
-> Small factory making rail ramps and rail supports from iron ore, stone and refined concrete (steel-limited).
+> 15×8 chest cell: supports and ramps on both sides into centre chests. Inputs refined concrete, steel and rails; each extra cell adds chests.
 
 [한국어](README.md)
 
@@ -13,9 +13,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 46×15 tiles |
-| Entities | 211 |
-| Main machines | `electric-furnace` ×12<br>`assembling-machine-2` ×4 (iron-stick 1, rail 1, rail-ramp 1, rail-support 1)<br>`steel-chest` ×2 |
+| Size | 19×17 tiles |
+| Entities | 127 |
+| Main machines | `assembling-machine-1` ×4 (rail-support 2, rail-ramp 2)<br>`iron-chest` ×4 |
 | Validation | OK |
 
 ### Inputs
@@ -24,35 +24,55 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `iron-ore` | 225 | (2, 1) |
-| `stone` | 4 | (0, 6) |
-| `refined-concrete` | 160 | (2, 14) |
+| `refined-concrete` | 450 | (4, 16) |
+| `steel-plate` | 450 | (0, 16) |
+| `rail` | 450 | (1, 16) |
+| `refined-concrete` | 450 | (14, 16) |
+| `steel-plate` | 450 | (18, 16) |
+| `rail` | 450 | (17, 16) |
 
 ### Outputs
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `rail-ramp` | ~1 | chest (2-slot limit) |
-| `rail-support` | ~3 | chest (2-slot limit) |
+| `(chests)` | - | centre chests (2 slots each) |
+
+### Cell types
+
+Every cell is **15** wide and uses the same lanes. The bottom cell makes the shared intermediates (e.g. gears) for the lanes, so it goes right above the cap; add any other cells northwards in any order. Products collect in the centre chests (limited to 2 slots).
+
+| Cell | Size | West (south→north) | East (south→north) |
+|---|---|---|---|
+| Ramps & supports | 15×8 | `rail-support` → `rail-ramp` | `rail-ramp` → `rail-support` |
+
+Lanes: `steel-plate` (inner), `refined-concrete` (inner), `rail` (outer)
 
 ### Roadmap
 
 | Stage | When / research needed | What to do |
 |---|---|---|
-| 0. Research (Space Age) | `elevated-rail` (red·green·blue·purple), `advanced-material-processing-2` (red·green·blue) | Elevated rail unlocks rail ramps and supports; it needs purple science. |
-| 1. Inputs | - | Iron ore, stone and refined concrete at the markers. Steel is the bottleneck, so check the iron-ore belt first. Refined concrete comes from the refined-concrete factory. |
-| 2. Stock up | - | One 2x2 big block uses 216 supports and 18 ramps. Fill the chests before expanding the rail network. |
+| 0. Research (Space Age) | `elevated-rail` (red·green·blue·purple) | Elevated rail unlocks ramps and supports (purple science). |
+| 1. Inputs | - | Refined concrete from the refined-concrete cell's centre belt, rails from the rail cell or the bus, steel from the bus, into the cap's markers. |
+| 2. Stock | - | One 2x2 big rail block uses 216 supports and 18 ramps; add another cell northwards for more chest space. |
+| 3. Upgrade | `logistics-2` (red·green), `logistics-3` (red·green·blue·purple), `construction-robotics` (red·green·blue) | Red/blue belts, AM2/AM3, fast/bulk inserters; passive provider chests at the late tier so bots take straight from it. |
 
 **Build next**
 
-- [Refined concrete 60/min](../refined-concrete-60/README.en.md) — refined-concrete supply
+- [Refined concrete (stackable cell)](../refined-concrete/README.en.md) — refined-concrete supply
+- [Rails (stackable cell)](../cell-rail/README.en.md) — rail supply
 - [Big rail block 2×2 (empty interior)](../rail-city-block-2x2/README.en.md) — the rail block that uses them
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | default |
+| [`blueprint.txt`](blueprint.txt) | cap + one cell, early (example / preview) |
+| [`variants/ramps-supports-early.txt`](variants/ramps-supports-early.txt) | Ramps & supports — early (yellow, AM1, basic) |
+| [`variants/ramps-supports-mid.txt`](variants/ramps-supports-mid.txt) | Ramps & supports — mid (red, AM2, fast) |
+| [`variants/ramps-supports-late.txt`](variants/ramps-supports-late.txt) | Ramps & supports — late (blue, AM3, bulk) |
+| [`variants/cap-early.txt`](variants/cap-early.txt) | cap — early (yellow, AM1, basic) |
+| [`variants/cap-mid.txt`](variants/cap-mid.txt) | cap — mid (red, AM2, fast) |
+| [`variants/cap-late.txt`](variants/cap-late.txt) | cap — late (blue, AM3, bulk) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -70,4 +90,11 @@ python3 tools/build.py rail-ramp-support
 
 <!-- AUTO:END -->
 
-{'ko': '## 구조\n\n- 철 용광로 6 → 철판 벨트(남쪽 레인, 돌은 북쪽 레인) → 강철 용광로 6 → 강철 벨트.\n- 철 막대 → 레일 → 경사로 조립기는 옆으로 바로 넣고, 지지대 조립기는 따로 있습니다.\n- 경사로 쪽이 강철을 먼저 가져가므로 두 상자를 2칸으로 제한해 강철이 지지대 쪽으로도 넘어가게 했습니다.\n\n## 참고\n\n- Space Age(고가 철도)가 필요합니다. 생산량을 늘리려면 `generate.py`의 `range(6)` 두 곳을 같이 늘리세요.\n', 'en': '## Layout\n\n- 6 iron furnaces → plate belt (south lane; stone on the north lane) → 6 steel furnaces → steel belt.\n- Stick → rail → ramp assemblers insert directly into each other; the support assembler is separate.\n- The ramp assembler takes steel first, so both chests are limited to 2 slots to let steel reach the supports.\n\n## Notes\n\n- Requires Space Age (elevated rails). Scale up by raising both `range(6)` in `generate.py`.\n'}
+## Layout
+
+- A chest cell like the malls: input belts run through along both edges (inner: steel and refined concrete, outer: rails); west makes support → ramp, east ramp → support, each into a centre chest.
+- A ramp eats 100 refined concrete, so the inserters limit it, which is fine for a cell that idles once its chests are full.
+
+## Credits
+
+The earlier ramp/support factory rebuilt as a stackable cell.

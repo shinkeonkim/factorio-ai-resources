@@ -105,6 +105,7 @@ Machine column (south → north, both halves):
 - Cap: bus taps come in at the markers on the bottom edge and are side-loaded onto their lanes. Marker counts are **late-tier demand per cell and side (per minute)**.
 - Every fourth row is a gap row with poles and the hand-over inserters between machines.
 
+
 ## Used by
 
 An input of [Military science (stackable cell)](../science-military-upgradeable/README.en.md). Send the centre belt to its cap, or onto the bus.

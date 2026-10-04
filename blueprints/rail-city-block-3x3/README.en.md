@@ -37,7 +37,7 @@ none
 
 **Build next**
 
-- [Rail ramp & support factory](../rail-ramp-support/README.en.md) — ramp/support supply
+- [Rail ramps & supports (stackable cell)](../rail-ramp-support/README.en.md) — ramp/support supply
 - [Rail smelter provider block](../rail-smelter-station/README.en.md) — a station that fits the big interior
 
 ### Files

@@ -1,39 +1,32 @@
 {
   "id": "rail-ramp-support",
-  "order": 30,
+  "order": 12,
   "game": "2.0",
   "mods": [
     "base",
     "space-age"
   ],
   "tags": [
-    "mall",
     "rail",
-    "elevated-rails"
+    "space-age",
+    "stackable",
+    "upgradeable"
   ],
   "title": {
-    "ko": "철도 경사로·지지대 공장",
-    "en": "Rail ramp & support factory"
+    "ko": "레일 경사로·지지대 (쌓는 셀)",
+    "en": "Rail ramps & supports (stackable cell)"
   },
   "summary": {
-    "ko": "철광석·돌·정제 콘크리트로 철도 경사로와 지지대를 만드는 소형 공장 (강철 병목).",
-    "en": "Small factory making rail ramps and rail supports from iron ore, stone and refined concrete (steel-limited)."
+    "ko": "15×8 상자 셀: 지지대·경사로를 양쪽에서 만들어 가운데 상자에. 입력은 정제 콘크리트·강철·레일; 셀을 붙일수록 상자가 늘어납니다.",
+    "en": "15×8 chest cell: supports and ramps on both sides into centre chests. Inputs refined concrete, steel and rails; each extra cell adds chests."
   },
   "outputs": [
     {
-      "item": "rail-ramp",
-      "per_minute": "~1",
+      "item": "(chests)",
+      "per_minute": "-",
       "where": {
-        "ko": "상자 (2칸 제한)",
-        "en": "chest (2-slot limit)"
-      }
-    },
-    {
-      "item": "rail-support",
-      "per_minute": "~3",
-      "where": {
-        "ko": "상자 (2칸 제한)",
-        "en": "chest (2-slot limit)"
+        "ko": "가운데 상자 (2칸 제한)",
+        "en": "centre chests (2 slots each)"
       }
     }
   ],
@@ -44,13 +37,12 @@
         "en": "0. Research (Space Age)"
       },
       "do": {
-        "ko": "엘리베이티드 레일 연구가 레일 경사로와 지지대를 엽니다. 보라 과학이 필요합니다.",
-        "en": "Elevated rail unlocks rail ramps and supports; it needs purple science."
+        "ko": "엘리베이티드 레일 연구가 경사로·지지대를 엽니다(보라 과학).",
+        "en": "Elevated rail unlocks ramps and supports (purple science)."
       },
       "research": [
         "rail-ramp",
-        "rail-support",
-        "electric-furnace"
+        "rail-support"
       ]
     },
     {
@@ -59,29 +51,51 @@
         "en": "1. Inputs"
       },
       "do": {
-        "ko": "철광석·돌·정제 콘크리트를 표시 위치로. 강철이 병목이라 철광석 벨트를 먼저 확인하세요. 정제 콘크리트는 정제 콘크리트 공장에서.",
-        "en": "Iron ore, stone and refined concrete at the markers. Steel is the bottleneck, so check the iron-ore belt first. Refined concrete comes from the refined-concrete factory."
+        "ko": "정제 콘크리트는 정제 콘크리트 셀의 가운데 벨트에서, 레일은 레일 셀이나 버스에서, 강철은 버스에서 캡 표시 자리로.",
+        "en": "Refined concrete from the refined-concrete cell's centre belt, rails from the rail cell or the bus, steel from the bus, into the cap's markers."
       },
       "research": []
     },
     {
       "stage": {
-        "ko": "2. 재고 쌓기",
-        "en": "2. Stock up"
+        "ko": "2. 재고",
+        "en": "2. Stock"
       },
       "do": {
-        "ko": "2x2 큰 블럭 하나에 지지대 216개, 경사로 18개가 듭니다. 철도망을 넓히기 전에 상자에 미리 쌓아 두세요.",
-        "en": "One 2x2 big block uses 216 supports and 18 ramps. Fill the chests before expanding the rail network."
+        "ko": "2x2 큰 철도 블럭 하나에 지지대 216개, 경사로 18개. 상자가 모자라면 셀을 북쪽에 하나 더.",
+        "en": "One 2x2 big rail block uses 216 supports and 18 ramps; add another cell northwards for more chest space."
       },
       "research": []
+    },
+    {
+      "stage": {
+        "ko": "3. 업그레이드",
+        "en": "3. Upgrade"
+      },
+      "do": {
+        "ko": "빨강/파랑 벨트·조립기 2/3·고속/벌크 인서터, 후반엔 패시브 공급 상자로 봇이 바로 가져가게.",
+        "en": "Red/blue belts, AM2/AM3, fast/bulk inserters; passive provider chests at the late tier so bots take straight from it."
+      },
+      "research": [
+        "fast-transport-belt",
+        "express-transport-belt",
+        "passive-provider-chest"
+      ]
     }
   ],
   "next": [
     {
-      "id": "refined-concrete-60",
+      "id": "refined-concrete",
       "why": {
         "ko": "정제 콘크리트 공급",
         "en": "refined-concrete supply"
+      }
+    },
+    {
+      "id": "cell-rail",
+      "why": {
+        "ko": "레일 공급",
+        "en": "rail supply"
       }
     },
     {
@@ -91,5 +105,60 @@
         "en": "the rail block that uses them"
       }
     }
-  ]
+  ],
+  "family": "RAMPS",
+  "variants": [
+    {
+      "file": "variants/ramps-supports-early.txt",
+      "label": {
+        "ko": "Ramps & supports — 초반 (노랑·조립기 1·일반)",
+        "en": "Ramps & supports — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/ramps-supports-mid.txt",
+      "label": {
+        "ko": "Ramps & supports — 중반 (빨강·조립기 2·고속)",
+        "en": "Ramps & supports — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/ramps-supports-late.txt",
+      "label": {
+        "ko": "Ramps & supports — 후반 (파랑·조립기 3·벌크)",
+        "en": "Ramps & supports — late (blue, AM3, bulk)"
+      }
+    },
+    {
+      "file": "variants/cap-early.txt",
+      "label": {
+        "ko": "캡 — 초반 (노랑·조립기 1·일반)",
+        "en": "cap — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/cap-mid.txt",
+      "label": {
+        "ko": "캡 — 중반 (빨강·조립기 2·고속)",
+        "en": "cap — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/cap-late.txt",
+      "label": {
+        "ko": "캡 — 후반 (파랑·조립기 3·벌크)",
+        "en": "cap — late (blue, AM3, bulk)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "캡 + 셀 1개, 초반 (예시·미리보기)",
+    "en": "cap + one cell, early (example / preview)"
+  },
+  "allow_problems": true,
+  "allow_problems_reason": "cell files: the bottom row is powered by the gap row below (cap or next cell); generate.py validates cap + cells at every tier",
+  "credits": {
+    "ko": "이 저장소의 이전 경사로·지지대 공장을 쌓는 셀로 다시 만들었습니다.",
+    "en": "The earlier ramp/support factory rebuilt as a stackable cell."
+  }
 }

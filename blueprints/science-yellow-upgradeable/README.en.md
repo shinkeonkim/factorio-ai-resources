@@ -105,6 +105,7 @@ Machine column (south → north, both halves):
 - Cap: bus taps come in at the markers on the bottom edge and are side-loaded onto their lanes. Marker counts are **late-tier demand per cell and side (per minute)**.
 - Every fourth row is a gap row with poles and the hand-over inserters between machines.
 
+
 ## Intermediate cells
 
 This science cell takes only three inputs; the intermediates come from their own cells. Send each one's centre belt into this cap, or onto the bus.
