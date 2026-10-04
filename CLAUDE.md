@@ -9,6 +9,11 @@
   top edge, so pasting the cell one period further north extends production (model: the Nilaus green-circuit
   module). Each folder ships cap + 3 cells (example), cell-<tier> (snaps to its grid) and cap-<tier>; build.py adds
   the stacking table. Complex products get their intermediates from their own cells, not one big layout.
+- **Fluid cells** (lib/fstack.py): one recipe per cell, machines rotated so fluid inputs face the belts and outputs
+  face the centre; each input fluid gets its own machine row (pipe-to-ground pairs must never share a row).
+- **Planet complexes** (lib/complex.py + lib/planets/<planet>.py): a bus with stacks on its north side, composed into
+  one blueprint. The composer plans every bus tap/crossing (underground spans per row), refuses collisions and lane
+  overloads, and adds a power spine. Producers must stand west of consumers.
 - House rules for new factories: horizontal main bus of 6-lane groups + 2 empty rows (`lib/main_bus.py`,
   docs/guides/main-bus-6x2.md); upgrade in place yellow→red→blue with the same layout (underground spans ≤4,
   no long-handed on bottlenecks, small-pole spacing, 2×2 furnaces; docs/guides/upgrade-in-place.md);

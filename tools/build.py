@@ -153,6 +153,39 @@ def family_section(name, lang):
     return out
 
 
+def planet_section(name, lang):
+    """Stacks, bus and power of a planet complex (lib/planets/<name>.py), from the same code that built it."""
+    import importlib
+    sys.path.insert(0, str(ROOT))
+    mod = importlib.import_module(f"lib.planets.{name}")
+    from lib.fstack import analyse as fan
+    from lib.complex import compose
+    ko = lang == "ko"
+    out = ["", "### " + ("단지 구성" if ko else "Complex"), "",
+           ("| 줄 | 셀 크기 | 셀 수 | 출력 (분당, 후반) | 입력 (분당, 후반) |" if ko else
+            "| Line | Cell | Cells | Output (/min, late) | Inputs (/min, late) |"), "|---|---|---:|---|---|"]
+    for key, n in mod.PLAN:
+        c = mod.C[key]
+        a = fan(c, "late")
+        outs = ", ".join(f"{icon(k, 'fluid' if k in c.fluids_out else 'item')} {v * 60 * n:,.0f}" for k, v in a["out_per_s"].items())
+        ins = ", ".join(f"{icon(k, 'fluid' if k in c.fluids_in else 'item')} {2 * v * 60 * n:,.0f}" for k, v in a["in_per_side"].items())
+        if c.centre == "chest":
+            outs = ("상자 (몰)" if ko else "chests (mall)")
+        out.append(f"| {c.name} | {c.width}×{c.period} | {n} | {outs} | {ins} |")
+    bp, rep = compose(name, mod.LAYOUT, mod.stacks(), tier=mod.BUS_TIER)
+    bp.connect_poles()
+    use, gen = mod.power_budget(bp)
+    out += ["", ("버스 (위 → 아래, 6줄 + 빈 2줄 묶음; 유체는 맨 아래):" if ko else "Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):"), "",
+            ("| 묶음 | 줄 |" if ko else "| Group | Lanes |"), "|---|---|"]
+    for g, grp in enumerate(mod.LAYOUT):
+        out.append(f"| {g + 1} ({grp['kind']}) | " + ", ".join(icon(i, 'fluid' if grp['kind'] == 'fluid' else 'item') if i else "-" for i in grp["lanes"]) + " |")
+    out += ["", (f"전체 {len(bp.entities):,}개 엔티티, 폭 {rep['x_end']}칸. 최대 전력 {use / 1000:,.0f} MW / 발전 {gen / 1000:,.0f} MW. "
+                 "버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다." if ko else
+                 f"{len(bp.entities):,} entities, {rep['x_end']} tiles wide. Peak power {use / 1000:,.0f} MW / generated {gen / 1000:,.0f} MW. "
+                 "Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).")]
+    return out
+
+
 def trigger_text(trig, lang):
     if not trig:
         return "-"
@@ -283,6 +316,8 @@ def auto_section(d: pathlib.Path, meta: dict, st: dict, lang: str) -> str:
         out += stack_section(meta["cell"], lang)
     if meta.get("family"):
         out += family_section(meta["family"], lang)
+    if meta.get("planet"):
+        out += planet_section(meta["planet"], lang)
     if meta.get("roadmap"):
         out += ["", f"### {t['roadmap']}", "", f"| {t['stage']} | {t['research']} | {t['todo']} |", "|---|---|---|"]
         for st_ in meta["roadmap"]:

@@ -1,0 +1,284 @@
+{
+  "id": "planet-vulcanus",
+  "order": 60,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "space-age"
+  ],
+  "planet": "vulcanus",
+  "tags": [
+    "planet",
+    "vulcanus",
+    "space-age",
+    "all-in-one",
+    "stackable"
+  ],
+  "title": {
+    "ko": "불카누스 올인원 단지",
+    "en": "Vulcanus all-in-one complex"
+  },
+  "summary": {
+    "ko": "용암 → 용융 금속 → 주조·텅스텐·금속 과학 분당 360, 윤활유, 몰(주조기·대형 채굴기·터보 벨트), 전력 372 MW, 착륙장 수입·로켓 수출, 돌 처리까지 버스 하나에 쌓는 셀로.",
+    "en": "Lava → molten metals → castings, tungsten and 360 metallurgic science/min, lubricant, a mall (foundries, big drills, turbo belts), 372 MW of power, landing-pad imports, rocket exports and stone disposal — all stackable cells on one bus."
+  },
+  "variants": [
+    {
+      "file": "variants/molten-iron.txt",
+      "label": {
+        "ko": "용융 철 — 캡 + 셀 1개",
+        "en": "Molten iron — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/molten-copper.txt",
+      "label": {
+        "ko": "용융 구리 — 캡 + 셀 1개",
+        "en": "Molten copper — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/heavy-oil.txt",
+      "label": {
+        "ko": "중유 (간이 석탄 액화) — 캡 + 셀 1개",
+        "en": "Heavy oil (simple coal liquefaction) — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/lubricant.txt",
+      "label": {
+        "ko": "윤활유 — 캡 + 셀 1개",
+        "en": "Lubricant — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/carbon.txt",
+      "label": {
+        "ko": "탄소 — 캡 + 셀 1개",
+        "en": "Carbon — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/tungsten-carbide.txt",
+      "label": {
+        "ko": "탄화 텅스텐 — 캡 + 셀 1개",
+        "en": "Tungsten carbide — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/tungsten-plate.txt",
+      "label": {
+        "ko": "텅스텐 판 — 캡 + 셀 1개",
+        "en": "Tungsten plate — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/iron-plate.txt",
+      "label": {
+        "ko": "철판 주조 — 캡 + 셀 1개",
+        "en": "Iron plates — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/steel-plate.txt",
+      "label": {
+        "ko": "강철 주조 — 캡 + 셀 1개",
+        "en": "Steel — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/science.txt",
+      "label": {
+        "ko": "금속 과학 — 캡 + 셀 1개",
+        "en": "Metallurgic science — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/low-density-structure.txt",
+      "label": {
+        "ko": "저밀도 구조물 주조 — 캡 + 셀 1개",
+        "en": "Low density structure — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/mall-foundry.txt",
+      "label": {
+        "ko": "몰: 주조기 — 캡 + 셀 1개",
+        "en": "Mall: foundry — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/mall-big-drill.txt",
+      "label": {
+        "ko": "몰: 대형 채굴기 — 캡 + 셀 1개",
+        "en": "Mall: big mining drill — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/mall-turbo-belt.txt",
+      "label": {
+        "ko": "몰: 터보 벨트 — 캡 + 셀 1개",
+        "en": "Mall: turbo belt — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/mall-turbo-underground.txt",
+      "label": {
+        "ko": "몰: 터보 지하 벨트 — 캡 + 셀 1개",
+        "en": "Mall: turbo underground — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/mall-turbo-splitter.txt",
+      "label": {
+        "ko": "몰: 터보 분배기 — 캡 + 셀 1개",
+        "en": "Mall: turbo splitter — cap + 1 cell"
+      }
+    },
+    {
+      "file": "variants/power.txt",
+      "label": {
+        "ko": "전력: 산 중화 + 터빈 64기 (372 MW)",
+        "en": "power: acid neutralisation + 64 turbines (372 MW)"
+      }
+    },
+    {
+      "file": "variants/landing-pad.txt",
+      "label": {
+        "ko": "착륙장 (수입)",
+        "en": "landing pad (imports)"
+      }
+    },
+    {
+      "file": "variants/rocket-silo-and-exports.txt",
+      "label": {
+        "ko": "로켓 사일로 + 수출 상자",
+        "en": "rocket silo + export chests"
+      }
+    },
+    {
+      "file": "variants/stone-sink.txt",
+      "label": {
+        "ko": "돌 처리 (재활용기)",
+        "en": "stone sink (recyclers)"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "단지 전체 (버스 + 모든 줄)",
+    "en": "the whole complex (bus + every line)"
+  },
+  "outputs": [
+    {
+      "item": "metallurgic-science-pack",
+      "per_minute": "360",
+      "where": {
+        "ko": "로켓 수출 상자 (버스 동쪽 끝)",
+        "en": "rocket export chests (east end of the bus)"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "설계는 이 저장소에서 새로 만든 것입니다. 참고: Space Ghost의 'Vulcanus MALL 108 items'(factorioprints -OL_rvijZDQI7WVI8mxG), Nir Adar의 'Vulcanus Starter Base'(-OU4xpv_3uAJk-nIYB2y), Zabr's Complete Space Age(-OJe1VpH5-TunS6dqcbi) — 수입 전략과 산 중화 전력 규모.",
+    "en": "Designed in this repository. References: Space Ghost's 'Vulcanus MALL 108 items' (factorioprints -OL_rvijZDQI7WVI8mxG), Nir Adar's 'Vulcanus Starter Base' (-OU4xpv_3uAJk-nIYB2y) and Zabr's Complete Space Age (-OJe1VpH5-TunS6dqcbi) for the import strategy and the size of acid-neutralisation power."
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 도착",
+        "en": "0. Arrival"
+      },
+      "do": {
+        "ko": "주조기 연구 전: 우주 플랫폼에서 착륙장·로봇·기본 건물을 내립니다. 용암 호수 옆, 방해석·석탄·텅스텐 광맥 근처의 디몰리셔 영역 밖에 자리를 잡습니다.",
+        "en": "Before foundries: drop the landing pad, robots and basic buildings from the platform. Pick a spot next to a lava lake, near calcite, coal and tungsten ore, outside demolisher territory."
+      },
+      "research": [
+        "foundry",
+        "cargo-landing-pad"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 전력",
+        "en": "1. Power"
+      },
+      "do": {
+        "ko": "전력 줄(산 중화 + 터빈)을 먼저: 방해석과 황산(산 간헐천 펌프잭)만 있으면 372 MW. 처음엔 터빈 몇 대로 시작해도 됩니다.",
+        "en": "Power first: calcite and sulfuric acid (pumpjacks on acid geysers) give 372 MW; a few turbines are enough to start."
+      },
+      "research": [
+        "acid-neutralisation",
+        "steam-turbine"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 용융 금속·주조",
+        "en": "2. Molten metals & castings"
+      },
+      "do": {
+        "ko": "용융 철·구리 줄과 철판·강철 주조. 용암은 버스 서쪽 끝 표시 자리에 해양 펌프로. 돌이 나오므로 돌 처리 줄도 같이 놓습니다(재활용 연구 전엔 상자에 쌓임).",
+        "en": "Molten iron/copper lines plus iron and steel casting. Lava from offshore pumps at the bus markers. They make stone, so place the stone sinks too (chests until recycling is researched)."
+      },
+      "research": [
+        "molten-iron-from-lava",
+        "casting-iron",
+        "casting-steel"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 텅스텐·과학",
+        "en": "3. Tungsten & science"
+      },
+      "do": {
+        "ko": "탄소 → 탄화 텅스텐, 텅스텐 판, 금속 과학(분당 360). 셀을 더 쌓으면 비례해서 늘어납니다.",
+        "en": "Carbon → tungsten carbide, tungsten plate, metallurgic science (360/min); more cells scale it linearly."
+      },
+      "research": [
+        "carbon",
+        "tungsten-carbide",
+        "tungsten-plate",
+        "metallurgic-science-pack"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "4. 몰·윤활유",
+        "en": "4. Mall & lubricant"
+      },
+      "do": {
+        "ko": "간이 석탄 액화 → 윤활유, 몰 줄(주조기·대형 채굴기·터보 벨트류). 회로·엔진·급행 벨트는 착륙장 수입.",
+        "en": "Simple coal liquefaction → lubricant, then the mall lines (foundries, big drills, turbo belts); circuits, engines and express belts are imported."
+      },
+      "research": [
+        "simple-coal-liquefaction",
+        "big-mining-drill",
+        "turbo-transport-belt"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "5. 로켓·수출",
+        "en": "5. Rocket & exports"
+      },
+      "do": {
+        "ko": "저밀도 구조물 주조(플라스틱 수입)와 로켓 사일로. 금속 과학·탄화 텅스텐·텅스텐 판·철판을 수출 상자에서 로켓 화물로.",
+        "en": "Cast low density structures (plastic imported) and build the silo; metallurgic science, carbide, tungsten plate and iron plate go from the export chests into rocket cargo."
+      },
+      "research": [
+        "casting-low-density-structure",
+        "rocket-silo"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "refined-concrete",
+      "why": {
+        "ko": "주조기 재료(정제 콘크리트) — 수입 대신 직접",
+        "en": "foundry ingredient (refined concrete), if not imported"
+      }
+    }
+  ]
+}
