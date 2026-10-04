@@ -31,6 +31,6 @@ demo-resources에 없는 영역을 보강하기 위해 조사한 커뮤니티 �
 
 ## 이 저장소에 반영할 순서 (계획)
 
-1. 업그레이드형 과학 라인 — ✅ [빨강](../../blueprints/science-red-upgradeable/README.md)·[초록](../../blueprints/science-green-upgradeable/README.md)·[군사](../../blueprints/science-military-upgradeable/README.md)·[파랑](../../blueprints/science-blue-upgradeable/README.md)·[보라](../../blueprints/science-purple-upgradeable/README.md)·[노랑](../../blueprints/science-yellow-upgradeable/README.md) 완료. 모든 타일이 같은 분당 60/90/150이라 1:1:1:1:1:1로 놓으면 됩니다 — 데모 09(XtremeZion)·07(Nilaus) 아이디어를 6+2 버스 기준으로 재설계
+1. 업그레이드형 과학 라인 — ✅ [빨강](../../blueprints/science-red-upgradeable/README.md)·[초록](../../blueprints/science-green-upgradeable/README.md)·[군사](../../blueprints/science-military-upgradeable/README.md)·[파랑](../../blueprints/science-blue-upgradeable/README.md)·[보라](../../blueprints/science-purple-upgradeable/README.md)·[노랑](../../blueprints/science-yellow-upgradeable/README.md) 완료. 모두 같은 폭·주기 규칙의 **쌓는 셀**입니다. 셀당 출력이 과학마다 달라서(초반 기준 분당 빨강 24, 초록 20, 군사 36, 파랑 15, 보라 25.7, 노랑 25.7) 원하는 분당 생산량 ÷ 셀당 출력만큼 셀을 쌓습니다. 군사·보라·노랑은 중간재를 별도 셀에서 받습니다. — 데모 09(XtremeZion)·07(Nilaus) 아이디어를 6+2 버스 기준으로 재설계
 2. 업그레이드형 몰(다이소) — ✅ [완료](../../blueprints/mall-upgradeable/README.md): 셀 20개짜리 거리 2종, 데모 02·03 분석 기반
 3. Space Age 행성 블럭은 위 링크의 원칙을 따라 별도 진행

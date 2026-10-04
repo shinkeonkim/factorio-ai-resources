@@ -411,7 +411,7 @@ P["09-science-book-xtremezion"] = dict(
 
 XtremeZion의 핵심 아이디어 — **과학팩별 독립 타일, 직접 삽입 위주, 같은 블럭 반복** — 를 가져오되,
 6+2 버스 분기로 입력을 받고 노랑→빨강→파랑을 같은 배치로 쓰는 과학 라인으로 다시 설계합니다.
-✅ 6종 완료: [빨강](../../blueprints/science-red-upgradeable/README.md), [초록](../../blueprints/science-green-upgradeable/README.md), [군사](../../blueprints/science-military-upgradeable/README.md), [파랑](../../blueprints/science-blue-upgradeable/README.md), [보라](../../blueprints/science-purple-upgradeable/README.md), [노랑](../../blueprints/science-yellow-upgradeable/README.md). 모두 타일당 분당 60/90/150이라 1:1로 놓습니다.
+✅ 6종 완료: [빨강](../../blueprints/science-red-upgradeable/README.md), [초록](../../blueprints/science-green-upgradeable/README.md), [군사](../../blueprints/science-military-upgradeable/README.md), [파랑](../../blueprints/science-blue-upgradeable/README.md), [보라](../../blueprints/science-purple-upgradeable/README.md), [노랑](../../blueprints/science-yellow-upgradeable/README.md). 모두 같은 폭·주기 규칙의 **쌓는 셀**입니다. 셀당 출력이 과학마다 달라서(초반 기준 분당 빨강 24, 초록 20, 군사 36, 파랑 15, 보라 25.7, 노랑 25.7) 원하는 분당 생산량 ÷ 셀당 출력만큼 셀을 쌓습니다. 군사·보라·노랑은 중간재를 별도 셀에서 받습니다.
 """,
     en="""## What it is
 
@@ -437,7 +437,7 @@ are nominal without modules/beacons, so they read lower than the labels).
 
 Take XtremeZion's core ideas — **one independent tile per science, mostly direct insertion, repeat the same
 block** — and rebuild them as science lines fed by 6+2 bus taps that run yellow→red→blue in the same layout.
-✅ All six done: [red](../../blueprints/science-red-upgradeable/README.en.md), [green](../../blueprints/science-green-upgradeable/README.en.md), [military](../../blueprints/science-military-upgradeable/README.en.md), [blue](../../blueprints/science-blue-upgradeable/README.en.md), [purple](../../blueprints/science-purple-upgradeable/README.en.md), [yellow](../../blueprints/science-yellow-upgradeable/README.en.md). Every tile makes 60/90/150 per minute, so they are placed 1:1.
+✅ All six done: [red](../../blueprints/science-red-upgradeable/README.en.md), [green](../../blueprints/science-green-upgradeable/README.en.md), [military](../../blueprints/science-military-upgradeable/README.en.md), [blue](../../blueprints/science-blue-upgradeable/README.en.md), [purple](../../blueprints/science-purple-upgradeable/README.en.md), [yellow](../../blueprints/science-yellow-upgradeable/README.en.md). All are **stackable cells** built on the same width/period rules. Output per cell differs by science (early tier, per minute: red 24, green 20, military 36, blue 15, purple 25.7, yellow 25.7), so stack target ÷ per-cell output cells of each. Military, purple and yellow take their intermediates from separate cells.
 """)
 
 

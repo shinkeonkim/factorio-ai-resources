@@ -53,3 +53,14 @@ the water inlet with a `water` constant combinator instead of running long water
 - [ ] fluid-recipe slots use AM2+
 - [ ] furnaces are the 2×2 family (stone/steel)
 - [ ] input/output belt lane count sized for the late tier
+
+## Stackable cells (growth rule)
+
+Besides upgrading in place, every factory is a **stackable cell** (model: the Nilaus green-circuit module in the user's demos).
+
+- A cell has a fixed width and period; input belts run north along both edges, the product runs south (toward the bus) down the middle.
+- Every line enters at the bottom edge and leaves at the top edge, so pasting the same cell one period further north just adds production — up to where an input lane runs dry ("max cells" in each README's stacking table).
+- A cap (base piece) goes once at the bottom and turns bus taps into lanes.
+- Cell files snap to a grid of the cell's size, so several can be dragged out at once.
+- Products with many inputs (military, purple, yellow science) take their intermediates from their own cells.
+- Implementation: `lib/stack.py` (layout, cap, ratio analysis), `lib/cells.py` (every cell spec).

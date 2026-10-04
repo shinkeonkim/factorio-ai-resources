@@ -30,4 +30,4 @@
 
 XtremeZion의 핵심 아이디어 — **과학팩별 독립 타일, 직접 삽입 위주, 같은 블럭 반복** — 를 가져오되,
 6+2 버스 분기로 입력을 받고 노랑→빨강→파랑을 같은 배치로 쓰는 과학 라인으로 다시 설계합니다.
-✅ 6종 완료: [빨강](../../blueprints/science-red-upgradeable/README.md), [초록](../../blueprints/science-green-upgradeable/README.md), [군사](../../blueprints/science-military-upgradeable/README.md), [파랑](../../blueprints/science-blue-upgradeable/README.md), [보라](../../blueprints/science-purple-upgradeable/README.md), [노랑](../../blueprints/science-yellow-upgradeable/README.md). 모두 타일당 분당 60/90/150이라 1:1로 놓습니다.
+✅ 6종 완료: [빨강](../../blueprints/science-red-upgradeable/README.md), [초록](../../blueprints/science-green-upgradeable/README.md), [군사](../../blueprints/science-military-upgradeable/README.md), [파랑](../../blueprints/science-blue-upgradeable/README.md), [보라](../../blueprints/science-purple-upgradeable/README.md), [노랑](../../blueprints/science-yellow-upgradeable/README.md). 모두 같은 폭·주기 규칙의 **쌓는 셀**입니다. 셀당 출력이 과학마다 달라서(초반 기준 분당 빨강 24, 초록 20, 군사 36, 파랑 15, 보라 25.7, 노랑 25.7) 원하는 분당 생산량 ÷ 셀당 출력만큼 셀을 쌓습니다. 군사·보라·노랑은 중간재를 별도 셀에서 받습니다.
