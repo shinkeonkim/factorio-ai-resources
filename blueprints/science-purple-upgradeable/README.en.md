@@ -39,6 +39,20 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 |---|---:|---|
 | `production-science-pack` | 60 / 90 / 150 | science belt, east end (y=0) |
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 0. Prepare | `production-science-pack` (red·green·blue), `productivity-module` (red·green), `advanced-material-processing-2` (red·green·blue), `railway` (red·green) | Lay the bus groups this tile needs and open a tap (full/half) under each marker at the bottom edge. Needs steel, stone, bricks, iron and green/red circuits. |
+| 1. Early (default file) | `automation` (red), `logistics` (red), `electronics` (on first craft) | Build with yellow belts, AM1, basic inserters and small poles: 60/min per tile. Need more? Place another tile. The rail row fills both lanes of y=6; do not take rails from it elsewhere. |
+| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. Same layout, 90/min. Upgrade the bus taps to red with it. |
+| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 150/min. Modules/beacons fit from here, but they raise the inputs above the markers, so switch the taps to full lanes. |
+
+**Build next**
+
+- [Utility science (upgradeable tile)](../science-yellow-upgradeable/README.en.md) — next science
+- [Module mall (tier 1-2, 4 kinds)](../module-mall-t1-t2/README.en.md) — module supply
+
 ### Files
 
 | File | Description |

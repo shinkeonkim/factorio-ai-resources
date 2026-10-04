@@ -65,6 +65,22 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 none
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 1. First bus | `logistics` (red) | Lay only the iron 6 / copper 6 groups first and keep the rows of the later groups (8-row pitch) empty. Add 33-tile segments eastwards as smelting grows. |
+| 2. Circuits and steel | `steel-processing` (red) | Fill green ×2 in group 3 and steel, stone and bricks in group 4. Lanes still empty keep their place for later. |
+| 3. Red belts | `logistics-2` (red·green) | Upgrade-planner the bus to match `variants/red.txt`. Underground spans are ≤4, so nothing has to move. |
+| 4. After oil | `plastics` (red·green), `sulfur-processing` (red·green), `advanced-circuit` (red·green), `battery` (red·green), `engine` (red·green) | Add plastic, sulfur, red circuits, batteries and engines to groups 3-5, and the fluid lines (pipe-to-ground, period 11) in group 6. Water comes from Waterfill where it is used. |
+| 5. Blue / turbo | `logistics-3` (red·green·blue·purple), `turbo-transport-belt` (red·green·blue·purple·space·Vulcanus) | `variants/blue.txt`, or `variants/turbo.txt` with Space Age. When the bus is full, add groups below with `variants/extension.txt`. |
+
+**Build next**
+
+- [Main bus 6+2 tap pieces](../main-bus-6x2-tap/README.en.md) — take one lane off the bus
+- [Main bus 6+2 crossing piece](../main-bus-6x2-crossing/README.en.md) — let a lower group's branch cross a group
+- [Red science (upgradeable tile)](../science-red-upgradeable/README.en.md) — the first factory to hang off it
+
 ### Files
 
 | File | Description |

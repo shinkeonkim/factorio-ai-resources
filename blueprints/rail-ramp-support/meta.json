@@ -36,5 +36,60 @@
         "en": "chest (2-slot limit)"
       }
     }
+  ],
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 연구 (Space Age)",
+        "en": "0. Research (Space Age)"
+      },
+      "do": {
+        "ko": "엘리베이티드 레일 연구가 레일 경사로와 지지대를 엽니다. 보라 과학이 필요합니다.",
+        "en": "Elevated rail unlocks rail ramps and supports; it needs purple science."
+      },
+      "research": [
+        "rail-ramp",
+        "rail-support",
+        "electric-furnace"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 입력",
+        "en": "1. Inputs"
+      },
+      "do": {
+        "ko": "철광석·돌·정제 콘크리트를 표시 위치로. 강철이 병목이라 철광석 벨트를 먼저 확인하세요. 정제 콘크리트는 정제 콘크리트 공장에서.",
+        "en": "Iron ore, stone and refined concrete at the markers. Steel is the bottleneck, so check the iron-ore belt first. Refined concrete comes from the refined-concrete factory."
+      },
+      "research": []
+    },
+    {
+      "stage": {
+        "ko": "2. 재고 쌓기",
+        "en": "2. Stock up"
+      },
+      "do": {
+        "ko": "2x2 큰 블럭 하나에 지지대 216개, 경사로 18개가 듭니다. 철도망을 넓히기 전에 상자에 미리 쌓아 두세요.",
+        "en": "One 2x2 big block uses 216 supports and 18 ramps. Fill the chests before expanding the rail network."
+      },
+      "research": []
+    }
+  ],
+  "next": [
+    {
+      "id": "refined-concrete-60",
+      "why": {
+        "ko": "정제 콘크리트 공급",
+        "en": "refined-concrete supply"
+      }
+    },
+    {
+      "id": "rail-city-block-2x2",
+      "why": {
+        "ko": "이걸 쓰는 철도 블럭",
+        "en": "the rail block that uses them"
+      }
+    }
   ]
 }

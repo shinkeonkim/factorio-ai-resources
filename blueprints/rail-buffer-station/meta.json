@@ -66,5 +66,74 @@
   "credits": {
     "ko": "레일·정거장·신호 배치는 사용자가 제공한 철도 블루프린트 북('Rails' 북의 **Mixed Elev. Cityblock**, 원작자 미상)을 그대로 사용합니다. 이 저장소에는 원본 북이 들어 있지 않으며, 생성기를 돌리려면 `third_party/`에 원본을 두어야 합니다.",
     "en": "Rail, stop and signal layout come unchanged from a user-supplied rail blueprint book (the **Mixed Elev. Cityblock** book inside a 'Rails' book; original author unknown). The original book is not in this repository; place it in `third_party/` to run the generator."
-  }
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 연구",
+        "en": "0. Research"
+      },
+      "do": {
+        "ko": "기차 역, 신호, 회로(기차 한도 자동 조절)가 필요합니다.",
+        "en": "Train stops, signals and the circuit network (automatic train limits)."
+      },
+      "research": [
+        "train-stop",
+        "rail-chain-signal",
+        "arithmetic-combinator"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 놓기",
+        "en": "1. Place"
+      },
+      "do": {
+        "ko": "철도 블럭(2x2) 가운데 칸에 그대로 겹쳐 놓습니다. 북쪽 정거장이 내리고 남쪽이 싣습니다. 상자 24개가 완충입니다.",
+        "en": "Stamp it into a 2x2 rail block interior. The north stop unloads, the south stop loads; 24 chests buffer between them."
+      },
+      "research": []
+    },
+    {
+      "stage": {
+        "ko": "2. 역 이름·한도",
+        "en": "2. Names and limits"
+      },
+      "do": {
+        "ko": "역 이름을 아이템별로 맞추고(변형 파일이 아이템별로 있음), 열차 일정은 '공급역 → 수요역' 두 정거장. 기차 한도는 상자 재고에 따라 회로가 정합니다.",
+        "en": "Name stops per item (there is a variant per item); schedules are just provider → requester. The circuit sets the train limit from the chest contents."
+      },
+      "research": []
+    },
+    {
+      "stage": {
+        "ko": "3. 업그레이드",
+        "en": "3. Upgrade"
+      },
+      "do": {
+        "ko": "빨강 벨트·고속 인서터 기준. 파랑 벨트·벌크 인서터로 바꾸면 적재가 빨라집니다(같은 크기).",
+        "en": "Drawn with red belts and fast inserters; blue belts and bulk inserters load faster (same footprint)."
+      },
+      "research": [
+        "express-transport-belt",
+        "bulk-inserter"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "rail-mining-station",
+      "why": {
+        "ko": "아이템을 공급하는 쪽",
+        "en": "the supplying side"
+      }
+    },
+    {
+      "id": "rail-smelter-station",
+      "why": {
+        "ko": "광석 → 판 변환 역",
+        "en": "ore → plate station"
+      }
+    }
+  ]
 }

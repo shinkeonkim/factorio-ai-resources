@@ -54,6 +54,7 @@ T = {
         "import_how": "문자열을 클립보드에 복사한 뒤 게임에서 블루프린트 라이브러리 → 문자열 가져오기:",
         "regen": "다시 생성", "requires": "필요한 원본 (저장소에 포함되지 않음)", "gallery": "갤러리",
         "none": "없음", "validation": "검사", "ok": "통과",
+        "roadmap": "로드맵", "stage": "단계", "research": "시기 / 필요한 연구", "todo": "할 일", "next": "다음에 지을 것",
         "render_note": "<sub>이미지: [Factorio Blueprint Editor](https://fbe.factorygamefan.com)로 렌더링 (게임 그래픽 © Wube Software)</sub>",
     },
     "en": {
@@ -67,11 +68,55 @@ T = {
         "import_how": "Copy the string to the clipboard, then in game: Blueprint library → Import string:",
         "regen": "Regenerate", "requires": "Required source files (not in the repo)", "gallery": "Gallery",
         "none": "none", "validation": "Validation", "ok": "OK",
+        "roadmap": "Roadmap", "stage": "Stage", "research": "When / research needed", "todo": "What to do", "next": "Build next",
         "render_note": "<sub>Images rendered with [Factorio Blueprint Editor](https://fbe.factorygamefan.com) (game graphics © Wube Software)</sub>",
     },
 }
 MACHINE_TYPES = ("assembling-machine", "furnace", "mining-drill", "lab", "beacon", "rocket-silo",
                  "train-stop", "container", "logistic-container", "storage-tank")
+
+
+TECH = json.loads((ROOT / "skills" / "factorio-blueprint" / "data" / "tech-unlocks.json").read_text())
+PACK = {"automation-science-pack": ("빨강", "red"), "logistic-science-pack": ("초록", "green"),
+        "military-science-pack": ("군사", "military"), "chemical-science-pack": ("파랑", "blue"),
+        "production-science-pack": ("보라", "purple"), "utility-science-pack": ("노랑", "yellow"),
+        "space-science-pack": ("우주", "space"), "metallurgic-science-pack": ("불카누스", "Vulcanus"),
+        "electromagnetic-science-pack": ("풀가오라", "Fulgora"), "agricultural-science-pack": ("글레바", "Gleba"),
+        "cryogenic-science-pack": ("아킬로", "Aquilo"), "promethium-science-pack": ("프로메튬", "promethium")}
+
+
+TRIGGER = {"craft-item": ("아이템을 처음 만들면", "on first craft"), "mine-entity": ("처음 캐면", "on first mining"),
+           "build-entity": ("처음 지으면", "on first build"), "create-space-platform": ("첫 우주 플랫폼을 만들면", "on the first space platform"),
+           "send-item-to-orbit": ("궤도로 보내면", "on sending to orbit"), "craft-fluid": ("유체를 처음 만들면", "on first fluid craft"),
+           "capture-spawner": ("둥지를 잡으면", "on capturing a spawner")}
+
+
+def trigger_text(trig, lang):
+    if not trig:
+        return "-"
+    kind, _, what = trig.partition(":")
+    base = TRIGGER.get(kind, (kind, kind))[0 if lang == "ko" else 1]
+    return base + (f" `{what}`" if what else "")
+
+
+def research_text(recipes, lang):
+    """Recipe names -> 'tech (packs)' using the unlock data, so roadmaps never name a wrong technology."""
+    i = 0 if lang == "ko" else 1
+    seen, parts = set(), []
+    for r in recipes:
+        techs = TECH["recipe_unlocked_by"].get(r)
+        if not techs:
+            raise SystemExit(f"roadmap: no technology unlocks recipe {r!r}")
+        t = techs[0]
+        if t in seen:
+            continue
+        seen.add(t)
+        e = TECH["technologies"][t]
+        packs = [PACK[x][i] for x in PACK if x in e["packs"]]
+        trig = e.get("space_age", {}).get("trigger") or e.get("trigger")
+        how = "·".join(packs) if packs else trigger_text(trig, lang)
+        parts.append(f"`{t}` ({how})")
+    return ", ".join(parts)
 
 
 def load_meta(d: pathlib.Path) -> dict:
@@ -82,6 +127,11 @@ def blueprint_files(d: pathlib.Path, meta: dict):
     yield "blueprint.txt", meta.get("default_label", {"ko": T["ko"]["default"], "en": T["en"]["default"]})
     for v in meta.get("variants", []):
         yield v["file"], v["label"]
+
+
+def variant_image(v: dict) -> str:
+    """images/<variant file stem>.webp for variants with "preview": true in meta.json."""
+    return "images/" + pathlib.Path(v["file"]).stem + ".webp"
 
 
 def stats(obj: dict) -> dict:
@@ -135,9 +185,14 @@ def auto_section(d: pathlib.Path, meta: dict, st: dict, lang: str) -> str:
     bid = d.name
     out = [f"{AUTO_START} ({t['auto_note']}) -->", ""]
     if (d / "images" / "preview.webp").exists():
+        if any(v.get("preview") for v in meta.get("variants", [])) and meta.get("default_label"):
+            out += [f"**{meta['default_label'][lang]}**", ""]
         out.append(f"![{t['preview']}](images/preview.webp)")
     if (d / "images" / "detail.webp").exists():
         out += ["", f"**{t['detail']}**", "", f"![{t['detail']}](images/detail.webp)"]
+    for v in meta.get("variants", []):
+        if v.get("preview") and (d / variant_image(v)).exists():
+            out += ["", f"**{v['label'][lang]}**", "", f"![{v['label'][lang]}]({variant_image(v)})"]
     if (d / "images" / "preview.webp").exists():
         out += ["", t["render_note"]]
     mods = ", ".join(meta.get("mods", ["base"]))
@@ -162,6 +217,20 @@ def auto_section(d: pathlib.Path, meta: dict, st: dict, lang: str) -> str:
         out += [f"| {icon(o['item'])} | {o.get('per_minute', '-')} | {o.get('where', {}).get(lang, '')} |" for o in meta["outputs"]]
     else:
         out.append(t["none"])
+    if meta.get("roadmap"):
+        out += ["", f"### {t['roadmap']}", "", f"| {t['stage']} | {t['research']} | {t['todo']} |", "|---|---|---|"]
+        for st_ in meta["roadmap"]:
+            res = research_text(st_.get("research", []), lang) or "-"
+            if st_.get("when"):
+                res = st_["when"][lang] + ("<br>" + res if res != "-" else "")
+            out.append(f"| {st_['stage'][lang]} | {res} | {st_['do'][lang]} |")
+    if meta.get("next"):
+        out += ["", f"**{t['next']}**", ""]
+        for n in meta["next"]:
+            nd = BP_DIR / n["id"]
+            title = load_meta(nd)["title"][lang] if (nd / "meta.json").exists() else n["id"]
+            readme = "README.md" if lang == "ko" else "README.en.md"
+            out.append(f"- [{title}](../{n['id']}/{readme}) — {n['why'][lang]}")
     out += ["", f"### {t['files']}", "", f"| {t['file']} | {t['desc']} |", "|---|---|"]
     for f, label in blueprint_files(d, meta):
         out.append(f"| [`{f}`]({f}) | {label[lang]} |")
@@ -295,6 +364,11 @@ def build_one(d: pathlib.Path, regen: bool, images):
                 if box and (box[2] - box[0]) * (box[3] - box[1]) < 0.5 * total:
                     save_webp(images.render(obj, title + " (detail)", box), img_dir / "detail.webp")
                 print(f"  images: {images.kind}")
+    if images:
+        for v in meta.get("variants", []):
+            if v.get("preview"):
+                obj = decode((d / v["file"]).read_text())
+                save_webp(images.render(obj, f"{meta['title']['en']} - {v['label']['en']}"), d / variant_image(v))
     if problems:
         raise SystemExit("  validation failed:\n    " + "\n    ".join(problems))
     for lang in ("ko", "en"):

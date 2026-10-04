@@ -142,5 +142,75 @@
   "default_label": {
     "ko": "전부 · 줄 0 (기본)",
     "en": "full · lane 0 (default)"
-  }
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "1. 분기 자리 정하기",
+        "en": "1. Pick the spot"
+      },
+      "do": {
+        "ko": "공장 타일 아래쪽 표시 조합기의 x 위치에 맞춰 분기 조각을 버스 위에 겹쳐 놓습니다. 위 묶음 줄들이 1-2칸 잠수해서 빈 2줄로 분기가 올라옵니다.",
+        "en": "Stamp the tap over the bus under the x of the factory's marker. The lanes above dive 1-2 tiles and the branch rises through the two empty rows."
+      },
+      "research": [
+        "underground-belt",
+        "splitter"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. Full / Half",
+        "en": "2. Full / half"
+      },
+      "do": {
+        "ko": "공장이 그 줄을 다 먹으면 Full, 다른 공장과 나눠 쓰면 Half(분배기로 절반). 초반엔 Half로 시작해서 공장이 커지면 Full 조각으로 갈아끼웁니다.",
+        "en": "Full if the factory uses the whole lane, half (splitter) if it is shared. Start with half early and swap in the full piece when the factory grows."
+      },
+      "research": []
+    },
+    {
+      "stage": {
+        "ko": "3. 유체 분기",
+        "en": "3. Fluid taps"
+      },
+      "do": {
+        "ko": "6번 묶음 유체 줄은 `fluid-line*.txt`. 지하 파이프가 구간 안에서 올라와 빈 줄까지 올라옵니다. 같은 x에 고체 분기와 겹치지 않게 1칸 비켜 놓으세요.",
+        "en": "Fluid lines of group 6 use `fluid-line*.txt`: the line surfaces inside a span and climbs to the gap row. Keep it one column away from a solid tap at the same x."
+      },
+      "research": [
+        "pipe-to-ground"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "4. 업그레이드",
+        "en": "4. Upgrade"
+      },
+      "do": {
+        "ko": "버스와 함께 업그레이드 플래너로 바꿉니다. 잠수 간격이 1-2칸이라 노랑부터 터보까지 같은 조각입니다.",
+        "en": "Upgrade together with the bus. Dives are 1-2 tiles, so the same piece works from yellow to turbo."
+      },
+      "research": [
+        "fast-transport-belt",
+        "express-transport-belt"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "main-bus-6x2-crossing",
+      "why": {
+        "ko": "분기가 다른 묶음을 지나가야 할 때",
+        "en": "when a branch must pass another group"
+      }
+    },
+    {
+      "id": "science-red-upgradeable",
+      "why": {
+        "ko": "분기 2개로 시작하는 공장",
+        "en": "a factory that starts with two taps"
+      }
+    }
+  ]
 }

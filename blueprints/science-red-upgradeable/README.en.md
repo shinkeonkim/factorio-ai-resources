@@ -33,6 +33,20 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 |---|---:|---|
 | `automation-science-pack` | 60 / 90 / 150 | science belt, east end (y=0) |
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 0. Prepare | `automation-science-pack` (on first craft) | Lay the bus groups this tile needs and open a tap (full/half) under each marker at the bottom edge. Only iron and copper are needed. |
+| 1. Early (default file) | `automation` (red), `logistics` (red), `electronics` (on first craft) | Build with yellow belts, AM1, basic inserters and small poles: 60/min per tile. Need more? Place another tile. |
+| 2. Mid | `logistics-2` (red·green), `automation-2` (red·green), `fast-inserter` (red), `electric-energy-distribution-1` (red·green) | Upgrade planner: red belts, AM2, fast inserters, medium poles. Same layout, 90/min. Upgrade the bus taps to red with it. |
+| 3. Late | `logistics-3` (red·green·blue·purple), `automation-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Blue belts, AM3, bulk inserters: 150/min. Modules/beacons fit from here, but they raise the inputs above the markers, so switch the taps to full lanes. |
+
+**Build next**
+
+- [Green science (upgradeable tile)](../science-green-upgradeable/README.en.md) — next science
+- [Upgradeable mall (Daiso redesign)](../mall-upgradeable/README.en.md) — automate buildings
+
 ### Files
 
 | File | Description |

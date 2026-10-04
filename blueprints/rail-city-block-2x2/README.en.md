@@ -26,6 +26,21 @@ none
 
 none
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 0. Research | `railway` (red·green), `automated-rail-transportation` (red·green), `electric-energy-distribution-1` (red·green), `elevated-rail` (red·green·blue·purple) | Trains, signals and big poles, plus elevated rail (Space Age) because the intersections are two-level. |
+| 1. Materials | - | One block takes 216 supports, 18 ramps and about 1,900 rails; run the ramp/support factory first. |
+| 2. Lay out | - | Snap blocks corner to corner on the grid and fill the empty interior with station or factory blocks. Big poles along the edges carry power with the rails. |
+| 3. Stations | `circuit-network` (red·green) | Drop buffer, mining and smelter station blocks into the interior; train limits are set by circuits. |
+
+**Build next**
+
+- [Rail ramp & support factory](../rail-ramp-support/README.en.md) — ramp/support supply
+- [Rail buffer station block](../rail-buffer-station/README.en.md) — a station for the interior
+- [Big rail block 3×3 (empty interior)](../rail-city-block-3x3/README.en.md) — the bigger block
+
 ### Files
 
 | File | Description |

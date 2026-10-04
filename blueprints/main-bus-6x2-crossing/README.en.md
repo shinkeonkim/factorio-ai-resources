@@ -26,6 +26,18 @@ none
 
 none
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 1. When | `logistics` (red) | When a branch from a lower group (e.g. steel in group 4) must reach a factory north of upper groups: all six lanes of each upper group dive at one column. |
+| 2. Fluids | `steam-power` (on first craft) | Fluid branches use `variants/fluid.txt`: pipe-to-ground pairs meet in the gap rows of each group. |
+| 3. Upgrade | `logistics-2` (red·green), `logistics-3` (red·green·blue·purple) | Upgrade with the bus; the dive is 1 tile, fine at every tier. |
+
+**Build next**
+
+- [Main bus 6+2 tap pieces](../main-bus-6x2-tap/README.en.md) — the tap that starts the branch
+
 ### Files
 
 | File | Description |

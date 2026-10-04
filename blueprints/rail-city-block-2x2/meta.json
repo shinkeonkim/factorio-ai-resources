@@ -24,5 +24,82 @@
   "credits": {
     "ko": "레일·정거장·신호 배치는 사용자가 제공한 철도 블루프린트 북('Rails' 북의 **Mixed Elev. Cityblock**, 원작자 미상)을 그대로 사용합니다. 이 저장소에는 원본 북이 들어 있지 않으며, 생성기를 돌리려면 `third_party/`에 원본을 두어야 합니다.",
     "en": "Rail, stop and signal layout come unchanged from a user-supplied rail blueprint book (the **Mixed Elev. Cityblock** book inside a 'Rails' book; original author unknown). The original book is not in this repository; place it in `third_party/` to run the generator."
-  }
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 연구",
+        "en": "0. Research"
+      },
+      "do": {
+        "ko": "기차·신호·큰 전봇대에 더해, 교차로가 2층(엘리베이티드)이라 엘리베이티드 레일 연구(Space Age)가 필요합니다.",
+        "en": "Trains, signals and big poles, plus elevated rail (Space Age) because the intersections are two-level."
+      },
+      "research": [
+        "rail",
+        "train-stop",
+        "rail-chain-signal",
+        "big-electric-pole",
+        "rail-ramp"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 자재",
+        "en": "1. Materials"
+      },
+      "do": {
+        "ko": "블럭 하나에 지지대 216개, 경사로 18개, 레일 약 1,900개. 경사로·지지대 공장을 먼저 돌리세요.",
+        "en": "One block takes 216 supports, 18 ramps and about 1,900 rails; run the ramp/support factory first."
+      },
+      "research": []
+    },
+    {
+      "stage": {
+        "ko": "2. 깔기",
+        "en": "2. Lay out"
+      },
+      "do": {
+        "ko": "모서리 교차로끼리 격자에 맞춰 이어 붙입니다. 가운데 빈 공간에 역·공장 블럭을 넣습니다. 큰 전봇대가 가장자리를 따라 이어져서 전력망도 같이 퍼집니다.",
+        "en": "Snap blocks corner to corner on the grid and fill the empty interior with station or factory blocks. Big poles along the edges carry power with the rails."
+      },
+      "research": []
+    },
+    {
+      "stage": {
+        "ko": "3. 역 붙이기",
+        "en": "3. Stations"
+      },
+      "do": {
+        "ko": "버퍼·채굴·제련 역 블럭을 가운데 공간에 놓습니다. 기차 한도는 회로로 자동 조절됩니다.",
+        "en": "Drop buffer, mining and smelter station blocks into the interior; train limits are set by circuits."
+      },
+      "research": [
+        "arithmetic-combinator"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "rail-ramp-support",
+      "why": {
+        "ko": "경사로·지지대 공급",
+        "en": "ramp/support supply"
+      }
+    },
+    {
+      "id": "rail-buffer-station",
+      "why": {
+        "ko": "가운데에 넣을 역",
+        "en": "a station for the interior"
+      }
+    },
+    {
+      "id": "rail-city-block-3x3",
+      "why": {
+        "ko": "더 큰 블럭",
+        "en": "the bigger block"
+      }
+    }
+  ]
 }

@@ -35,6 +35,19 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 | `rail-ramp` | ~1 | chest (2-slot limit) |
 | `rail-support` | ~3 | chest (2-slot limit) |
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 0. Research (Space Age) | `elevated-rail` (red·green·blue·purple), `advanced-material-processing-2` (red·green·blue) | Elevated rail unlocks rail ramps and supports; it needs purple science. |
+| 1. Inputs | - | Iron ore, stone and refined concrete at the markers. Steel is the bottleneck, so check the iron-ore belt first. Refined concrete comes from the refined-concrete factory. |
+| 2. Stock up | - | One 2x2 big block uses 216 supports and 18 ramps. Fill the chests before expanding the rail network. |
+
+**Build next**
+
+- [Refined concrete 60/min](../refined-concrete-60/README.en.md) — refined-concrete supply
+- [Big rail block 2×2 (empty interior)](../rail-city-block-2x2/README.en.md) — the rail block that uses them
+
 ### Files
 
 | File | Description |

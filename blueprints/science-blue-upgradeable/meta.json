@@ -51,5 +51,85 @@
   "credits": {
     "ko": "타일형 과학 아이디어: Christoffer Ramqvist \"Tileable Science Production\", XtremeZion Science Book, Nilaus Base-In-A-Book 비율 참고. 설계 자체는 이 저장소에서 새로 만든 것입니다.",
     "en": "Tileable-science idea from Christoffer Ramqvist's \"Tileable Science Production\", XtremeZion's Science Book and Nilaus' ratios; the layout itself is new."
-  }
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 준비",
+        "en": "0. Prepare"
+      },
+      "do": {
+        "ko": "6+2 버스에 필요한 묶음을 깔고, 타일 아래쪽 표시 조합기 위치에 맞춰 버스 분기(Full/Half)를 엽니다. 석유(황), 엔진, 빨강 회로가 버스에 있어야 합니다.",
+        "en": "Lay the bus groups this tile needs and open a tap (full/half) under each marker at the bottom edge. Needs oil (sulfur), engines and red circuits on the bus."
+      },
+      "research": [
+        "chemical-science-pack",
+        "engine-unit",
+        "advanced-circuit",
+        "sulfur"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 초반 (기본 파일)",
+        "en": "1. Early (default file)"
+      },
+      "do": {
+        "ko": "노랑 벨트·조립기 1·일반 인서터·소형 전봇대로 짓습니다. 타일당 분당 60. 더 필요하면 같은 타일을 하나 더 놓습니다.",
+        "en": "Build with yellow belts, AM1, basic inserters and small poles: 60/min per tile. Need more? Place another tile."
+      },
+      "research": [
+        "assembling-machine-1",
+        "underground-belt",
+        "small-electric-pole"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 중반",
+        "en": "2. Mid"
+      },
+      "do": {
+        "ko": "업그레이드 플래너로 빨강 벨트·조립기 2·고속 인서터·중형 전봇대로 바꿉니다. 배치는 그대로, 분당 90. 버스 분기도 빨강으로 함께 올립니다.",
+        "en": "Upgrade planner: red belts, AM2, fast inserters, medium poles. Same layout, 90/min. Upgrade the bus taps to red with it."
+      },
+      "research": [
+        "fast-transport-belt",
+        "assembling-machine-2",
+        "fast-inserter",
+        "medium-electric-pole"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 후반",
+        "en": "3. Late"
+      },
+      "do": {
+        "ko": "파랑 벨트·조립기 3·벌크 인서터로 바꿉니다. 분당 150. 이 단계부터 모듈·비콘을 꽂을 수 있지만, 그러면 입력이 표시 값보다 늘어나니 버스 분기를 Full로 바꾸세요.",
+        "en": "Blue belts, AM3, bulk inserters: 150/min. Modules/beacons fit from here, but they raise the inputs above the markers, so switch the taps to full lanes."
+      },
+      "research": [
+        "express-transport-belt",
+        "assembling-machine-3",
+        "bulk-inserter"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "science-purple-upgradeable",
+      "why": {
+        "ko": "다음 과학",
+        "en": "next science"
+      }
+    },
+    {
+      "id": "science-yellow-upgradeable",
+      "why": {
+        "ko": "다음 과학",
+        "en": "next science"
+      }
+    }
+  ]
 }

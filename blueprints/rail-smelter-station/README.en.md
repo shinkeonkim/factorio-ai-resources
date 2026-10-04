@@ -34,6 +34,20 @@
 |---|---:|---|
 | `iron-plate` | ~900 | south stop `Pickup` → trains |
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 0. Research | `automated-rail-transportation` (red·green), `circuit-network` (red·green), `advanced-material-processing-2` (red·green·blue) | Train stops, signals and the circuit network (automatic train limits). |
+| 1. Place | - | Stamp it into a 2x2 rail block interior. Ore arrives north, plates leave south. |
+| 2. Names and limits | - | Name stops per item (there is a variant per item); schedules are just provider → requester. The circuit sets the train limit from the chest contents. |
+| 3. Upgrade | `logistics-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Drawn with red belts and fast inserters; blue belts and bulk inserters load faster (same footprint). |
+
+**Build next**
+
+- [Rail mining provider block](../rail-mining-station/README.en.md) — ore supply
+- [Main bus 6+2 segment](../main-bus-6x2-segment/README.en.md) — feeding plates into the bus
+
 ### Files
 
 | File | Description |

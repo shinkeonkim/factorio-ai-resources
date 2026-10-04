@@ -51,5 +51,101 @@
   "default_label": {
     "ko": "노랑 벨트 (기본)",
     "en": "yellow belts (default)"
-  }
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "1. 첫 버스",
+        "en": "1. First bus"
+      },
+      "do": {
+        "ko": "철 6줄·구리 6줄 묶음만 먼저 깔고, 아래 묶음 자리(8칸 간격)는 비워 둡니다. 제련소가 늘 때마다 동쪽으로 33칸 조각을 이어 붙입니다.",
+        "en": "Lay only the iron 6 / copper 6 groups first and keep the rows of the later groups (8-row pitch) empty. Add 33-tile segments eastwards as smelting grows."
+      },
+      "research": [
+        "underground-belt",
+        "splitter"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 회로·강철",
+        "en": "2. Circuits and steel"
+      },
+      "do": {
+        "ko": "3번 묶음(초록·빨강·파랑 회로)에 초록 2줄, 4번 묶음에 강철·돌·벽돌을 채웁니다. 빈 줄은 그대로 두면 나중에 같은 자리에 들어갑니다.",
+        "en": "Fill green ×2 in group 3 and steel, stone and bricks in group 4. Lanes still empty keep their place for later."
+      },
+      "research": [
+        "steel-plate"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 빨강 벨트",
+        "en": "3. Red belts"
+      },
+      "do": {
+        "ko": "업그레이드 플래너로 `variants/red.txt`와 같은 상태로 바꿉니다. 지하 간격이 4칸 이하라 그대로 됩니다.",
+        "en": "Upgrade-planner the bus to match `variants/red.txt`. Underground spans are ≤4, so nothing has to move."
+      },
+      "research": [
+        "fast-transport-belt"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "4. 석유 이후",
+        "en": "4. After oil"
+      },
+      "do": {
+        "ko": "플라스틱, 황, 빨강 회로, 배터리, 엔진을 4·5번 묶음과 3번 묶음에 넣고, 6번 묶음에 유체 줄(지하 파이프, 11칸 주기)을 깝니다. 물은 Waterfill로 필요한 곳에서 바로 뽑습니다.",
+        "en": "Add plastic, sulfur, red circuits, batteries and engines to groups 3-5, and the fluid lines (pipe-to-ground, period 11) in group 6. Water comes from Waterfill where it is used."
+      },
+      "research": [
+        "plastic-bar",
+        "sulfur",
+        "advanced-circuit",
+        "battery",
+        "engine-unit"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "5. 파랑 / 터보",
+        "en": "5. Blue / turbo"
+      },
+      "do": {
+        "ko": "`variants/blue.txt`, Space Age면 `variants/turbo.txt`. 버스가 꽉 차면 `variants/extension.txt`로 새 묶음을 아래에 붙입니다.",
+        "en": "`variants/blue.txt`, or `variants/turbo.txt` with Space Age. When the bus is full, add groups below with `variants/extension.txt`."
+      },
+      "research": [
+        "express-transport-belt",
+        "turbo-transport-belt"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "main-bus-6x2-tap",
+      "why": {
+        "ko": "버스에서 한 줄을 빼는 분기",
+        "en": "take one lane off the bus"
+      }
+    },
+    {
+      "id": "main-bus-6x2-crossing",
+      "why": {
+        "ko": "아래 묶음 분기가 위 묶음을 건너는 조각",
+        "en": "let a lower group's branch cross a group"
+      }
+    },
+    {
+      "id": "science-red-upgradeable",
+      "why": {
+        "ko": "첫 번째로 붙일 공장",
+        "en": "the first factory to hang off it"
+      }
+    }
+  ]
 }

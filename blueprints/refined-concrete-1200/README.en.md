@@ -35,6 +35,18 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 |---|---:|---|
 | `refined-concrete` | 1200 | bottom-left column x=-11, flows south |
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 0. Research | `concrete` (red·green), `advanced-material-processing-2` (red·green·blue), `logistics-2` (red·green), `fast-inserter` (red), `automation-2` (red·green) | Concrete unlocks both concrete and refined concrete. Electric furnaces need blue science, so this is a mid-game build. |
+| 1. Inputs | - | 1,200/min. The west manifold splits the inputs into five modules; place it next to ore train stations. Bring stone and iron-ore belts and water (Waterfill at the marker) to the markers on the west edge; the output leaves on the west too. |
+| 2. Improve | `automation-3` (red·green·blue·purple), `productivity-module` (red·green) | Swap AM2 for AM3 (same footprint) to run faster on the same inputs; productivity modules cut the ore needed. |
+
+**Build next**
+
+- [Rail smelter provider block](../rail-smelter-station/README.en.md) — how to receive ore by train
+
 ### Files
 
 | File | Description |

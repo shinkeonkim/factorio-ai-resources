@@ -34,6 +34,20 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 |---|---:|---|
 | `*-module / *-module-2` | 2.5 (T2) | steel chests below each assembler |
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 1. Tier-1 modules | `speed-module` (red·green), `efficiency-module` (red·green), `productivity-module` (red·green), `advanced-circuit` (red·green) | Tap green and red circuits from bus group 3. At first only the four tier-1 cells need to run. |
+| 2. Tier-2 modules | `speed-module-2` (red·green·blue), `efficiency-module-2` (red·green·blue), `productivity-module-2` (red·green·blue) | Tier 2 takes two tier-1 modules plus circuits (the tier-1 cell feeds its neighbour); the cells start once researched. |
+| 3. Quality (Space Age) | `quality-module` (red·green), `quality-module-2` (red·green·blue) | The quality cells need the Quality mod; without it, clear their recipes. |
+| 4. Assemblers | `automation-2` (red·green), `automation-3` (red·green·blue·purple) | Drawn with AM3; AM2 has the same footprint and works, just slower. |
+
+**Build next**
+
+- [Production science (upgradeable tile)](../science-purple-upgradeable/README.en.md) — the science that consumes productivity modules
+- [Upgradeable mall (Daiso redesign)](../mall-upgradeable/README.en.md) — the building mall
+
 ### Files
 
 | File | Description |

@@ -10,11 +10,12 @@ or read/modify a string they already have.
 
 Everything lives next to this file:
 - `scripts/calc.py` — ratio calculator over the real recipe data (vanilla 2.x or Space Age)
+- `scripts/tech.py` — which research unlocks a recipe, its science packs and prerequisite chain (`--plan` merges several)
 - `scripts/blueprint.py` — encode/decode, `Blueprint` builder, `validate()`, ASCII preview, CLI
 - `examples/*.py` — validated layouts to start from (green circuits 3:2, smelting column, mining outpost)
 - `references/blueprint-format.md` — string/JSON spec, 2.0 vs 1.1 differences, wires, modules, fluid ports
 - `references/layout-patterns.md` — game mechanics that break designs + layout patterns
-- `data/` — recipes (extracted from wube/factorio-data 2.1), entity footprints, machine/belt/pole stats
+- `data/` — recipes (extracted from wube/factorio-data 2.1), technology unlocks (`tech-unlocks.json`), entity footprints, machine/belt/pole stats
 
 Use `python3` with absolute paths to these files (`SKILL_DIR` below = this directory).
 

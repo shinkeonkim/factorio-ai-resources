@@ -34,6 +34,19 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 |---|---:|---|
 | `refined-concrete` | 60 | bottom belt, leaves at the west edge |
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 0. Research | `concrete` (red·green), `advanced-material-processing-2` (red·green·blue), `logistics-2` (red·green), `fast-inserter` (red), `automation-2` (red·green) | Concrete unlocks both concrete and refined concrete. Electric furnaces need blue science, so this is a mid-game build. |
+| 1. Inputs | - | 60/min. Bring stone and iron-ore belts and water (Waterfill at the marker) to the markers on the west edge; the output leaves on the west too. |
+| 2. Improve | `automation-3` (red·green·blue·purple), `productivity-module` (red·green) | Swap AM2 for AM3 (same footprint) to run faster on the same inputs; productivity modules cut the ore needed. |
+
+**Build next**
+
+- [Refined concrete 240/min](../refined-concrete-240/README.en.md) — the same design ×4
+- [Rail ramp & support factory](../rail-ramp-support/README.en.md) — the next factory that uses refined concrete
+
 ### Files
 
 | File | Description |

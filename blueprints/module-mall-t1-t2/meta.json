@@ -27,5 +27,82 @@
         "en": "steel chests below each assembler"
       }
     }
+  ],
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "1. 1단계 모듈",
+        "en": "1. Tier-1 modules"
+      },
+      "do": {
+        "ko": "버스 3번 묶음에서 초록·빨강 회로를 분기해 넣습니다. 처음엔 1단계 모듈 4종 칸만 돌려도 충분합니다.",
+        "en": "Tap green and red circuits from bus group 3. At first only the four tier-1 cells need to run."
+      },
+      "research": [
+        "speed-module",
+        "efficiency-module",
+        "productivity-module",
+        "advanced-circuit"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 2단계 모듈",
+        "en": "2. Tier-2 modules"
+      },
+      "do": {
+        "ko": "2단계는 1단계 2개 + 회로가 들어갑니다(1단계 칸이 옆 칸에 넣음). 연구가 끝나면 그 칸들이 자동으로 돕니다.",
+        "en": "Tier 2 takes two tier-1 modules plus circuits (the tier-1 cell feeds its neighbour); the cells start once researched."
+      },
+      "research": [
+        "speed-module-2",
+        "efficiency-module-2",
+        "productivity-module-2"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 품질 (Space Age)",
+        "en": "3. Quality (Space Age)"
+      },
+      "do": {
+        "ko": "품질 모듈 칸은 Quality 모드가 켜져 있어야 씁니다. 꺼져 있으면 그 칸들의 레시피를 비워 두세요.",
+        "en": "The quality cells need the Quality mod; without it, clear their recipes."
+      },
+      "research": [
+        "quality-module",
+        "quality-module-2"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "4. 조립기",
+        "en": "4. Assemblers"
+      },
+      "do": {
+        "ko": "조립기 3 기준이지만 같은 크기라 조립기 2로 먼저 지어도 됩니다(느리기만 함).",
+        "en": "Drawn with AM3; AM2 has the same footprint and works, just slower."
+      },
+      "research": [
+        "assembling-machine-2",
+        "assembling-machine-3"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "science-purple-upgradeable",
+      "why": {
+        "ko": "생산 모듈을 쓰는 과학",
+        "en": "the science that consumes productivity modules"
+      }
+    },
+    {
+      "id": "mall-upgradeable",
+      "why": {
+        "ko": "건물 몰",
+        "en": "the building mall"
+      }
+    }
   ]
 }

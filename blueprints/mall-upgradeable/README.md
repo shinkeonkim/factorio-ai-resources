@@ -6,7 +6,13 @@
 
 <!-- AUTO:START (tools/build.py가 생성하는 구역입니다. 직접 수정하지 마세요) -->
 
+**물류·채굴 거리, 초반 (노랑·조립기 1·일반)**
+
 ![미리보기](images/preview.webp)
+
+**전력·유체·기차 거리, 초반**
+
+![전력·유체·기차 거리, 초반](images/power-fluids-trains-early.webp)
 
 <sub>이미지: [Factorio Blueprint Editor](https://fbe.factorygamefan.com)로 렌더링 (게임 그래픽 © Wube Software)</sub>
 
@@ -33,6 +39,20 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 | 아이템 | 분당 | 위치 |
 |---|---:|---|
 | `(chests)` | - | 북쪽 줄 y=-2, 남쪽 줄 y=11의 상자 (2칸 제한) |
+
+### 로드맵
+
+| 단계 | 시기 / 필요한 연구 | 할 일 |
+|---|---|---|
+| 1. 물류 거리 (초반) | `logistics` (빨강), `electric-mining-drill` (빨강), `steel-processing` (빨강) | 철·초록 회로·강철 분기 3개로 기본 파일을 짓습니다. 벨트·인서터·조립기·채굴기가 상자에 쌓입니다. 아직 연구 안 된 칸은 멈춰 있다가 연구되면 저절로 돕니다. |
+| 2. 전력·유체·기차 거리 | `engine` (빨강·초록), `fluid-handling` (빨강·초록), `railway` (빨강·초록), `fluid-wagon` (빨강·초록) | 철·강철 분기 2개로 두 번째 거리를 놓습니다. 엔진·펌프는 연구 전엔 멈춰 있습니다. |
+| 3. 중반 | `logistics-2` (빨강·초록), `automation-2` (빨강·초록), `fast-inserter` (빨강), `electric-energy-distribution-1` (빨강·초록) | 업그레이드 플래너: 빨강 벨트·조립기 2·고속 인서터·중형 전봇대. 조립기 2 칸은 조립기 2를 만드는 데도 쓰입니다(조립기 1 → 2를 옆 칸에서 넘김). |
+| 4. 후반 / 봇 | `logistics-3` (빨강·초록·파랑·보라), `automation-3` (빨강·초록·파랑·보라), `bulk-inserter` (빨강·초록), `construction-robotics` (빨강·초록·파랑) | 파랑 벨트·조립기 3·벌크 인서터, 상자는 패시브 공급 상자로 바꾸면 건설 로봇이 몰에서 바로 가져갑니다. |
+
+**다음에 지을 것**
+
+- [모듈 몰 (1·2단계, 4종)](../module-mall-t1-t2/README.md) — 모듈 몰
+- [빨강 과학 (업그레이드형 타일)](../science-red-upgradeable/README.md) — 몰이 만든 건물로 지을 첫 공장
 
 ### 파일
 

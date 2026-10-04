@@ -32,6 +32,20 @@ none
 |---|---:|---|
 | `iron-ore` | ~1920 | stop `Pickup` → trains |
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 0. Research | `automated-rail-transportation` (red·green), `circuit-network` (red·green), `electric-mining-drill` (red) | Train stops, signals and the circuit network (automatic train limits). |
+| 1. Place | - | Stamp it into a 2x2 rail block interior. Place it on an ore patch; 64 drills cover the interior. |
+| 2. Names and limits | - | Name stops per item (there is a variant per item); schedules are just provider → requester. The circuit sets the train limit from the chest contents. |
+| 3. Upgrade | `logistics-3` (red·green·blue·purple), `bulk-inserter` (red·green) | Drawn with red belts and fast inserters; blue belts and bulk inserters load faster (same footprint). |
+
+**Build next**
+
+- [Rail smelter provider block](../rail-smelter-station/README.en.md) — where the ore goes
+- [Rail buffer station block](../rail-buffer-station/README.en.md) — where plates are buffered
+
 ### Files
 
 | File | Description |

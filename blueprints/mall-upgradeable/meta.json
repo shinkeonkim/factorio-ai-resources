@@ -38,7 +38,8 @@
       "label": {
         "ko": "전력·유체·기차 거리, 초반",
         "en": "power/fluids/trains street, early"
-      }
+      },
+      "preview": true
     },
     {
       "file": "variants/power-fluids-trains-mid.txt",
@@ -72,5 +73,87 @@
   "credits": {
     "ko": "사용자의 다이소1·다이소2 몰(데모 02·03)을 분석해 6+2 버스와 업그레이드 규칙에 맞게 새로 설계했습니다.",
     "en": "Redesigned from the user's Daiso 1 and Daiso 2 malls (demos 02 and 03) for the 6+2 bus and the upgrade rules."
-  }
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "1. 물류 거리 (초반)",
+        "en": "1. Logistics street (early)"
+      },
+      "do": {
+        "ko": "철·초록 회로·강철 분기 3개로 기본 파일을 짓습니다. 벨트·인서터·조립기·채굴기가 상자에 쌓입니다. 아직 연구 안 된 칸은 멈춰 있다가 연구되면 저절로 돕니다.",
+        "en": "Build the default file from three taps (iron, green circuits, steel). Belts, inserters, assemblers and drills fill the chests; cells not yet researched wait and start by themselves."
+      },
+      "research": [
+        "underground-belt",
+        "splitter",
+        "electric-mining-drill",
+        "steel-chest"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 전력·유체·기차 거리",
+        "en": "2. Power, fluids & trains street"
+      },
+      "do": {
+        "ko": "철·강철 분기 2개로 두 번째 거리를 놓습니다. 엔진·펌프는 연구 전엔 멈춰 있습니다.",
+        "en": "Place the second street from two taps (iron, steel); engines and pumps wait for their research."
+      },
+      "research": [
+        "engine-unit",
+        "pump",
+        "cargo-wagon",
+        "fluid-wagon"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 중반",
+        "en": "3. Mid"
+      },
+      "do": {
+        "ko": "업그레이드 플래너: 빨강 벨트·조립기 2·고속 인서터·중형 전봇대. 조립기 2 칸은 조립기 2를 만드는 데도 쓰입니다(조립기 1 → 2를 옆 칸에서 넘김).",
+        "en": "Upgrade planner: red belts, AM2, fast inserters, medium poles. The AM2 cell also makes AM2s (the AM1 cell next to it hands over AM1s)."
+      },
+      "research": [
+        "fast-transport-belt",
+        "assembling-machine-2",
+        "fast-inserter",
+        "medium-electric-pole"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "4. 후반 / 봇",
+        "en": "4. Late / bots"
+      },
+      "do": {
+        "ko": "파랑 벨트·조립기 3·벌크 인서터, 상자는 패시브 공급 상자로 바꾸면 건설 로봇이 몰에서 바로 가져갑니다.",
+        "en": "Blue belts, AM3, bulk inserters, and passive provider chests so construction bots take straight from the mall."
+      },
+      "research": [
+        "express-transport-belt",
+        "assembling-machine-3",
+        "bulk-inserter",
+        "passive-provider-chest"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "module-mall-t1-t2",
+      "why": {
+        "ko": "모듈 몰",
+        "en": "module mall"
+      }
+    },
+    {
+      "id": "science-red-upgradeable",
+      "why": {
+        "ko": "몰이 만든 건물로 지을 첫 공장",
+        "en": "the first factory to build from it"
+      }
+    }
+  ]
 }

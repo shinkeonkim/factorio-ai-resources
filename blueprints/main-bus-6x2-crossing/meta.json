@@ -30,5 +30,56 @@
   "default_label": {
     "ko": "벨트 (기본)",
     "en": "belt (default)"
-  }
+  },
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "1. 언제 쓰나",
+        "en": "1. When"
+      },
+      "do": {
+        "ko": "아래 묶음(예: 4번 강철)에서 뺀 분기가 위 묶음을 지나 북쪽 공장으로 가야 할 때. 위 묶음의 6줄이 한 열에서 같이 잠수합니다.",
+        "en": "When a branch from a lower group (e.g. steel in group 4) must reach a factory north of upper groups: all six lanes of each upper group dive at one column."
+      },
+      "research": [
+        "underground-belt"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "2. 유체",
+        "en": "2. Fluids"
+      },
+      "do": {
+        "ko": "유체 분기는 `variants/fluid.txt`: 지하 파이프가 각 묶음 위아래 빈 줄에서 이어집니다.",
+        "en": "Fluid branches use `variants/fluid.txt`: pipe-to-ground pairs meet in the gap rows of each group."
+      },
+      "research": [
+        "pipe-to-ground"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "3. 업그레이드",
+        "en": "3. Upgrade"
+      },
+      "do": {
+        "ko": "버스와 함께 바꾸면 됩니다. 잠수는 1칸이라 모든 단계에서 됩니다.",
+        "en": "Upgrade with the bus; the dive is 1 tile, fine at every tier."
+      },
+      "research": [
+        "fast-transport-belt",
+        "express-transport-belt"
+      ]
+    }
+  ],
+  "next": [
+    {
+      "id": "main-bus-6x2-tap",
+      "why": {
+        "ko": "분기 시작 조각",
+        "en": "the tap that starts the branch"
+      }
+    }
+  ]
 }

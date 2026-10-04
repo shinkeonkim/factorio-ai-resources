@@ -26,6 +26,20 @@ none
 
 none
 
+### Roadmap
+
+| Stage | When / research needed | What to do |
+|---|---|---|
+| 1. Pick the spot | `logistics` (red) | Stamp the tap over the bus under the x of the factory's marker. The lanes above dive 1-2 tiles and the branch rises through the two empty rows. |
+| 2. Full / half | - | Full if the factory uses the whole lane, half (splitter) if it is shared. Start with half early and swap in the full piece when the factory grows. |
+| 3. Fluid taps | `steam-power` (on first craft) | Fluid lines of group 6 use `fluid-line*.txt`: the line surfaces inside a span and climbs to the gap row. Keep it one column away from a solid tap at the same x. |
+| 4. Upgrade | `logistics-2` (red·green), `logistics-3` (red·green·blue·purple) | Upgrade together with the bus. Dives are 1-2 tiles, so the same piece works from yellow to turbo. |
+
+**Build next**
+
+- [Main bus 6+2 crossing piece](../main-bus-6x2-crossing/README.en.md) — when a branch must pass another group
+- [Red science (upgradeable tile)](../science-red-upgradeable/README.en.md) — a factory that starts with two taps
+
 ### Files
 
 | File | Description |

@@ -11,6 +11,9 @@
 - Analysing a blueprint/book: `python3 tools/analyze_blueprint.py <file>` (tiers, upgrade check, I/O).
 - Every external input gets a constant-combinator marker (`bp.add_marker`), count = per minute.
 - Write both `README.md` (Korean) and `README.en.md` (English); keep prose outside the AUTO block.
+- Every blueprint's meta.json has a `roadmap` (stages; `research` = recipe names, resolved to technologies by
+  build.py from `tech-unlocks.json`, so never type tech names by hand) and `next` (related blueprint ids).
+  Variants with `"preview": true` get their own image.
 - Shared generator code goes to `lib/`; never commit anything under `third_party/` except its README.
 - Rail city-block stations: take rail geometry from the user's book (`third_party/rail-book.txt` via
   `lib/rail_city_block.py`); do not invent rail positions.
