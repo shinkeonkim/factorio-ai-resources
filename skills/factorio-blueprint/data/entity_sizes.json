@@ -1,0 +1,667 @@
+{
+"accumulator": {
+"type": "accumulator",
+"w": 2,
+"h": 2
+},
+"active-provider-chest": {
+"type": "logistic-container",
+"w": 1,
+"h": 1
+},
+"agricultural-tower": {
+"type": "agricultural-tower",
+"w": 3,
+"h": 3
+},
+"arithmetic-combinator": {
+"type": "arithmetic-combinator",
+"w": 1,
+"h": 2
+},
+"artillery-turret": {
+"type": "artillery-turret",
+"w": 3,
+"h": 3
+},
+"artillery-wagon": {
+"type": "artillery-wagon",
+"w": 2,
+"h": 5
+},
+"assembling-machine-1": {
+"type": "assembling-machine",
+"w": 3,
+"h": 3
+},
+"assembling-machine-2": {
+"type": "assembling-machine",
+"w": 3,
+"h": 3
+},
+"assembling-machine-3": {
+"type": "assembling-machine",
+"w": 3,
+"h": 3
+},
+"asteroid-collector": {
+"type": "asteroid-collector",
+"w": 3,
+"h": 3
+},
+"beacon": {
+"type": "beacon",
+"w": 3,
+"h": 3
+},
+"big-electric-pole": {
+"type": "electric-pole",
+"w": 2,
+"h": 2
+},
+"big-mining-drill": {
+"type": "mining-drill",
+"w": 5,
+"h": 5
+},
+"biochamber": {
+"type": "assembling-machine",
+"w": 3,
+"h": 3
+},
+"biolab": {
+"type": "lab",
+"w": 5,
+"h": 5
+},
+"boiler": {
+"type": "boiler",
+"w": 3,
+"h": 2
+},
+"buffer-chest": {
+"type": "logistic-container",
+"w": 1,
+"h": 1
+},
+"bulk-inserter": {
+"type": "inserter",
+"w": 1,
+"h": 1
+},
+"burner-inserter": {
+"type": "inserter",
+"w": 1,
+"h": 1
+},
+"burner-mining-drill": {
+"type": "mining-drill",
+"w": 2,
+"h": 2
+},
+"captive-biter-spawner": {
+"type": "assembling-machine",
+"w": 5,
+"h": 5
+},
+"cargo-bay": {
+"type": "cargo-bay",
+"w": 4,
+"h": 4
+},
+"cargo-landing-pad": {
+"type": "cargo-landing-pad",
+"w": 8,
+"h": 8
+},
+"cargo-wagon": {
+"type": "cargo-wagon",
+"w": 2,
+"h": 5
+},
+"centrifuge": {
+"type": "assembling-machine",
+"w": 3,
+"h": 3
+},
+"chemical-plant": {
+"type": "assembling-machine",
+"w": 3,
+"h": 3
+},
+"constant-combinator": {
+"type": "constant-combinator",
+"w": 1,
+"h": 1
+},
+"crusher": {
+"type": "assembling-machine",
+"w": 2,
+"h": 3
+},
+"cryogenic-plant": {
+"type": "assembling-machine",
+"w": 5,
+"h": 5
+},
+"curved-rail-a": {
+"type": "curved-rail-a",
+"w": 2,
+"h": 6
+},
+"curved-rail-b": {
+"type": "curved-rail-b",
+"w": 2,
+"h": 5
+},
+"decider-combinator": {
+"type": "decider-combinator",
+"w": 1,
+"h": 2
+},
+"display-panel": {
+"type": "display-panel",
+"w": 1,
+"h": 1
+},
+"electric-energy-interface": {
+"type": "electric-energy-interface",
+"w": 2,
+"h": 2
+},
+"electric-furnace": {
+"type": "furnace",
+"w": 3,
+"h": 3
+},
+"electric-mining-drill": {
+"type": "mining-drill",
+"w": 3,
+"h": 3
+},
+"electromagnetic-plant": {
+"type": "assembling-machine",
+"w": 4,
+"h": 4
+},
+"elevated-curved-rail-a": {
+"type": "elevated-curved-rail-a",
+"w": 2,
+"h": 6
+},
+"elevated-curved-rail-b": {
+"type": "elevated-curved-rail-b",
+"w": 2,
+"h": 5
+},
+"elevated-half-diagonal-rail": {
+"type": "elevated-half-diagonal-rail",
+"w": 2,
+"h": 2
+},
+"elevated-straight-rail": {
+"type": "elevated-straight-rail",
+"w": 2,
+"h": 2
+},
+"express-loader": {
+"type": "loader",
+"w": 1,
+"h": 2
+},
+"express-splitter": {
+"type": "splitter",
+"w": 2,
+"h": 1
+},
+"express-transport-belt": {
+"type": "transport-belt",
+"w": 1,
+"h": 1
+},
+"express-underground-belt": {
+"type": "underground-belt",
+"w": 1,
+"h": 1
+},
+"fast-inserter": {
+"type": "inserter",
+"w": 1,
+"h": 1
+},
+"fast-loader": {
+"type": "loader",
+"w": 1,
+"h": 2
+},
+"fast-splitter": {
+"type": "splitter",
+"w": 2,
+"h": 1
+},
+"fast-transport-belt": {
+"type": "transport-belt",
+"w": 1,
+"h": 1
+},
+"fast-underground-belt": {
+"type": "underground-belt",
+"w": 1,
+"h": 1
+},
+"flamethrower-turret": {
+"type": "fluid-turret",
+"w": 2,
+"h": 3
+},
+"fluid-wagon": {
+"type": "fluid-wagon",
+"w": 2,
+"h": 5
+},
+"foundry": {
+"type": "assembling-machine",
+"w": 5,
+"h": 5
+},
+"fusion-generator": {
+"type": "fusion-generator",
+"w": 3,
+"h": 5
+},
+"fusion-reactor": {
+"type": "fusion-reactor",
+"w": 6,
+"h": 6
+},
+"gate": {
+"type": "gate",
+"w": 1,
+"h": 1
+},
+"gun-turret": {
+"type": "ammo-turret",
+"w": 2,
+"h": 2
+},
+"half-diagonal-rail": {
+"type": "half-diagonal-rail",
+"w": 2,
+"h": 2
+},
+"heat-exchanger": {
+"type": "boiler",
+"w": 3,
+"h": 2
+},
+"heat-pipe": {
+"type": "heat-pipe",
+"w": 1,
+"h": 1
+},
+"heating-tower": {
+"type": "reactor",
+"w": 3,
+"h": 3
+},
+"inserter": {
+"type": "inserter",
+"w": 1,
+"h": 1
+},
+"iron-chest": {
+"type": "container",
+"w": 1,
+"h": 1
+},
+"lab": {
+"type": "lab",
+"w": 3,
+"h": 3
+},
+"land-mine": {
+"type": "land-mine",
+"w": 1,
+"h": 1
+},
+"landing-pad-unloading-bay": {
+"type": "cargo-bay",
+"w": 4,
+"h": 4
+},
+"lane-splitter": {
+"type": "lane-splitter",
+"w": 1,
+"h": 1
+},
+"laser-turret": {
+"type": "electric-turret",
+"w": 2,
+"h": 2
+},
+"legacy-curved-rail": {
+"type": "legacy-curved-rail",
+"w": 4,
+"h": 8
+},
+"legacy-straight-rail": {
+"type": "legacy-straight-rail",
+"w": 2,
+"h": 2
+},
+"lightning-collector": {
+"type": "lightning-attractor",
+"w": 2,
+"h": 2
+},
+"lightning-rod": {
+"type": "lightning-attractor",
+"w": 1,
+"h": 1
+},
+"linked-belt": {
+"type": "linked-belt",
+"w": 1,
+"h": 1
+},
+"loader": {
+"type": "loader",
+"w": 1,
+"h": 2
+},
+"loader-1x1": {
+"type": "loader-1x1",
+"w": 1,
+"h": 1
+},
+"locomotive": {
+"type": "locomotive",
+"w": 2,
+"h": 6
+},
+"long-handed-inserter": {
+"type": "inserter",
+"w": 1,
+"h": 1
+},
+"market": {
+"type": "market",
+"w": 3,
+"h": 3
+},
+"medium-electric-pole": {
+"type": "electric-pole",
+"w": 1,
+"h": 1
+},
+"nuclear-reactor": {
+"type": "reactor",
+"w": 5,
+"h": 5
+},
+"offshore-pump": {
+"type": "offshore-pump",
+"w": 1,
+"h": 2
+},
+"oil-refinery": {
+"type": "assembling-machine",
+"w": 5,
+"h": 5
+},
+"one-way-valve": {
+"type": "valve",
+"w": 1,
+"h": 1
+},
+"overflow-valve": {
+"type": "valve",
+"w": 1,
+"h": 1
+},
+"passive-provider-chest": {
+"type": "logistic-container",
+"w": 1,
+"h": 1
+},
+"pipe": {
+"type": "pipe",
+"w": 1,
+"h": 1
+},
+"pipe-to-ground": {
+"type": "pipe-to-ground",
+"w": 1,
+"h": 1
+},
+"power-switch": {
+"type": "power-switch",
+"w": 2,
+"h": 2
+},
+"programmable-speaker": {
+"type": "programmable-speaker",
+"w": 1,
+"h": 1
+},
+"pump": {
+"type": "pump",
+"w": 1,
+"h": 2
+},
+"pumpjack": {
+"type": "mining-drill",
+"w": 3,
+"h": 3
+},
+"radar": {
+"type": "radar",
+"w": 3,
+"h": 3
+},
+"rail-chain-signal": {
+"type": "rail-chain-signal",
+"w": 1,
+"h": 1
+},
+"rail-ramp": {
+"type": "rail-ramp",
+"w": 4,
+"h": 16
+},
+"rail-signal": {
+"type": "rail-signal",
+"w": 1,
+"h": 1
+},
+"rail-support": {
+"type": "rail-support",
+"w": 3,
+"h": 3
+},
+"railgun-turret": {
+"type": "ammo-turret",
+"w": 3,
+"h": 5
+},
+"recycler": {
+"type": "furnace",
+"w": 2,
+"h": 4
+},
+"requester-chest": {
+"type": "logistic-container",
+"w": 1,
+"h": 1
+},
+"roboport": {
+"type": "roboport",
+"w": 4,
+"h": 4
+},
+"rocket-silo": {
+"type": "rocket-silo",
+"w": 9,
+"h": 9
+},
+"rocket-silo-rocket": {
+"type": "rocket-silo-rocket",
+"w": 4,
+"h": 11
+},
+"rocket-turret": {
+"type": "ammo-turret",
+"w": 3,
+"h": 3
+},
+"selector-combinator": {
+"type": "selector-combinator",
+"w": 1,
+"h": 2
+},
+"simple-entity-with-force": {
+"type": "simple-entity-with-force",
+"w": 1,
+"h": 1
+},
+"small-electric-pole": {
+"type": "electric-pole",
+"w": 1,
+"h": 1
+},
+"small-lamp": {
+"type": "lamp",
+"w": 1,
+"h": 1
+},
+"solar-panel": {
+"type": "solar-panel",
+"w": 3,
+"h": 3
+},
+"space-platform-hub": {
+"type": "space-platform-hub",
+"w": 8,
+"h": 8
+},
+"splitter": {
+"type": "splitter",
+"w": 2,
+"h": 1
+},
+"stack-inserter": {
+"type": "inserter",
+"w": 1,
+"h": 1
+},
+"steam-engine": {
+"type": "generator",
+"w": 3,
+"h": 5
+},
+"steam-turbine": {
+"type": "generator",
+"w": 3,
+"h": 5
+},
+"steel-chest": {
+"type": "container",
+"w": 1,
+"h": 1
+},
+"steel-furnace": {
+"type": "furnace",
+"w": 2,
+"h": 2
+},
+"stone-furnace": {
+"type": "furnace",
+"w": 2,
+"h": 2
+},
+"stone-wall": {
+"type": "wall",
+"w": 1,
+"h": 1
+},
+"storage-chest": {
+"type": "logistic-container",
+"w": 1,
+"h": 1
+},
+"storage-tank": {
+"type": "storage-tank",
+"w": 3,
+"h": 3
+},
+"straight-rail": {
+"type": "straight-rail",
+"w": 2,
+"h": 2
+},
+"substation": {
+"type": "electric-pole",
+"w": 2,
+"h": 2
+},
+"tesla-turret": {
+"type": "electric-turret",
+"w": 4,
+"h": 4
+},
+"thruster": {
+"type": "thruster",
+"w": 4,
+"h": 5
+},
+"tile-ghost": {
+"type": "tile-ghost",
+"w": 1,
+"h": 1
+},
+"top-up-valve": {
+"type": "valve",
+"w": 1,
+"h": 1
+},
+"train-stop": {
+"type": "train-stop",
+"w": 2,
+"h": 2
+},
+"transport-belt": {
+"type": "transport-belt",
+"w": 1,
+"h": 1
+},
+"turbo-loader": {
+"type": "loader",
+"w": 1,
+"h": 2
+},
+"turbo-splitter": {
+"type": "splitter",
+"w": 2,
+"h": 1
+},
+"turbo-transport-belt": {
+"type": "transport-belt",
+"w": 1,
+"h": 1
+},
+"turbo-underground-belt": {
+"type": "underground-belt",
+"w": 1,
+"h": 1
+},
+"underground-belt": {
+"type": "underground-belt",
+"w": 1,
+"h": 1
+},
+"wooden-chest": {
+"type": "container",
+"w": 1,
+"h": 1
+}
+}

@@ -1,0 +1,31 @@
+{
+  "id": "refined-concrete-1200",
+  "order": 12,
+  "game": "2.0",
+  "mods": [
+    "base"
+  ],
+  "tags": [
+    "production",
+    "refined-concrete",
+    "large"
+  ],
+  "title": {
+    "ko": "정제 콘크리트 1200/분",
+    "en": "Refined concrete 1200/min"
+  },
+  "summary": {
+    "ko": "240/분 모듈 5개를 세로로 쌓고 서쪽에 분배·수집 구간을 붙인 대형 공장.",
+    "en": "Five stacked 240/min modules plus a west-side manifold for inputs and output."
+  },
+  "outputs": [
+    {
+      "item": "refined-concrete",
+      "per_minute": 1200,
+      "where": {
+        "ko": "왼쪽 아래 x=-11 열 (남쪽으로 나감)",
+        "en": "bottom-left column x=-11, flows south"
+      }
+    }
+  ]
+}

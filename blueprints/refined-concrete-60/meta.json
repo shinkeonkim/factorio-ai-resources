@@ -1,0 +1,30 @@
+{
+  "id": "refined-concrete-60",
+  "order": 10,
+  "game": "2.0",
+  "mods": [
+    "base"
+  ],
+  "tags": [
+    "production",
+    "refined-concrete"
+  ],
+  "title": {
+    "ko": "정제 콘크리트 60/분",
+    "en": "Refined concrete 60/min"
+  },
+  "summary": {
+    "ko": "돌·철광석·물로 정제 콘크리트를 분당 60개 만드는 소형 공장. 입출력은 모두 서쪽 끝.",
+    "en": "Small factory turning stone, iron ore and water into 60 refined concrete/min. All I/O on the west edge."
+  },
+  "outputs": [
+    {
+      "item": "refined-concrete",
+      "per_minute": 60,
+      "where": {
+        "ko": "서쪽 끝 아래쪽 벨트 (서쪽으로 나감)",
+        "en": "bottom belt, leaves at the west edge"
+      }
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+name: validate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  blueprints:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pillow
+      - name: Regenerate + validate every blueprint, refresh READMEs and catalog
+        run: python3 tools/build.py --regen --no-images
+      - name: Committed files must already be up to date
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)" || { echo "::error::run 'python3 tools/build.py --regen' and commit the result"; git diff | head -100; exit 1; }
+      - name: Every blueprint has a preview image
+        run: |
+          missing=0
+          for d in blueprints/*/; do
+            [ -f "$d/meta.json" ] || continue
+            [ -f "$d/images/preview.png" ] || { echo "::error::missing $d/images/preview.png"; missing=1; }
+          done
+          exit $missing
+      - name: Skill self-test (examples build and validate)
+        run: |
+          for f in skills/factorio-blueprint/examples/*.py; do python3 "$f" > /tmp/out.txt; grep -q "Validation: OK" /tmp/out.txt || { cat /tmp/out.txt; exit 1; }; done

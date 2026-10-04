@@ -1,0 +1,63 @@
+{
+  "id": "rail-smelter-station",
+  "order": 52,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "space-age"
+  ],
+  "tags": [
+    "rail",
+    "city-block",
+    "station",
+    "smelting"
+  ],
+  "requires": [
+    "rail-book.txt"
+  ],
+  "variants": [
+    {
+      "file": "variants/copper-plate.txt",
+      "label": {
+        "ko": "구리 광석 → 구리판",
+        "en": "copper ore → copper plate"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "철광석 → 철판 (기본)",
+    "en": "iron ore → iron plate (default)"
+  },
+  "title": {
+    "ko": "철도 제련 공급 역 블럭",
+    "en": "Rail smelter provider block"
+  },
+  "summary": {
+    "ko": "위 역에서 광석을 하역해 전기 용광로 42대로 제련하고 아래 역에서 판을 적재.",
+    "en": "North stop unloads ore, 42 electric furnaces smelt it, south stop loads plates."
+  },
+  "inputs": [
+    {
+      "item": "iron-ore",
+      "per_minute": "~900",
+      "where": {
+        "ko": "열차 → 위 정거장 `Drop (smelter)`",
+        "en": "trains → north stop `Drop (smelter)`"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "item": "iron-plate",
+      "per_minute": "~900",
+      "where": {
+        "ko": "아래 정거장 `Pickup` → 열차",
+        "en": "south stop `Pickup` → trains"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "레일·정거장·신호 배치는 사용자가 제공한 철도 블루프린트 북('Rails' 북의 **Mixed Elev. Cityblock**, 원작자 미상)을 그대로 사용합니다. 이 저장소에는 원본 북이 들어 있지 않으며, 생성기를 돌리려면 `third_party/`에 원본을 두어야 합니다.",
+    "en": "Rail, stop and signal layout come unchanged from a user-supplied rail blueprint book (the **Mixed Elev. Cityblock** book inside a 'Rails' book; original author unknown). The original book is not in this repository; place it in `third_party/` to run the generator."
+  }
+}

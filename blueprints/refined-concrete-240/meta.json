@@ -1,0 +1,30 @@
+{
+  "id": "refined-concrete-240",
+  "order": 11,
+  "game": "2.0",
+  "mods": [
+    "base"
+  ],
+  "tags": [
+    "production",
+    "refined-concrete"
+  ],
+  "title": {
+    "ko": "정제 콘크리트 240/분",
+    "en": "Refined concrete 240/min"
+  },
+  "summary": {
+    "ko": "60/분 설계를 길게 늘린 분당 240개 모듈 (조립기 24, 용광로 17).",
+    "en": "The 60/min design stretched into a 240/min module (24 assemblers, 17 furnaces)."
+  },
+  "outputs": [
+    {
+      "item": "refined-concrete",
+      "per_minute": 240,
+      "where": {
+        "ko": "서쪽 끝 아래쪽 벨트",
+        "en": "bottom belt, west edge"
+      }
+    }
+  ]
+}

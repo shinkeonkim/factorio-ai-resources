@@ -1,0 +1,31 @@
+{
+  "id": "module-mall-t1-t2",
+  "order": 20,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "quality"
+  ],
+  "tags": [
+    "mall",
+    "modules"
+  ],
+  "title": {
+    "ko": "모듈 몰 (1·2단계, 4종)",
+    "en": "Module mall (tier 1-2, 4 kinds)"
+  },
+  "summary": {
+    "ko": "속도·효율·생산성·품질 모듈 1·2단계를 메인버스의 녹/적/청 회로로 만들어 상자에 쌓는 몰.",
+    "en": "Speed, efficiency, productivity and quality modules tier 1-2 from bus circuits into chests."
+  },
+  "outputs": [
+    {
+      "item": "*-module / *-module-2",
+      "per_minute": "2.5 (T2)",
+      "where": {
+        "ko": "조립기 아래 강철 상자",
+        "en": "steel chests below each assembler"
+      }
+    }
+  ]
+}

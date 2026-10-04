@@ -1,0 +1,28 @@
+{
+  "id": "rail-city-block-3x3",
+  "order": 41,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "space-age"
+  ],
+  "tags": [
+    "rail",
+    "city-block"
+  ],
+  "requires": [
+    "empty-block.txt"
+  ],
+  "title": {
+    "ko": "철도 시티블럭 3×3",
+    "en": "Rail city block 3×3"
+  },
+  "summary": {
+    "ko": "182칸 빈 철도 블럭을 3×3으로 확장 (546칸 그리드).",
+    "en": "The 182-tile empty rail block tiled 3×3 (546-tile grid)."
+  },
+  "credits": {
+    "ko": "레일·정거장·신호 배치는 사용자가 제공한 철도 블루프린트 북('Rails' 북의 **Mixed Elev. Cityblock**, 원작자 미상)을 그대로 사용합니다. 이 저장소에는 원본 북이 들어 있지 않으며, 생성기를 돌리려면 `third_party/`에 원본을 두어야 합니다.",
+    "en": "Rail, stop and signal layout come unchanged from a user-supplied rail blueprint book (the **Mixed Elev. Cityblock** book inside a 'Rails' book; original author unknown). The original book is not in this repository; place it in `third_party/` to run the generator."
+  }
+}

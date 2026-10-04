@@ -1,0 +1,67 @@
+{
+  "id": "rail-mining-station",
+  "order": 51,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "space-age"
+  ],
+  "tags": [
+    "rail",
+    "city-block",
+    "station",
+    "mining"
+  ],
+  "requires": [
+    "rail-book.txt"
+  ],
+  "variants": [
+    {
+      "file": "variants/copper-ore.txt",
+      "label": {
+        "ko": "구리 광석",
+        "en": "copper ore"
+      }
+    },
+    {
+      "file": "variants/stone.txt",
+      "label": {
+        "ko": "돌",
+        "en": "stone"
+      }
+    },
+    {
+      "file": "variants/coal.txt",
+      "label": {
+        "ko": "석탄",
+        "en": "coal"
+      }
+    }
+  ],
+  "default_label": {
+    "ko": "철광석 (기본)",
+    "en": "iron ore (default)"
+  },
+  "title": {
+    "ko": "철도 채굴 공급 역 블럭",
+    "en": "Rail mining provider block"
+  },
+  "summary": {
+    "ko": "블럭 안을 채굴기 64대로 채우고 수집 벨트로 적재 역에 실어 보내는 공급 블럭.",
+    "en": "64 electric drills inside the block feeding a loading station."
+  },
+  "outputs": [
+    {
+      "item": "iron-ore",
+      "per_minute": "~1920",
+      "where": {
+        "ko": "정거장 `Pickup` → 열차",
+        "en": "stop `Pickup` → trains"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "레일·정거장·신호 배치는 사용자가 제공한 철도 블루프린트 북('Rails' 북의 **Mixed Elev. Cityblock**, 원작자 미상)을 그대로 사용합니다. 이 저장소에는 원본 북이 들어 있지 않으며, 생성기를 돌리려면 `third_party/`에 원본을 두어야 합니다.",
+    "en": "Rail, stop and signal layout come unchanged from a user-supplied rail blueprint book (the **Mixed Elev. Cityblock** book inside a 'Rails' book; original author unknown). The original book is not in this repository; place it in `third_party/` to run the generator."
+  }
+}

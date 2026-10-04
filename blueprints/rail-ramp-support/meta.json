@@ -1,0 +1,40 @@
+{
+  "id": "rail-ramp-support",
+  "order": 30,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "space-age"
+  ],
+  "tags": [
+    "mall",
+    "rail",
+    "elevated-rails"
+  ],
+  "title": {
+    "ko": "철도 경사로·지지대 공장",
+    "en": "Rail ramp & support factory"
+  },
+  "summary": {
+    "ko": "철광석·돌·정제 콘크리트로 철도 경사로와 지지대를 만드는 소형 공장 (강철 병목).",
+    "en": "Small factory making rail ramps and rail supports from iron ore, stone and refined concrete (steel-limited)."
+  },
+  "outputs": [
+    {
+      "item": "rail-ramp",
+      "per_minute": "~1",
+      "where": {
+        "ko": "상자 (2칸 제한)",
+        "en": "chest (2-slot limit)"
+      }
+    },
+    {
+      "item": "rail-support",
+      "per_minute": "~3",
+      "where": {
+        "ko": "상자 (2칸 제한)",
+        "en": "chest (2-slot limit)"
+      }
+    }
+  ]
+}
