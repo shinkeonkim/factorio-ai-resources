@@ -34,3 +34,23 @@ CELLS = {
     "robot-frame": Cell("Flying robot frames", ["flying-robot-frame"] * 3,
                         inner=("battery", "electronic-circuit"), outer=("electric-engine-unit", "steel-plate")),
 }
+
+# --- malls: products into chests (sink="chest"); each half has its own items; one lane set per mall --------
+_MALL = dict(inner=("iron-gear-wheel", "iron-plate"), outer=("steel-plate", "electronic-circuit"), sink="chest")
+MALL = [   # stack in this order: the first cell makes the gear lane for everything above it
+    Cell("Mall: gears & belts", ["iron-gear-wheel", "transport-belt", "underground-belt"],
+         east=["iron-gear-wheel", "transport-belt", "splitter"], **_MALL),
+    Cell("Mall: inserters & assemblers", ["long-handed-inserter", "inserter", "fast-inserter"],
+         east=["assembling-machine-2", "assembling-machine-1", "electric-mining-drill"], **_MALL),
+    Cell("Mall: pipes & logistics", ["pipe", "pipe-to-ground", "radar"],
+         east=["steel-chest", "repair-pack", "rail-signal"], **_MALL),
+    Cell("Mall: trains & fluids", ["pipe", "engine-unit", "locomotive"],
+         east=["storage-tank", "fluid-wagon", "pipe"], **_MALL),
+]
+_MOD = dict(inner=("advanced-circuit", "electronic-circuit"), outer=("processing-unit", None), sink="chest")
+MODULE_MALL = [
+    Cell("Modules: speed & efficiency", ["speed-module", "speed-module-2"],
+         east=["efficiency-module", "efficiency-module-2"], **_MOD),
+    Cell("Modules: productivity & quality", ["productivity-module", "productivity-module-2"],
+         east=["quality-module", "quality-module-2"], **_MOD),
+]

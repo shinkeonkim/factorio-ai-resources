@@ -64,3 +64,48 @@ def variants_meta():
             out.append({"file": f"variants/{kind}-{tier}.txt",
                         "label": {"ko": f"{ko} — {t['label']['ko']}", "en": f"{en} — {t['label']['en']}"}})
     return out
+
+
+def family_example(cells, tier="early", rates=None):
+    """cap + one of each cell type, stacked in the given order (malls)."""
+    bp = Blueprint(f"{cells[0].name.split(':')[0]}: cap + {len(cells)} cells ({tier})", game="2.0",
+                   description="Cells stack in any order above the first one (which feeds the shared lanes). "
+                               "Products go into chests limited to 2 slots.")
+    build_cap(bp, cells[0], tier, rates)
+    y = 0
+    for cell in cells:
+        y -= cell.period
+        build_cell(bp, cell, tier, y)
+    bp.connect_poles()
+    return bp
+
+
+def slug(cell):
+    return cell.name.split(":")[-1].strip().lower().replace(" & ", "-").replace(" ", "-")
+
+
+def write_family(cells, script_file, rates=None):
+    for tier in TIERS:
+        problems = family_example(cells, tier, rates).validate()
+        if problems:
+            raise SystemExit(f"{cells[0].name} {tier}: " + "; ".join(problems))
+    save(family_example(cells, "early", rates), script_file)
+    for tier in TIERS:
+        for cell in cells:
+            save(cell_bp(cell, tier), script_file, f"variants/{slug(cell)}-{tier}.txt", check=False)
+        bp = Blueprint(f"{cells[0].name.split(':')[0]} cap ({tier})", game="2.0")
+        build_cap(bp, cells[0], tier, rates)
+        bp.connect_poles()
+        save(bp, script_file, f"variants/cap-{tier}.txt")
+
+
+def family_variants_meta(cells):
+    out = []
+    for cell in cells:
+        for tier, t in TIERS.items():
+            out.append({"file": f"variants/{slug(cell)}-{tier}.txt",
+                        "label": {"ko": f"{cell.name} — {t['label']['ko']}", "en": f"{cell.name} — {t['label']['en']}"}})
+    for tier, t in TIERS.items():
+        out.append({"file": f"variants/cap-{tier}.txt",
+                    "label": {"ko": f"캡 — {t['label']['ko']}", "en": f"cap — {t['label']['en']}"}})
+    return out

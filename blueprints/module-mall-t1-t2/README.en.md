@@ -1,6 +1,6 @@
-# Module mall (tier 1-2, 4 kinds)
+# Module mall tier 1-2 (stackable cells)
 
-> Speed, efficiency, productivity and quality modules tier 1-2 from bus circuits into chests.
+> Two 15-wide cell types (speed & efficiency / productivity & quality) stacked northwards; tier-1 modules go straight into the tier-2 machine above. Inputs green, red and blue circuits.
 
 [한국어](README.md)
 
@@ -13,9 +13,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, quality) |
-| Size | 52×9 tiles |
-| Entities | 193 |
-| Main machines | `assembling-machine-3` ×12 (speed-module 2, efficiency-module 2, productivity-module 2, quality-module 2, speed-module-2 1, efficiency-module-2 1, productivity-module-2 1, quality-module-2 1)<br>`steel-chest` ×12 |
+| Size | 19×25 tiles |
+| Entities | 181 |
+| Main machines | `assembling-machine-1` ×8 (speed-module 1, speed-module-2 1, efficiency-module 1, efficiency-module-2 1, productivity-module 1, productivity-module-2 1, quality-module 1, quality-module-2 1)<br>`iron-chest` ×8 |
 | Validation | OK |
 
 ### Inputs
@@ -24,35 +24,57 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `electronic-circuit` | 200 | (0, 1) |
-| `processing-unit` | 50 | (0, 3) |
-| `advanced-circuit` | 250 | (0, 5) |
+| `electronic-circuit` | 450 | (4, 24) |
+| `advanced-circuit` | 450 | (0, 24) |
+| `processing-unit` | 450 | (1, 24) |
+| `electronic-circuit` | 450 | (14, 24) |
+| `advanced-circuit` | 450 | (18, 24) |
+| `processing-unit` | 450 | (17, 24) |
 
 ### Outputs
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `*-module / *-module-2` | 2.5 (T2) | steel chests below each assembler |
+| `(chests)` | - | centre chests of each cell (2 slots each) |
+
+### Cell types
+
+Every cell is **15** wide and uses the same lanes. The bottom cell makes the shared intermediates (e.g. gears) for the lanes, so it goes right above the cap; add any other cells northwards in any order. Products collect in the centre chests (limited to 2 slots).
+
+| Cell | Size | West (south→north) | East (south→north) |
+|---|---|---|---|
+| speed & efficiency | 15×8 | `speed-module` → `speed-module-2` | `efficiency-module` → `efficiency-module-2` |
+| productivity & quality | 15×8 | `productivity-module` → `productivity-module-2` | `quality-module` → `quality-module-2` |
+
+Lanes: `advanced-circuit` (inner), `electronic-circuit` (inner), `processing-unit` (outer)
 
 ### Roadmap
 
 | Stage | When / research needed | What to do |
 |---|---|---|
-| 1. Tier-1 modules | `speed-module` (red·green), `efficiency-module` (red·green), `productivity-module` (red·green), `advanced-circuit` (red·green) | Tap green and red circuits from bus group 3. At first only the four tier-1 cells need to run. |
-| 2. Tier-2 modules | `speed-module-2` (red·green·blue), `efficiency-module-2` (red·green·blue), `productivity-module-2` (red·green·blue) | Tier 2 takes two tier-1 modules plus circuits (the tier-1 cell feeds its neighbour); the cells start once researched. |
-| 3. Quality (Space Age) | `quality-module` (red·green), `quality-module-2` (red·green·blue) | The quality cells need the Quality mod; without it, clear their recipes. |
-| 4. Assemblers | `automation-2` (red·green), `automation-3` (red·green·blue·purple) | Drawn with AM3; AM2 has the same footprint and works, just slower. |
+| 1. Tier 1 | `speed-module` (red·green), `efficiency-module` (red·green), `productivity-module` (red·green), `advanced-circuit` (red·green) | Tap the circuits from bus group 3 and place the cap and cells; tier-2 cells wait for their research. |
+| 2. Tier 2 | `speed-module-2` (red·green·blue), `efficiency-module-2` (red·green·blue), `productivity-module-2` (red·green·blue), `processing-unit` (red·green·blue) | A tier-2 module takes 4 tier-1 modules + 5 red + 5 blue circuits (2.1 data); the tier-1 machine feeds the tier-2 machine above and fills its chest. |
+| 3. Quality (Space Age) | `quality-module` (red·green), `quality-module-2` (red·green·blue) | The quality cell needs the Quality mod; leave it out otherwise. |
 
 **Build next**
 
-- [Production science (stackable cell)](../science-purple-upgradeable/README.en.md) — the science that consumes productivity modules
-- [Upgradeable mall (Daiso redesign)](../mall-upgradeable/README.en.md) — the building mall
+- [Production science (stackable cell)](../science-purple-upgradeable/README.en.md) — the science that uses productivity modules
+- [Upgradeable mall (stackable cells)](../mall-upgradeable/README.en.md) — the building mall
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | default |
+| [`blueprint.txt`](blueprint.txt) | cap + one cell of each type, early (example / preview) |
+| [`variants/speed-efficiency-early.txt`](variants/speed-efficiency-early.txt) | Modules: speed & efficiency — early (yellow, AM1, basic) |
+| [`variants/speed-efficiency-mid.txt`](variants/speed-efficiency-mid.txt) | Modules: speed & efficiency — mid (red, AM2, fast) |
+| [`variants/speed-efficiency-late.txt`](variants/speed-efficiency-late.txt) | Modules: speed & efficiency — late (blue, AM3, bulk) |
+| [`variants/productivity-quality-early.txt`](variants/productivity-quality-early.txt) | Modules: productivity & quality — early (yellow, AM1, basic) |
+| [`variants/productivity-quality-mid.txt`](variants/productivity-quality-mid.txt) | Modules: productivity & quality — mid (red, AM2, fast) |
+| [`variants/productivity-quality-late.txt`](variants/productivity-quality-late.txt) | Modules: productivity & quality — late (blue, AM3, bulk) |
+| [`variants/cap-early.txt`](variants/cap-early.txt) | cap — early (yellow, AM1, basic) |
+| [`variants/cap-mid.txt`](variants/cap-mid.txt) | cap — mid (red, AM2, fast) |
+| [`variants/cap-late.txt`](variants/cap-late.txt) | cap — late (blue, AM3, bulk) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -70,4 +92,17 @@ python3 tools/build.py module-mall-t1-t2
 
 <!-- AUTO:END -->
 
-{'ko': '## 구조\n\n- 모듈 종류마다 [1단계 · 2단계 · 1단계] 조립기 3 세 대. 2단계 1대가 1단계를 분당 10개 쓰고 1단계 1대는 5개를 만들어서, 1단계 2대가 가운데 2단계에 옆으로 바로 넣습니다.\n- 녹색 회로(북쪽 레인)와 청색 회로(남쪽 레인)는 블루프린트 안에서 한 벨트로 합쳐집니다. 버스에서 벨트를 따로 끌어오면 됩니다.\n- 1단계 상자는 1칸(50개), 2단계 상자는 2칸으로 제한해 남는 것만 쌓입니다.\n\n## 참고\n\n- Quality 모드가 필요합니다. 3단계는 Space Age 재료가 필요해 제외했습니다.\n- 더 많이 만들려면 `generate.py`의 `TYPES`에 종류를 반복해 넣으세요.\n', 'en': '## Layout\n\n- One [T1 · T2 · T1] group of assembling machine 3 per module kind. A T2 assembler eats 10 T1/min and a T1 makes 5/min, so two T1 feed the middle T2 sideways.\n- Green circuits (north lane) and processing units (south lane) are merged onto one belt inside the blueprint; bring them from the bus separately.\n- T1 chests are limited to 1 slot (50), T2 chests to 2 slots, so only surplus accumulates.\n\n## Notes\n\n- Requires the Quality mod. Tier 3 was left out because it needs Space Age ingredients.\n- Repeat a kind in `TYPES` in `generate.py` for more output.\n'}
+## Layout
+
+- Same frame as the science cells: input belts run north through every cell along both edges, one machine every 4 rows in a single column per side.
+- The centre column holds **chests** instead of a belt. Each machine fills its own chest; when the machine above or below needs the product, a gap-row inserter hands it over directly (belt → underground/splitter, inserter → long-handed/fast, AM1 → AM2, tier-1 → tier-2 module).
+- Intermediates that are not on the bus (gears) are made by the bottom cell and put on the far lane for every cell above.
+- Marker counts are 450/min per input (one yellow lane); a mall idles once its chests are full, so real use is far lower.
+
+## Upgrading
+
+Swap belts, assemblers, inserters and poles with the upgrade planner; at the late tier swap the iron chests for passive provider chests (same footprint).
+
+## Credits
+
+The earlier module mall rebuilt as stackable cells.

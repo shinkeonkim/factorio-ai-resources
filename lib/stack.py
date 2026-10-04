@@ -33,7 +33,8 @@ from lib.fbp import N, E, S, W
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 _DATA = ROOT / "skills" / "factorio-blueprint" / "data"
-RECIPES = json.loads((_DATA / "recipes-base.json").read_text())["recipes"]
+RECIPES = {**json.loads((_DATA / "recipes-space-age.json").read_text())["recipes"],   # quality modules etc.
+           **json.loads((_DATA / "recipes-base.json").read_text())["recipes"]}          # base wins where both exist
 SPEED = {"assembling-machine-1": 0.5, "assembling-machine-2": 0.75, "assembling-machine-3": 1.25,
          "electric-furnace": 2.0, "steel-furnace": 2.0, "stone-furnace": 1.0, "chemical-plant": 1.0}
 LANE = {"transport-belt": 7.5, "fast-transport-belt": 15.0, "express-transport-belt": 22.5,
@@ -61,6 +62,16 @@ class Cell:
     outer: tuple | None = None              # same for the outer belt, None = no outer belt
     product: str | None = None              # defaults to the last recipe's result
     machine: dict = field(default_factory=dict)   # recipe -> entity override (e.g. electric-furnace)
+    east: list | None = None                # east half's column if it differs (malls); same length as column
+    sink: str = "belt"                      # "belt": product onto the centre belt; "chest": every product into a
+                                            # chest in the centre column (malls), neighbours may still take it
+
+    def half(self, side):
+        """This cell as seen from one half (side = -1 west, +1 east)."""
+        if side < 0 or not self.east:
+            return self
+        import dataclasses
+        return dataclasses.replace(self, column=list(self.east), east=None)
 
     @property
     def period(self):
@@ -93,7 +104,7 @@ class Cell:
 
     def makers(self):
         """lane items produced inside the cell"""
-        made = {self.out_item(r) for r in self.column}
+        made = {self.out_item(r) for r in self.column + (self.east or [])}
         return {i for i in self.lanes() if i in made}
 
     def cap_items(self):
@@ -119,12 +130,15 @@ def plan(cell: Cell):
             elif not [n for n in (k - 1, k + 1) if 0 <= n < len(col) and cell.out_item(col[n]) == item]:
                 raise ValueError(f"{cell.name}: {r} needs {item}: not on a lane and no neighbour makes it")
         prod = cell.out_item(r)
-        if prod == cell.final:
-            j["roles"].append("centre")
-        elif prod in lanes:
+        users = [n for n in (k - 1, k + 1) if 0 <= n < len(col) and prod in _ingredients(col[n])]
+        if prod in lanes:
             j["roles"].append("lane_" + lanes[prod][0])
+        elif cell.sink == "chest":
+            j["roles"].append("chest")
+            j["roles"] += [("hand", n) for n in users]
+        elif prod == cell.final:
+            j["roles"].append("centre")
         else:
-            users = [n for n in (k - 1, k + 1) if 0 <= n < len(col) and prod in _ingredients(col[n])]
             if not users:
                 raise ValueError(f"{cell.name}: nobody takes {prod} from machine {k}")
             j["roles"] += [("hand", n) for n in users]
@@ -143,7 +157,7 @@ def _role_load(cell, tier, k, role):
     r = col[k]
     if role in ("inner", "outer"):
         return rate[k] * sum(a for i, a in _ingredients(r).items() if lanes.get(i, ("",))[0] == role)
-    if role == "centre" or str(role).startswith("lane_"):
+    if role in ("centre", "chest") or str(role).startswith("lane_"):
         return rate[k] * RECIPES[r]["results"][0]["amount"]
     n = role[1]                                             # hand-over: limited by the consumer n
     return rate[n] * _ingredients(col[n])[cell.out_item(r)]
@@ -170,7 +184,10 @@ def _solve(cell, tier, counts=None):
                 allowed = counts[k][str(role)] * _role_cap(tier, role) / load
                 target = role[1] if isinstance(role, tuple) else k
                 limit[target] = min(limit[target], allowed)
-    finals = [k for k, r in enumerate(col) if cell.out_item(r) == cell.final]
+    if cell.sink == "chest":                               # malls: size every machine for running flat out
+        finals = [k for k, j in enumerate(jobs) if "chest" in j["roles"]]
+    else:
+        finals = [k for k, r in enumerate(col) if cell.out_item(r) == cell.final]
     util = [limit[k] if k in finals else 0.0 for k in range(len(col))]
     for _ in range(30):
         need = {}
@@ -223,9 +240,13 @@ def build_cell(bp, cell: Cell, tier: str, y0: int):
     """Place one cell with its top row at y0 (rows y0 .. y0+P-1)."""
     t = TIERS[tier]
     c, P = cell.c, cell.period
-    jobs, cnt = plan(cell), counts(cell)
     gap_used = set()
+    chest = {"early": "iron-chest", "mid": "iron-chest", "late": "passive-provider-chest"}[tier]
     for sgn in (-1, 1):                                          # west half, then the mirrored east half
+        half = cell.half(sgn)
+        if len(half.column) != len(cell.column):
+            raise ValueError(f"{cell.name}: both halves need the same number of machines")
+        jobs, cnt = plan(half), counts(half)
         X = lambda d: c + sgn * d                                # d = distance from the centre
         from_out, from_in = (W, E) if sgn < 0 else (E, W)        # inserter picks from the outer / inner side
         for y in range(y0, y0 + P):
@@ -245,6 +266,10 @@ def build_cell(bp, cell: Cell, tier: str, y0: int):
                     bp.add(name, X(5), y, from_in if role.startswith("lane") else from_out)
             for i in range(cnt[k].get("centre", 0)):
                 bp.add(t["ins"], X(1), [top + 1, top, top + 2][i], from_out)
+            if "chest" in j["roles"]:                            # west chest on row top+1, east on top+2
+                cy = top + 1 if sgn < 0 else top + 2
+                bp.add(t["ins"], X(1), cy, from_out)
+                bp.add(chest, c, cy, bar=2)
             for role in j["roles"]:
                 if not isinstance(role, tuple):
                     continue
@@ -255,11 +280,14 @@ def build_cell(bp, cell: Cell, tier: str, y0: int):
                 gap_used.add((sgn, gy))
                 for i in range(cnt[k][str(role)]):
                     bp.add(t["ins"], X([3, 4, 2][i]), gy, S if n > k else N)   # S = picks from the south
+                    if i == 2 and sgn > 0:                       # c+2 is outside the c-1 / c+5 poles' reach
+                        bp.add(t["pole"], c + 1, gy)
     for g in range(y0, y0 + P, 4):                               # gap rows: poles
         for dx in (-5, -1, 5):
             bp.add(t["pole"], c + dx, g)
-    for y in range(y0, y0 + P):
-        bp.add(t["belt"], c, y, S)
+    if cell.sink == "belt":
+        for y in range(y0, y0 + P):
+            bp.add(t["belt"], c, y, S)
 
 
 def build_cap(bp, cell: Cell, tier: str, rates=None):
@@ -278,8 +306,9 @@ def build_cap(bp, cell: Cell, tier: str, rates=None):
     rates = rates or {}
     for dx in (-5, -1, 5):
         bp.add(t["pole"], c + dx, 0)
-    for y in range(0, 8):
-        bp.add(t["belt"], c, y, S)
+    if cell.sink == "belt":
+        for y in range(0, 8):
+            bp.add(t["belt"], c, y, S)
     get = lambda belt, side: next((i for i, v in lanes.items() if v == (belt, side)), None)
     inner_far, inner_near = get("inner", "far"), get("inner", "near")
     outer_far, outer_near = get("outer", "far"), get("outer", "near")

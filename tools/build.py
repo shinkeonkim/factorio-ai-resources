@@ -123,6 +123,36 @@ def stack_section(name, lang):
     return out
 
 
+def family_section(name, lang):
+    """Cell types of a mall-style family (lib/cells.py list `name`)."""
+    sys.path.insert(0, str(ROOT))
+    import lib.cells as C
+    from lib.stack import RECIPES
+    cells = getattr(C, name)
+    ko = lang == "ko"
+    out_item = lambda r: RECIPES[r]["results"][0]["name"]
+    first = cells[0]
+    out = ["", "### " + ("셀 종류" if ko else "Cell types"), "",
+           (f"모든 셀의 폭은 **{first.width}**칸이고 같은 레인을 씁니다. 맨 아래 셀이 공용 레인을 채우는 중간재(예: 톱니)를 "
+            "만들므로 그 셀을 캡 바로 위에 놓고, 나머지 셀은 필요한 것만 원하는 순서로 북쪽에 붙입니다. "
+            "제품은 가운데 상자(2칸 제한)에 쌓입니다." if ko else
+            f"Every cell is **{first.width}** wide and uses the same lanes. The bottom cell makes the shared intermediates "
+            "(e.g. gears) for the lanes, so it goes right above the cap; add any other cells northwards in any order. "
+            "Products collect in the centre chests (limited to 2 slots)."), "",
+           ("| 셀 | 크기 | 서쪽 (남→북) | 동쪽 (남→북) |" if ko else "| Cell | Size | West (south→north) | East (south→north) |"),
+           "|---|---|---|---|"]
+    for cell in cells:
+        w = " → ".join(icon(out_item(r)) for r in cell.column)
+        e = " → ".join(icon(out_item(r)) for r in (cell.east or cell.column))
+        out.append(f"| {cell.name.split(':')[-1].strip()} | {cell.width}×{cell.period} | {w} | {e} |")
+    lanes = first.lanes()
+    out += ["", ("레인: " if ko else "Lanes: ") + ", ".join(
+        f"{icon(i)} ({'안쪽' if ko and v[0] == 'inner' else '바깥' if ko else v[0]}"
+        + (", 셀 안에서 만듦" if ko and i in first.makers() else ", made in the cell" if i in first.makers() else "") + ")"
+        for i, v in lanes.items())]
+    return out
+
+
 def trigger_text(trig, lang):
     if not trig:
         return "-"
@@ -251,6 +281,8 @@ def auto_section(d: pathlib.Path, meta: dict, st: dict, lang: str) -> str:
         out.append(t["none"])
     if meta.get("cell"):
         out += stack_section(meta["cell"], lang)
+    if meta.get("family"):
+        out += family_section(meta["family"], lang)
     if meta.get("roadmap"):
         out += ["", f"### {t['roadmap']}", "", f"| {t['stage']} | {t['research']} | {t['todo']} |", "|---|---|---|"]
         for st_ in meta["roadmap"]:

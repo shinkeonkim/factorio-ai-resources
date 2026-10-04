@@ -1,6 +1,6 @@
 {
   "id": "module-mall-t1-t2",
-  "order": 20,
+  "order": 51,
   "game": "2.0",
   "mods": [
     "base",
@@ -8,35 +8,110 @@
   ],
   "tags": [
     "mall",
-    "modules"
+    "stackable",
+    "upgradeable"
   ],
+  "family": "MODULE_MALL",
   "title": {
-    "ko": "모듈 몰 (1·2단계, 4종)",
-    "en": "Module mall (tier 1-2, 4 kinds)"
+    "ko": "모듈 몰 1·2단계 (쌓는 셀)",
+    "en": "Module mall tier 1-2 (stackable cells)"
   },
   "summary": {
-    "ko": "속도·효율·생산성·품질 모듈 1·2단계를 메인버스의 녹/적/청 회로로 만들어 상자에 쌓는 몰.",
-    "en": "Speed, efficiency, productivity and quality modules tier 1-2 from bus circuits into chests."
+    "ko": "15칸 폭 셀 2종(속도·효율 / 생산·품질)을 북쪽으로 쌓습니다. 1단계 모듈이 바로 위 2단계 기계로 넘어갑니다. 입력은 초록·빨강·파랑 회로.",
+    "en": "Two 15-wide cell types (speed & efficiency / productivity & quality) stacked northwards; tier-1 modules go straight into the tier-2 machine above. Inputs green, red and blue circuits."
   },
-  "outputs": [
+  "variants": [
     {
-      "item": "*-module / *-module-2",
-      "per_minute": "2.5 (T2)",
-      "where": {
-        "ko": "조립기 아래 강철 상자",
-        "en": "steel chests below each assembler"
+      "file": "variants/speed-efficiency-early.txt",
+      "label": {
+        "ko": "Modules: speed & efficiency — 초반 (노랑·조립기 1·일반)",
+        "en": "Modules: speed & efficiency — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/speed-efficiency-mid.txt",
+      "label": {
+        "ko": "Modules: speed & efficiency — 중반 (빨강·조립기 2·고속)",
+        "en": "Modules: speed & efficiency — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/speed-efficiency-late.txt",
+      "label": {
+        "ko": "Modules: speed & efficiency — 후반 (파랑·조립기 3·벌크)",
+        "en": "Modules: speed & efficiency — late (blue, AM3, bulk)"
+      }
+    },
+    {
+      "file": "variants/productivity-quality-early.txt",
+      "label": {
+        "ko": "Modules: productivity & quality — 초반 (노랑·조립기 1·일반)",
+        "en": "Modules: productivity & quality — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/productivity-quality-mid.txt",
+      "label": {
+        "ko": "Modules: productivity & quality — 중반 (빨강·조립기 2·고속)",
+        "en": "Modules: productivity & quality — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/productivity-quality-late.txt",
+      "label": {
+        "ko": "Modules: productivity & quality — 후반 (파랑·조립기 3·벌크)",
+        "en": "Modules: productivity & quality — late (blue, AM3, bulk)"
+      }
+    },
+    {
+      "file": "variants/cap-early.txt",
+      "label": {
+        "ko": "캡 — 초반 (노랑·조립기 1·일반)",
+        "en": "cap — early (yellow, AM1, basic)"
+      }
+    },
+    {
+      "file": "variants/cap-mid.txt",
+      "label": {
+        "ko": "캡 — 중반 (빨강·조립기 2·고속)",
+        "en": "cap — mid (red, AM2, fast)"
+      }
+    },
+    {
+      "file": "variants/cap-late.txt",
+      "label": {
+        "ko": "캡 — 후반 (파랑·조립기 3·벌크)",
+        "en": "cap — late (blue, AM3, bulk)"
       }
     }
   ],
+  "default_label": {
+    "ko": "캡 + 셀 종류별 1개, 초반 (예시·미리보기)",
+    "en": "cap + one cell of each type, early (example / preview)"
+  },
+  "outputs": [
+    {
+      "item": "(chests)",
+      "per_minute": "-",
+      "where": {
+        "ko": "각 셀 가운데 상자 (2칸 제한)",
+        "en": "centre chests of each cell (2 slots each)"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "이 저장소의 이전 모듈 몰을 쌓는 셀 형태로 다시 만들었습니다.",
+    "en": "The earlier module mall rebuilt as stackable cells."
+  },
   "roadmap": [
     {
       "stage": {
-        "ko": "1. 1단계 모듈",
-        "en": "1. Tier-1 modules"
+        "ko": "1. 1단계",
+        "en": "1. Tier 1"
       },
       "do": {
-        "ko": "버스 3번 묶음에서 초록·빨강 회로를 분기해 넣습니다. 처음엔 1단계 모듈 4종 칸만 돌려도 충분합니다.",
-        "en": "Tap green and red circuits from bus group 3. At first only the four tier-1 cells need to run."
+        "ko": "버스 3번 묶음에서 회로를 분기해 캡 + 셀을 놓습니다. 2단계 칸은 연구 전까지 멈춰 있습니다.",
+        "en": "Tap the circuits from bus group 3 and place the cap and cells; tier-2 cells wait for their research."
       },
       "research": [
         "speed-module",
@@ -47,17 +122,18 @@
     },
     {
       "stage": {
-        "ko": "2. 2단계 모듈",
-        "en": "2. Tier-2 modules"
+        "ko": "2. 2단계",
+        "en": "2. Tier 2"
       },
       "do": {
-        "ko": "2단계는 1단계 2개 + 회로가 들어갑니다(1단계 칸이 옆 칸에 넣음). 연구가 끝나면 그 칸들이 자동으로 돕니다.",
-        "en": "Tier 2 takes two tier-1 modules plus circuits (the tier-1 cell feeds its neighbour); the cells start once researched."
+        "ko": "2단계 모듈은 1단계 4개 + 빨강·파랑 회로 5개씩입니다(2.1 데이터). 1단계 기계가 바로 위 2단계 기계에 넣고 남는 것은 상자로.",
+        "en": "A tier-2 module takes 4 tier-1 modules + 5 red + 5 blue circuits (2.1 data); the tier-1 machine feeds the tier-2 machine above and fills its chest."
       },
       "research": [
         "speed-module-2",
         "efficiency-module-2",
-        "productivity-module-2"
+        "productivity-module-2",
+        "processing-unit"
       ]
     },
     {
@@ -66,26 +142,12 @@
         "en": "3. Quality (Space Age)"
       },
       "do": {
-        "ko": "품질 모듈 칸은 Quality 모드가 켜져 있어야 씁니다. 꺼져 있으면 그 칸들의 레시피를 비워 두세요.",
-        "en": "The quality cells need the Quality mod; without it, clear their recipes."
+        "ko": "품질 셀은 Quality 모드가 있을 때만 씁니다. 없으면 그 셀은 빼고 쌓으세요.",
+        "en": "The quality cell needs the Quality mod; leave it out otherwise."
       },
       "research": [
         "quality-module",
         "quality-module-2"
-      ]
-    },
-    {
-      "stage": {
-        "ko": "4. 조립기",
-        "en": "4. Assemblers"
-      },
-      "do": {
-        "ko": "조립기 3 기준이지만 같은 크기라 조립기 2로 먼저 지어도 됩니다(느리기만 함).",
-        "en": "Drawn with AM3; AM2 has the same footprint and works, just slower."
-      },
-      "research": [
-        "assembling-machine-2",
-        "assembling-machine-3"
       ]
     }
   ],
@@ -94,7 +156,7 @@
       "id": "science-purple-upgradeable",
       "why": {
         "ko": "생산 모듈을 쓰는 과학",
-        "en": "the science that consumes productivity modules"
+        "en": "the science that uses productivity modules"
       }
     },
     {
@@ -104,5 +166,7 @@
         "en": "the building mall"
       }
     }
-  ]
+  ],
+  "allow_problems": true,
+  "allow_problems_reason": "cell files: the bottom row is powered by the gap row below (cap or next cell); generate.py validates cap + all cells at every tier"
 }
