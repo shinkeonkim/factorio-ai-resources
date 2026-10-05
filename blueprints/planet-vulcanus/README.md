@@ -1,6 +1,6 @@
-# 불카누스 올인원 단지
+# 불카누스 올인원 기지
 
-> 용암 → 용융 금속 → 주조·텅스텐·금속 과학 분당 360, 윤활유, 몰(주조기·대형 채굴기·터보 벨트), 전력 372 MW, 착륙장 수입·로켓 수출, 돌 처리까지 버스 하나에 쌓는 셀로.
+> 직사각형 하나로 지은 불카누스 기지: 용암 선반(용융 금속 + 돌 처리) → 주조·텅스텐·금속 과학 분당 360, 윤활유, 몰(주조기·대형 채굴기·터보 벨트), 전력 372 MW, 남쪽 광석 입구, 로켓·착륙장. 블록 사이는 로봇, 유체는 서쪽 줄기 배관.
 
 [English](README.en.md)
 
@@ -8,31 +8,37 @@
 
 ![미리보기](images/preview.webp)
 
-**구간별 확대 (서쪽 → 동쪽)**
+**구역별 확대 (북서 → 남동, 줄마다 서 → 동)**
 
 ![part-1](images/part-1.webp)
 ![part-2](images/part-2.webp)
-![part-3](images/part-3.webp)
 
 <sub>이미지: [Factorio Blueprint Editor](https://fbe.factorygamefan.com)로 렌더링 (게임 그래픽 © Wube Software)</sub>
 
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
-| 크기 | 643×107 타일 |
-| 엔티티 | 19592 |
-| 주요 설비 | `foundry` ×64 (tungsten-plate 16, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 6, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×42<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`passive-provider-chest` ×14<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`requester-chest` ×11<br>`steel-chest` ×3<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
+| 크기 | 264×201 타일 |
+| 엔티티 | 9376 |
+| 주요 설비 | `requester-chest` ×83<br>`passive-provider-chest` ×80<br>`foundry` ×68 (tungsten-plate 20, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 6, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×42<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`steel-chest` ×3<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
 ### 입력
 
-없음
+_블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 위치 = 블루프린트 왼쪽 위 기준 타일 좌표)_
+
+| 신호 | 분당 | 위치 |
+|---|---:|---|
+| `calcite` | 412 | (22, 200) |
+| `coal` | 2,400 | (26, 200) |
+| `tungsten-ore` | 1,860 | (30, 200) |
+| `tungsten-ore` | 1,860 | (34, 200) |
 
 ### 출력
 
 | 아이템 | 분당 | 위치 |
 |---|---:|---|
-| `metallurgic-science-pack` | 360 | 로켓 수출 상자 (버스 동쪽 끝) |
+| `metallurgic-science-pack` | 360 | 로봇 네트워크 → 로켓 화물 요청 |
 
 ### 단지 구성
 
@@ -45,7 +51,7 @@
 | Lubricant | 17×4 | 1 | `lubricant` (fluid) 1,200 | `heavy-oil` (fluid) 1,200 |
 | Carbon | 17×12 | 3 | `carbon` 1,080 | `coal` 2,160, `sulfuric-acid` (fluid) 21,600 |
 | Tungsten carbide | 17×8 | 3 | `tungsten-carbide` 900 | `tungsten-ore` 1,800, `sulfuric-acid` (fluid) 9,000, `carbon` 900 |
-| Tungsten plate | 21×12 | 4 | `tungsten-plate` 576 | `tungsten-ore` 1,536, `molten-iron` (fluid) 3,840 |
+| Tungsten plate | 21×12 | 5 | `tungsten-plate` 720 | `tungsten-ore` 1,920, `molten-iron` (fluid) 4,800 |
 | Iron plates | 21×6 | 2 | `iron-plate` 900 | `molten-iron` (fluid) 6,000 |
 | Steel | 21×6 | 2 | `steel-plate` 450 | `molten-iron` (fluid) 9,000 |
 | Metallurgic science | 21×6 | 5 | `metallurgic-science-pack` 360 | `tungsten-carbide` 720, `tungsten-plate` 480, `molten-copper` (fluid) 48,000 |
@@ -55,24 +61,21 @@
 | Mall: turbo belt | 21×6 | 1 | 상자 (몰) | `tungsten-plate` 480, `express-transport-belt` 96, `lubricant` (fluid) 1,920 |
 | Mall: turbo underground | 21×6 | 1 | 상자 (몰) | `tungsten-plate` 1,829, `express-underground-belt` 91, `lubricant` (fluid) 1,829 |
 | Mall: turbo splitter | 23×6 | 1 | 상자 (몰) | `express-splitter` 60, `tungsten-plate` 900, `processing-unit` 120, `lubricant` (fluid) 4,800 |
+| Raw intake (south gate) | - | - | 방해석·석탄·텅스텐 광석 벨트 → 공급 상자 | |
 | Power | - | - | 산 중화 화학 공장 2대 + 증기 터빈 64대 (372 MW) | |
-| Landing pad | - | - | 수입품 11종 → 버스 줄 | |
-| Rocket silo | - | - | 로켓 부품(수입 파랑 회로·주조 LDS·수입 로켓 연료) + 수출 상자 | |
-| Stone sinks ×3 | - | - | 재활용기 14대씩, 돌 줄마다 하나 | |
+| Stone voids ×3 | - | - | 용암 선반의 돌 벨트 끝, 재활용기 14대씩 | |
+| Landing pad | - | - | 수입품 11종 → 로봇 네트워크 | |
+| Rocket silo | - | - | 로봇이 재료를 넣는 사일로; 수출은 화물 요청으로 | |
 
-버스 (위 → 아래, 6줄 + 빈 2줄 묶음; 유체는 맨 아래):
+선반 (아래 → 위; 줄이 길면 같은 높이의 스택 여러 개로 나뉨):
 
-| 묶음 | 줄 |
+| 선반 | 블록 |
 |---|---|
-| 1 (solid) | `calcite`, `coal`, `tungsten-ore`, `tungsten-ore`, `carbon`, `tungsten-carbide` |
-| 2 (solid) | `tungsten-plate`, `metallurgic-science-pack`, `iron-plate`, `steel-plate`, `low-density-structure`, - |
-| 3 (solid) | `stone`, `stone`, `stone`, -, -, - |
-| 4 (solid) | `electronic-circuit`, `advanced-circuit`, `processing-unit`, `electric-engine-unit`, `electric-mining-drill`, `refined-concrete` |
-| 5 (solid) | `express-transport-belt`, `express-underground-belt`, `express-splitter`, `plastic-bar`, `rocket-fuel`, - |
-| 6 (fluid) | `lava` (fluid), `lava` (fluid), `sulfuric-acid` (fluid), `molten-iron` (fluid), `molten-copper` (fluid), `molten-copper` (fluid) |
-| 7 (fluid) | `heavy-oil` (fluid), `lubricant` (fluid), -, -, -, - |
+| 1 | Molten iron x3, Molten copper x3, Molten copper x3, Stone void 1, Stone void 2, Stone void 3, Power: acid neutralisation + 64 turbines, Carbon x3, Tungsten plate x3, Metallurgic science x5 |
+| 2 | Tungsten carbide x3, Tungsten plate x2, Iron plates x2, Steel x2, Heavy oil (simple coal liquefaction) x1, Low density structure x1, Mall: foundry x1, Lubricant x1 |
+| 3 | Mall: big mining drill x1, Mall: turbo belt x1, Mall: turbo underground x1, Mall: turbo splitter x1, Rocket silo (robot-fed), Landing pad (imports into the robot network) |
 
-전체 19,592개 엔티티, 폭 642칸. 최대 전력 194 MW / 발전 372 MW. 버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다.
+코어 253×196칸, 전체 264×201칸, 9,376개 엔티티. 최대 전력 215 MW / 발전 372 MW. 블록 사이 아이템은 로봇(요청 상자 → 블록 → 공급 상자), 유체는 서쪽 줄기 배관으로 모든 선반에 이어집니다.
 
 ### 로드맵
 
@@ -80,7 +83,7 @@
 |---|---|---|
 | 0. 도착 | `foundry` (아이템을 처음 만들면), `rocket-silo` (빨강·초록·파랑·보라·노랑) | 주조기 연구 전: 우주 플랫폼에서 착륙장·로봇·기본 건물을 내립니다. 용암 호수 옆, 방해석·석탄·텅스텐 광맥 근처의 디몰리셔 영역 밖에 자리를 잡습니다. |
 | 1. 전력 | `calcite-processing` (처음 캐면), `nuclear-power` (빨강·초록·파랑) | 전력 줄(산 중화 + 터빈)을 먼저: 방해석과 황산(산 간헐천 펌프잭)만 있으면 372 MW. 처음엔 터빈 몇 대로 시작해도 됩니다. |
-| 2. 용융 금속·주조 | `foundry` (아이템을 처음 만들면) | 용융 철·구리 줄과 철판·강철 주조. 용암은 버스 서쪽 끝 표시 자리에 해양 펌프로. 돌이 나오므로 돌 처리 줄도 같이 놓습니다(재활용 연구 전엔 상자에 쌓임). |
+| 2. 용융 금속·주조 | `foundry` (아이템을 처음 만들면) | 용융 철·구리 줄과 철판·강철 주조. 용암은 북서쪽 줄기 배관 끝 표시에 해양 펌프로. 돌이 나오므로 같은 선반의 돌 처리 블록도 같이 놓습니다(재활용 연구 전엔 상자에 쌓임). |
 | 3. 텅스텐·과학 | `tungsten-carbide` (처음 캐면), `tungsten-steel` (아이템을 처음 만들면), `metallurgic-science-pack` (아이템을 처음 만들면) | 탄소 → 탄화 텅스텐, 텅스텐 판, 금속 과학(분당 360). 셀을 더 쌓으면 비례해서 늘어납니다. |
 | 4. 몰·윤활유 | `calcite-processing` (처음 캐면), `big-mining-drill` (아이템을 처음 만들면), `turbo-transport-belt` (빨강·초록·파랑·보라·우주·불카누스) | 간이 석탄 액화 → 윤활유, 몰 줄(주조기·대형 채굴기·터보 벨트류). 회로·엔진·급행 벨트는 착륙장 수입. |
 | 5. 로켓·수출 | `foundry` (아이템을 처음 만들면), `rocket-silo` (빨강·초록·파랑·보라·노랑) | 저밀도 구조물 주조(플라스틱 수입)와 로켓 사일로. 금속 과학·탄화 텅스텐·텅스텐 판·철판을 수출 상자에서 로켓 화물로. |
@@ -93,7 +96,7 @@
 
 | 파일 | 설명 |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | 단지 전체 (버스 + 모든 줄) |
+| [`blueprint.txt`](blueprint.txt) | 기지 전체 (직사각형 코어 + 남쪽 광석 입구) |
 | [`variants/molten-iron.txt`](variants/molten-iron.txt) | 용융 철 — 캡 + 셀 1개 |
 | [`variants/molten-copper.txt`](variants/molten-copper.txt) | 용융 구리 — 캡 + 셀 1개 |
 | [`variants/heavy-oil.txt`](variants/heavy-oil.txt) | 중유 (간이 석탄 액화) — 캡 + 셀 1개 |
@@ -111,9 +114,10 @@
 | [`variants/mall-turbo-underground.txt`](variants/mall-turbo-underground.txt) | 몰: 터보 지하 벨트 — 캡 + 셀 1개 |
 | [`variants/mall-turbo-splitter.txt`](variants/mall-turbo-splitter.txt) | 몰: 터보 분배기 — 캡 + 셀 1개 |
 | [`variants/power.txt`](variants/power.txt) | 전력: 산 중화 + 터빈 64기 (372 MW) |
-| [`variants/landing-pad.txt`](variants/landing-pad.txt) | 착륙장 (수입) |
-| [`variants/rocket-silo-and-exports.txt`](variants/rocket-silo-and-exports.txt) | 로켓 사일로 + 수출 상자 |
-| [`variants/stone-sink.txt`](variants/stone-sink.txt) | 돌 처리 (재활용기) |
+| [`variants/rocket-silo.txt`](variants/rocket-silo.txt) | 로켓 사일로 (로봇 공급) |
+| [`variants/stone-void.txt`](variants/stone-void.txt) | 돌 처리 (재활용기) |
+| [`variants/landing-pad.txt`](variants/landing-pad.txt) | 착륙장 (로봇 네트워크로 수입) |
+| [`variants/raw-intake.txt`](variants/raw-intake.txt) | 남쪽 광석 입구 (벨트 → 공급 상자) |
 
 문자열을 클립보드에 복사한 뒤 게임에서 블루프린트 라이브러리 → 문자열 가져오기:
 
@@ -131,27 +135,31 @@ python3 tools/build.py planet-vulcanus
 
 <!-- AUTO:END -->
 
-## 구조
+## 기지 모양
 
-- **버스 하나 + 쌓는 셀 줄들.** 6줄 + 빈 2줄 묶음의 가로 버스(유체 묶음은 맨 아래) 북쪽에 생산 줄이 서쪽 → 동쪽으로 섭니다. 각 줄은 이 저장소의 쌓는 셀(`lib/fstack.py`)이라 셀을 더 붙이면 그대로 늘어납니다.
-- **입력**: 서쪽 끝 표시 조합기 자리 = 원자재. 용암(용암 위 해양 펌프), 방해석·석탄·텅스텐 광석(채굴), 황산(산 간헐천 펌프잭). 수입품(회로, 엔진, 급행 벨트류, 정제 콘크리트, 플라스틱, 로켓 연료)은 착륙장 → 로봇 → 요청 상자 → 버스 줄로 들어옵니다.
-- **제품은 버스로 돌아갑니다.** 각 줄의 가운데 출력이 남쪽으로 내려와 자기 버스 줄을 시작하고, 동쪽의 다음 줄이 그 줄에서 분기합니다(탄소 → 탄화 텅스텐 → 금속 과학 순서).
-- **유체 셀**: 주조기는 유체 입력이 벨트 쪽, 출력이 가운데를 보도록 돌려 놓습니다. 입력 유체마다 한 기계 행을 따로 쓰고(지하 파이프 쌍이 서로 엉키지 않게), 바깥 본관에서 지하 파이프로 들어옵니다. 용융 금속은 가운데 파이프 두 줄로, 부산물 돌은 그 사이 벨트로 나갑니다.
-- **돌**: 용암 주조는 돌을 많이 냅니다(주조기 한 대가 초당 2.5–3.75개). 쌓이면 용융 금속 생산이 멈추므로 돌 줄마다 재활용기 처리 줄을 하나씩 둡니다(돌은 25% 확률로 자기 자신이 되므로 75%가 사라짐). 재활용 연구(풀가오라) 전에는 위쪽 상자에 쌓입니다.
-- **생성할 때 검사**: 모든 타일 충돌, 버스 줄 용량(파랑 벨트 45/s, 파이프 1,200/s), 전력망 연결을 생성 단계에서 검사합니다. 하나라도 어긋나면 문자열을 만들지 않습니다.
+커뮤니티의 행성 기지는 행성 전체에 버스를 깔지 않습니다. 빽빽한 직사각형 하나에 생산을 모으고, 전력·방어를 가장자리에 두릅니다(아래 '참고한 커뮤니티 설계'). 이 기지도 그렇게 짓습니다(`lib/base.py`).
+
+- **선반**: 생산 줄을 같은 높이의 블록(쌓는 셀 스택)으로 나눠 가로 선반에 빽빽하게 채웁니다. 선반을 위로 쌓으면 직사각형이 됩니다. 폭은 빈 칸이 가장 적게 남는 값을 찾아 정합니다.
+- **블록 사이는 로봇**: 블록 입력마다 요청 상자 → 인서터 → 벨트, 출력마다 벨트 끝 → 인서터 → 공급 상자를 둡니다. 벨트는 블록 안에만 있고, 로봇 기지는 40칸 격자로 코어 전체를 덮습니다.
+- **유체는 서쪽 줄기**: 선반마다 자기가 쓰는 유체만 선반 아래 짧은 거리에 깝니다. 서쪽 가장자리의 세로 줄기 배관이 같은 유체를 모든 선반에 잇습니다. 바깥에서 들어오는 유체는 줄기의 북쪽 끝 표시(상수 조합기)로 들어옵니다.
+- **용암 선반**(맨 아래): 용융 철·구리 주조기와 돌 처리 재활용기가 돌 벨트를 함께 씁니다. 돌은 초당 약 80개라 로봇 대신 벨트로 처리합니다. 돌이 쌓이면 용융 금속 생산이 멈추므로 처리 블록이 같은 선반에 있어야 합니다(돌은 25% 확률로 자기 자신이 되므로 75%가 사라짐). 재활용 연구(풀가오라) 전에는 처리 블록 위쪽 상자에 쌓입니다.
+- **남쪽 광석 입구**: 방해석·석탄·텅스텐 광석 벨트가 남쪽에서 들어와 공급 상자로 내려집니다.
+- **유체 셀**: 주조기는 유체 입력이 벨트 쪽, 출력이 가운데를 보도록 돌려 놓습니다. 입력 유체마다 기계 행을 따로 씁니다.
+- **생성할 때 검사**: 모든 타일 충돌, 선반 거리의 줄 용량(파이프 1,200/s), 전력망 연결을 생성 단계에서 검사합니다. 하나라도 어긋나면 문자열을 만들지 않습니다.
 
 ## 전력·방어
 
-- 전력: 산 중화(방해석 + 황산 → 500°C 증기) 화학 공장 2대가 증기 터빈 64대를 돌립니다(372 MW). 단지 최대 소비는 아래 표의 값입니다.
-- 방어: 불카누스의 적은 디몰리셔입니다. 포탑으로 막는 대상이 아니므로 **영역 밖에 짓는 것**이 원칙입니다. 영역을 넓혀야 하면 레일건·테슬라 연구 후 처리하세요.
+- 전력: 산 중화(방해석 + 황산 → 500°C 증기) 화학 공장 2대가 증기 터빈 64대를 돌립니다(372 MW). 이 블록도 선반 안에 들어갑니다.
+- 방어: 불카누스의 적은 디몰리셔입니다. 포탑으로 막는 대상이 아니므로 둘레 방어 대신 **영역 밖에 짓는 것**이 원칙입니다. 그래서 이 기지에는 외곽 띠가 없습니다.
 
 ## 늘리는 법
 
-- 과학을 늘리려면: 금속 과학 줄에 셀을 붙이고, 아래 '단지 구성' 표에서 모자라는 입력 줄(탄화 텅스텐, 텅스텐 판, 용융 구리)에도 같은 비율로 셀을 붙입니다.
+- 블록 하나를 더 키우려면 그 블록 위에 셀을 더 붙입니다(쌓는 셀). 줄 전체를 늘리려면 `lib/planets/vulcanus.py`의 `PLAN` 숫자를 바꾸고 다시 생성하세요. 같은 높이로 다시 나눠 다시 채웁니다.
 - 줄 하나만 따로 쓰려면 `variants/<줄>.txt`(캡 + 셀 1개, 입력에 표시 조합기)를 쓰세요.
 
 ## 참고한 커뮤니티 설계 (문자열은 저장소에 넣지 않음)
 
-- Space Ghost, "Vulcanus MALL 108 items+ from ores" — 몰 품목 구성, 로켓 공장 규모 (https://factorioprints.com/view/-OL_rvijZDQI7WVI8mxG)
+- "Vulcanus all production, no mods" — 직사각형 하나, 터빈 블록을 한쪽 가장자리에 (https://factorioprints.com/view/-OBM-LoRxzZKXi8dvphv)
+- "Vulcanus Production" — 블록별 고밀도 생산 (https://factorioprints.com/view/-OAjOz4bGjyJdIo5eMRl)
+- Space Ghost, "Vulcanus MALL 108 items+ from ores" — 몰 품목 구성 (https://factorioprints.com/view/-OL_rvijZDQI7WVI8mxG)
 - Nir Adar, "Vulcanus Starter Base" — 도착 직후 순서, 산 중화 전력으로 자립 (https://factorioprints.com/view/-OU4xpv_3uAJk-nIYB2y)
-- Zabr, "Complete Space Age v1.0" — 로켓 부품 재료는 플랫폼으로 들여오는 전략 (https://factorioprints.com/view/-OJe1VpH5-TunS6dqcbi)

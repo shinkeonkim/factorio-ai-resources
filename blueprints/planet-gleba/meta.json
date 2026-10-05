@@ -16,12 +16,12 @@
     "robots"
   ],
   "title": {
-    "ko": "글레바 올인원 단지",
-    "en": "Gleba all-in-one complex"
+    "ko": "글레바 올인원 기지",
+    "en": "Gleba all-in-one base"
   },
   "summary": {
-    "ko": "로봇이 나르는 쌓는 셀: 과일 가공 → 바이오플럭스·영양분·펜타포드 알 → 농업 과학 분당 약 300, 철 박테리아 → 탄창, 탄소 섬유, 젤리 로켓 연료, 가열탑 전력(부패물 연료), 로켓·착륙장, 포탑 방어선까지.",
-    "en": "Robot-fed stackable cells: fruit processing → bioflux, nutrients, pentapod eggs → about 300 agricultural science/min, iron bacteria → magazines, carbon fiber, rocket fuel from jelly, heating-tower power burning spoilage, rocket and landing pad, and a turret ring."
+    "ko": "돌벽과 레이저·기관총 포탑으로 둘러싼 직사각형 글레바 기지, 모두 로봇 공급: 과일 가공 → 바이오플럭스·영양분·펜타포드 알 → 농업 과학 분당 약 600, 철 박테리아 → 탄창, 탄소 섬유, 젤리 로켓 연료, 가열탑 전력(부패물 연료), 로켓·착륙장.",
+    "en": "Gleba base in one rectangle inside stone walls with laser and gun turrets, all robot-fed: fruit processing → bioflux, nutrients, pentapod eggs → about 600 agricultural science/min, iron bacteria → magazines, carbon fiber, rocket fuel from jelly, heating-tower power burning spoilage, rocket and landing pad."
   },
   "variants": [
     {
@@ -118,8 +118,8 @@
     {
       "file": "variants/power.txt",
       "label": {
-        "ko": "전력: 가열탑 2 → 열교환기 8 → 터빈 16",
-        "en": "power: 2 heating towers → 8 exchangers → 16 turbines"
+        "ko": "전력: 가열탑 2 → 열교환기 8 → 터빈 16 (기지에 2세트)",
+        "en": "power: 2 heating towers → 8 exchangers → 16 turbines (two in the base)"
       }
     },
     {
@@ -152,13 +152,13 @@
     }
   ],
   "default_label": {
-    "ko": "단지 전체 (물 버스 + 모든 줄 + 방어선)",
-    "en": "the whole complex (water bus + every line + defence ring)"
+    "ko": "기지 전체 (코어 + 벽·포탑)",
+    "en": "the whole base (core + wall and turrets)"
   },
   "outputs": [
     {
       "item": "agricultural-science-pack",
-      "per_minute": "~300",
+      "per_minute": "~600",
       "where": {
         "ko": "로켓 화물 요청 (1시간 안에 부패)",
         "en": "rocket cargo requests (spoils within an hour)"

@@ -1,6 +1,6 @@
-# Fulgora all-in-one complex
+# Fulgora all-in-one base
 
-> 160 scrap/s → recycling and sorting → holmium, electrolyte, superconductors, supercapacitors → about 100 electromagnetic science/min, secondary recycling (iron, copper, green circuits, plastic), rocket and exports, an EM-plant mall, lightning power and protection, and overflow disposal on one bus.
+> Fulgora base in one rectangle wrapped in a band of lightning collectors and accumulators: 160 scrap/s → two scrap shelves (recycling, sorting, overflow voids) → holmium, electrolyte, superconductors, supercapacitors → about 100 electromagnetic science/min, secondary recycling, an EM-plant mall, rocket. Robots between blocks.
 
 [한국어](README.md)
 
@@ -8,22 +8,19 @@
 
 ![Preview](images/preview.webp)
 
-**Zoomed sections (west → east)**
+**Zoomed areas (north-west → south-east, row by row)**
 
 ![part-1](images/part-1.webp)
 ![part-2](images/part-2.webp)
-![part-3](images/part-3.webp)
-![part-4](images/part-4.webp)
-![part-5](images/part-5.webp)
 
 <sub>Images rendered with [Factorio Blueprint Editor](https://fbe.factorygamefan.com) (game graphics © Wube Software)</sub>
 
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 975×112 tiles |
-| Entities | 24281 |
-| Main machines | `recycler` ×100<br>`electromagnetic-plant` ×30 (electrolyte 8, electromagnetic-science-pack 8, superconductor 4, accumulator 4, supercapacitor 4, electromagnetic-plant 2)<br>`chemical-plant` ×18 (holmium-solution 12, ice-melting 4, heavy-oil-cracking 2)<br>`assembling-machine-3` ×10 (rocket-fuel 4, refined-concrete 4, iron-stick 2)<br>`passive-provider-chest` ×6<br>`foundry` ×2 (holmium-plate 2)<br>`steel-chest` ×2<br>`rocket-silo` ×1 |
+| Size | 336×183 tiles |
+| Entities | 11687 |
+| Main machines | `recycler` ×104<br>`passive-provider-chest` ×75<br>`requester-chest` ×56<br>`electromagnetic-plant` ×30 (electrolyte 8, electromagnetic-science-pack 8, accumulator 4, superconductor 4, supercapacitor 4, electromagnetic-plant 2)<br>`chemical-plant` ×18 (holmium-solution 12, ice-melting 4, heavy-oil-cracking 2)<br>`assembling-machine-3` ×10 (rocket-fuel 4, refined-concrete 4, iron-stick 2)<br>`steel-chest` ×4<br>`foundry` ×2 (holmium-plate 2)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -34,9 +31,9 @@ none
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `electromagnetic-science-pack` | ~100 | rocket export chests |
+| `electromagnetic-science-pack` | ~100 | robot network → rocket cargo requests |
 
-### Complex
+### Base layout
 
 | Line | Cell | Cells | Output (/min, late) | Inputs (/min, late) |
 |---|---|---:|---|---|
@@ -53,25 +50,23 @@ none
 | Iron sticks | 13×4 | 1 | `iron-stick` 600 | `iron-plate` 300 |
 | Refined concrete | 19×8 | 1 | `refined-concrete` 200 | `concrete` 400, `iron-stick` 160, `steel-plate` 20, `water` (fluid) 2,000 |
 | Mall: electromagnetic plant | 17×5 | 1 | chests (mall) | `holmium-plate` 432, `steel-plate` 144, `processing-unit` 144, `refined-concrete` 144 |
-| Lightning power | - | - | 12 lightning collectors + 408 accumulators (2 GJ) + substations | |
-| Scrap recycling + sorting ×4 | - | - | 16 recyclers each (40 scrap/s), sorts 12 items + an overflow lane | |
+| Scrap shelves ×2 | - | - | two blocks of 16 recyclers + 12-item sorter each, 80 scrap/s (belts from the west) | |
 | Secondary recycling | - | - | gears→iron, cable→copper, blue→green circuits, LDS→plastic | |
-| Rocket silo | - | - | rocket parts (blue circuits and LDS from scrap + rocket fuel) + export chests | |
-| Void ×2 | - | - | recyclers destroy everything on the overflow lane | |
-| Lightning cover | - | - | lightning collectors every 36 tiles over the whole complex (range 25) | |
+| Voids ×4 | - | - | recyclers destroy everything on the overflow belts | |
+| Rocket silo | - | - | robot-fed silo; exports via its cargo requests | |
+| Lightning band | - | - | around the base, each 12×12 tile: lightning collector + substation + 34 accumulators (170 MJ) | |
+| Lightning cover | - | - | lightning collectors every 36 tiles inside the core too | |
 
-Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
+Shelves (bottom → top; long lines are split into stacks of equal height):
 
-| Group | Lanes |
+| Shelf | Blocks |
 |---|---|
-| 1 (solid) | `scrap`, `scrap`, `scrap`, `scrap`, `holmium-ore`, `battery` |
-| 2 (solid) | `ice`, `stone`, `processing-unit`, `advanced-circuit`, `low-density-structure`, `solid-fuel` |
-| 3 (solid) | `concrete`, `steel-plate`, `iron-gear-wheel`, `copper-cable`, `signal-T`, `rocket-fuel` |
-| 4 (solid) | `iron-plate`, `copper-plate`, `electronic-circuit`, `plastic-bar`, `holmium-plate`, `superconductor` |
-| 5 (solid) | `accumulator`, `supercapacitor`, `electromagnetic-science-pack`, `iron-stick`, `refined-concrete`, - |
-| 6 (fluid) | `heavy-oil` (fluid), `heavy-oil` (fluid), `water` (fluid), `light-oil` (fluid), `holmium-solution` (fluid), `electrolyte` (fluid) |
+| 1 | Scrap recycling + sorting 1, Scrap recycling + sorting 2, Secondary recycling (iron, copper, green circuits, plastic), Void: overflow 1, Void: overflow 2 |
+| 2 | Scrap recycling + sorting 3, Scrap recycling + sorting 4, Void: overflow 3, Void: overflow 4, Accumulator x1, Iron sticks x1 |
+| 3 | Holmium solution x2, Electrolyte x2, Electromagnetic science x2, Superconductor x1, Supercapacitor x1, Water (ice melting) x1, Rocket fuel x1, Refined concrete x1, Holmium plate x1, Light oil (heavy oil cracking) x1 |
+| 4 | Mall: electromagnetic plant x1, Rocket silo (robot-fed) |
 
-24,281 entities, 946 tiles wide. Peak power 109 MW, accumulators 2,040 MJ (lightning arrives only in storms). Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).
+Core 306×151 tiles, overall 336×183, 11,687 entities. Peak power 121 MW, accumulators 13,260 MJ (lightning arrives only in storms). Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a trunk along the west edge that joins it in every shelf.
 
 ### Roadmap
 
@@ -86,13 +81,13 @@ Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
 
 **Build next**
 
-- [Vulcanus all-in-one complex](../planet-vulcanus/README.en.md) — the tungsten / foundry planet
+- [Vulcanus all-in-one base](../planet-vulcanus/README.en.md) — the tungsten / foundry planet
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | the whole complex (bus + every line) |
+| [`blueprint.txt`](blueprint.txt) | the whole base (core + lightning band) |
 | [`variants/water.txt`](variants/water.txt) | Water (ice melting) — cap + 1 cell |
 | [`variants/light-oil.txt`](variants/light-oil.txt) | Light oil (heavy oil cracking) — cap + 1 cell |
 | [`variants/holmium-solution.txt`](variants/holmium-solution.txt) | Holmium solution — cap + 1 cell |
@@ -106,11 +101,11 @@ Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
 | [`variants/iron-stick.txt`](variants/iron-stick.txt) | Iron sticks — cap + 1 cell |
 | [`variants/refined-concrete.txt`](variants/refined-concrete.txt) | Refined concrete — cap + 1 cell |
 | [`variants/mall-em-plant.txt`](variants/mall-em-plant.txt) | Mall: electromagnetic plant — cap + 1 cell |
-| [`variants/lightning-power.txt`](variants/lightning-power.txt) | lightning power + accumulators |
 | [`variants/scrap-recycling.txt`](variants/scrap-recycling.txt) | scrap recycling + sorting (16 recyclers) |
 | [`variants/secondary-recycling.txt`](variants/secondary-recycling.txt) | secondary recycling (iron, copper, green circuits, plastic) |
-| [`variants/rocket-silo.txt`](variants/rocket-silo.txt) | rocket silo + export chests |
+| [`variants/rocket-silo.txt`](variants/rocket-silo.txt) | rocket silo (robot-fed) |
 | [`variants/void.txt`](variants/void.txt) | overflow void (recyclers) |
+| [`variants/lightning-tile.txt`](variants/lightning-tile.txt) | lightning band tile 12×12 (collector + substation + 34 accumulators) |
 
 Copy the string to the clipboard, then in game: Blueprint library → Import string:
 
@@ -128,19 +123,25 @@ python3 tools/build.py planet-fulgora
 
 <!-- AUTO:END -->
 
-## Layout
+## Shape
 
-- **Scrap stacks**: 16 recyclers stand in a row above the input belt and drop their results out of their fronts onto a mixed belt. In the sort section, filter inserters split 12 items onto their own columns; the rest goes down the overflow column (marked with the virtual signal T).
-- **Self-regulating**: when a product lane is full its filter inserters stop and the item rides on to the overflow, which the void stacks (recycler loops) destroy, so nothing ever jams.
-- **Shared lanes**: four scrap stacks make the same products; the first starts each bus lane, the others side-load into it.
-- **Secondary recycling**: gears → iron, copper cable → copper, blue circuits → green (+ red), LDS → plastic (+ steel, copper).
-- **EM-plant cells**: an EM plant has one fluid input on each side, so the second fluid (holmium solution) comes from the centre pipe. Electrolyte leaves through ports facing the gap rows: a pipe-to-ground in the gap row takes it to an outer main, and both halves' mains are joined above the cells with a pipe-to-ground chain.
-- **Lightning protection**: the generator scatters lightning collectors (range 25) every 36 tiles over the whole complex.
+Community planet bases don't run a bus across the planet. They pack production into one dense rectangle and put power and defence around its edge (see the community designs below). This base is built the same way (`lib/base.py`).
+
+- **Shelves**: every line is split into blocks of equal height (stacks of stackable cells) packed side by side into horizontal shelves. The shelves stack up into the rectangle. The packer picks the width that leaves the fewest empty tiles.
+- **Robots between blocks**: every block input gets requester chest → inserter → belt, and every output gets belt end → inserter → provider chest. Belts stay inside blocks, and roboports cover the core on a 40-tile grid.
+- **Fluids in west trunks**: each shelf lays only the fluids it uses, on a short street under it. A vertical trunk per fluid along the west edge joins that fluid across all shelves. External fluids enter at the north end of their trunk (constant-combinator marker).
+- **Lightning band**: one ring of 12×12 tiles around the core (lightning collector + substation + 34 accumulators = 170 MJ each). More collectors stand every 36 tiles inside the core, so every building is protected.
+- **Two scrap shelves** (bottom): scrap belts come in from the west. In each block 16 recyclers drop their output onto a mixed belt, and filter inserters in the sort section to the east split 12 items into provider chests. Whatever is left rides the overflow belt (virtual signal T) to the void on the same shelf.
+- **Self-regulating**: when a provider chest is full its filter inserter stops and that item goes to the overflow, so the base never jams.
+- **Secondary recycling**: gears → iron, cable → copper, blue circuits → green (+ red), LDS → plastic (+ steel, copper).
+- **EM-plant cells**: the plant has one fluid input on each side, so the second fluid (holmium solution) comes from the centre pipe.
 
 ## Numbers
 
-One electromagnetic science pack (EM plant and foundry +50 % productivity) needs ~0.93 holmium ore, 2.7 batteries and 1.8 green circuits. Holmium is 1 % of scrap, so a pack costs ~93 scrap → 160 scrap/s gives about 100/min. The cell outputs in the table are for machines that never wait; in practice holmium is the limit.
+One electromagnetic science pack (EM plants and foundries +50 % productivity) takes about 0.93 holmium ore, 2.7 batteries and 1.8 green circuits. Holmium is 1 % of scrap, so a pack costs about 93 scrap, and 160 scrap/s gives about 100 packs/min. The cell outputs in the table are for machines that never idle; in practice holmium is the limit.
 
-## Community design consulted (its strings are not in this repository)
+## Community designs consulted (their strings are not in this repository)
 
+- "Fulgora all production, no mods" — an island-sized accumulator and lightning-rod field wraps the production core (https://factorioprints.com/view/-OBM1jc4Izxd8iAZrzKf)
+- "Compact Fulgora Scrap Recycling" — dense recycling and sorting blocks (https://factorioprints.com/view/-OBdvHoEr2jlVweXSUKW)
 - Space Ghost, "Fulgora blueprint book. All in" (https://factorioprints.com/view/-OUf5gju1G_1O_K38VLl)

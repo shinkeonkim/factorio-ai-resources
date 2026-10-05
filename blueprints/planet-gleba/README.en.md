@@ -1,6 +1,6 @@
-# Gleba all-in-one complex
+# Gleba all-in-one base
 
-> Robot-fed stackable cells: fruit processing → bioflux, nutrients, pentapod eggs → about 300 agricultural science/min, iron bacteria → magazines, carbon fiber, rocket fuel from jelly, heating-tower power burning spoilage, rocket and landing pad, and a turret ring.
+> Gleba base in one rectangle inside stone walls with laser and gun turrets, all robot-fed: fruit processing → bioflux, nutrients, pentapod eggs → about 600 agricultural science/min, iron bacteria → magazines, carbon fiber, rocket fuel from jelly, heating-tower power burning spoilage, rocket and landing pad.
 
 [한국어](README.md)
 
@@ -8,19 +8,18 @@
 
 ![Preview](images/preview.webp)
 
-**Zoomed sections (west → east)**
+**Zoomed areas (north-west → south-east, row by row)**
 
 ![part-1](images/part-1.webp)
-![part-2](images/part-2.webp)
 
 <sub>Images rendered with [Factorio Blueprint Editor](https://fbe.factorygamefan.com) (game graphics © Wube Software)</sub>
 
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 305×55 tiles |
-| Entities | 1293 |
-| Main machines | `requester-chest` ×147<br>`passive-provider-chest` ×60<br>`biochamber` ×54 (pentapod-egg 12, agricultural-science-pack 8, yumako-processing 6, bioflux 6, iron-bacteria-cultivation 4, burnt-spoilage 4, carbon-fiber 4, rocket-fuel-from-jelly 4, jellynut-processing 2, nutrients-from-bioflux 2, iron-bacteria 2)<br>`electric-furnace` ×4<br>`assembling-machine-3` ×2 (firearm-magazine 2)<br>`rocket-silo` ×1 |
+| Size | 177×126 tiles |
+| Entities | 4025 |
+| Main machines | `requester-chest` ×263<br>`passive-provider-chest` ×120<br>`biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, iron-bacteria-cultivation 8, burnt-spoilage 8, carbon-fiber 8, jellynut-processing 4, nutrients-from-bioflux 4, iron-bacteria 4)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -31,37 +30,39 @@ none
 
 | Item | Per minute | Position |
 |---|---:|---|
-| `agricultural-science-pack` | ~300 | rocket cargo requests (spoils within an hour) |
+| `agricultural-science-pack` | ~600 | rocket cargo requests (spoils within an hour) |
 
-### Complex
+### Base layout
 
 | Line | Cell | Cells | Output (/min, late) | Inputs (/min, late) |
 |---|---|---:|---|---|
-| Yumako processing | 13×12 | 1 | `yumako-seed` 4, `yumako-mash` 428 | `yumako` 143 |
-| Jellynut processing | 13×4 | 1 | `jellynut-seed` 1, `jelly` 143 | `jellynut` 24 |
-| Bioflux | 13×12 | 1 | `bioflux` 432 | `yumako-mash` 1,080, `jelly` 864 |
-| Nutrients | 13×4 | 1 | `nutrients` 144 | `bioflux` 12 |
-| Pentapod eggs | 17×12 | 2 | `pentapod-egg` 288 | `pentapod-egg` 96, `nutrients` 2,880, `water` (fluid) 5,760 |
-| Agricultural science | 13×8 | 2 | `agricultural-science-pack` 360 | `bioflux` 240, `pentapod-egg` 240 |
-| Iron bacteria | 13×4 | 1 | `iron-bacteria` 4, `spoilage` 140 | `jelly` 140 |
-| Iron bacteria cultivation | 13×8 | 1 | `iron-bacteria` 288 | `iron-bacteria` 48, `bioflux` 48 |
-| Iron plates (bacteria ore) | 13×8 | 1 | `iron-plate` 150 | `iron-ore` 150 |
-| Firearm magazines | 13×4 | 1 | `firearm-magazine` 144 | `iron-plate` 576 |
-| Carbon (burnt spoilage) | 13×8 | 1 | `carbon` 60 | `spoilage` 240 |
-| Carbon fiber | 13×8 | 1 | `carbon-fiber` 144 | `yumako-mash` 960, `carbon` 96 |
-| Rocket fuel (jelly) | 17×8 | 1 | `rocket-fuel` 72 | `water` (fluid) 1,440, `jelly` 1,440, `bioflux` 96 |
-| Power | - | - | 2 heating towers → 8 heat exchangers → 16 turbines (fuel: spoilage, jellynut) | |
+| Yumako processing | 13×12 | 2 | `yumako-seed` 9, `yumako-mash` 855 | `yumako` 285 |
+| Jellynut processing | 13×4 | 2 | `jellynut-seed` 1, `jelly` 287 | `jellynut` 48 |
+| Bioflux | 13×12 | 2 | `bioflux` 864 | `yumako-mash` 2,160, `jelly` 1,728 |
+| Nutrients | 13×4 | 2 | `nutrients` 288 | `bioflux` 24 |
+| Pentapod eggs | 17×12 | 4 | `pentapod-egg` 576 | `pentapod-egg` 192, `nutrients` 5,760, `water` (fluid) 11,520 |
+| Agricultural science | 13×8 | 4 | `agricultural-science-pack` 720 | `bioflux` 480, `pentapod-egg` 480 |
+| Iron bacteria | 13×4 | 2 | `iron-bacteria` 7, `spoilage` 281 | `jelly` 281 |
+| Iron bacteria cultivation | 13×8 | 2 | `iron-bacteria` 576 | `iron-bacteria` 96, `bioflux` 96 |
+| Iron plates (bacteria ore) | 13×8 | 2 | `iron-plate` 300 | `iron-ore` 300 |
+| Firearm magazines | 13×4 | 2 | `firearm-magazine` 288 | `iron-plate` 1,152 |
+| Carbon (burnt spoilage) | 13×8 | 2 | `carbon` 120 | `spoilage` 480 |
+| Carbon fiber | 13×8 | 2 | `carbon-fiber` 288 | `yumako-mash` 1,920, `carbon` 192 |
+| Rocket fuel (jelly) | 17×8 | 2 | `rocket-fuel` 144 | `water` (fluid) 2,880, `jelly` 2,880, `bioflux` 192 |
+| Power ×2 | - | - | 2 heating towers → 8 heat exchangers → 16 turbines each (fuel: spoilage, jellynut) | |
 | Rocket silo | - | - | robot-fed silo; exports via its cargo requests | |
 | Landing pad | - | - | imports blue circuits and LDS | |
-| Defence ring | - | - | gun turret + magazine requester every 18 tiles around the complex | |
+| Defence ring | - | - | two rows of stone wall + a laser turret every 4 tiles, every third a gun turret with a magazine requester | |
 
-Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
+Shelves (bottom → top; long lines are split into stacks of equal height):
 
-| Group | Lanes |
+| Shelf | Blocks |
 |---|---|
-| 1 (fluid) | `water` (fluid), `water` (fluid), -, -, -, - |
+| 1 | Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Rocket fuel (jelly) x2, Agricultural science x2, Agricultural science x2, Iron bacteria cultivation x2, Iron plates (bacteria ore) x2 |
+| 2 | Carbon (burnt spoilage) x2, Carbon fiber x2, Pentapod eggs x1, Pentapod eggs x1, Pentapod eggs x1, Pentapod eggs x1, Yumako processing x1, Yumako processing x1 |
+| 3 | Bioflux x1, Bioflux x1, Jellynut processing x2, Nutrients x2, Iron bacteria x2, Firearm magazines x2, Rocket silo (robot-fed), Landing pad (robot network) |
 
-1,293 entities, 289 tiles wide. Peak power 40 MW / turbines 93 MW (with enough heating-tower fuel). Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).
+Core 160×105 tiles, overall 177×126, 4,025 entities. Peak power 77 MW / turbines 186 MW (with enough heating-tower fuel). Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a trunk along the west edge that joins it in every shelf.
 
 ### Roadmap
 
@@ -76,13 +77,13 @@ Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
 
 **Build next**
 
-- [Fulgora all-in-one complex](../planet-fulgora/README.en.md) — the electromagnetic science planet
+- [Fulgora all-in-one base](../planet-fulgora/README.en.md) — the electromagnetic science planet
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | the whole complex (water bus + every line + defence ring) |
+| [`blueprint.txt`](blueprint.txt) | the whole base (core + wall and turrets) |
 | [`variants/yumako-processing.txt`](variants/yumako-processing.txt) | Yumako processing — cap + 1 cell |
 | [`variants/jellynut-processing.txt`](variants/jellynut-processing.txt) | Jellynut processing — cap + 1 cell |
 | [`variants/bioflux.txt`](variants/bioflux.txt) | Bioflux — cap + 1 cell |
@@ -96,7 +97,7 @@ Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
 | [`variants/carbon.txt`](variants/carbon.txt) | Carbon (burnt spoilage) — cap + 1 cell |
 | [`variants/carbon-fiber.txt`](variants/carbon-fiber.txt) | Carbon fiber — cap + 1 cell |
 | [`variants/rocket-fuel.txt`](variants/rocket-fuel.txt) | Rocket fuel (jelly) — cap + 1 cell |
-| [`variants/power.txt`](variants/power.txt) | power: 2 heating towers → 8 exchangers → 16 turbines |
+| [`variants/power.txt`](variants/power.txt) | power: 2 heating towers → 8 exchangers → 16 turbines (two in the base) |
 | [`variants/rocket-silo.txt`](variants/rocket-silo.txt) | rocket silo (robot-fed) |
 | [`variants/landing-pad.txt`](variants/landing-pad.txt) | landing pad |
 | [`variants/farm-yumako.txt`](variants/farm-yumako.txt) | farm tile: yumako (on its soil) |
@@ -118,23 +119,39 @@ python3 tools/build.py planet-gleba
 
 <!-- AUTO:END -->
 
+## Shape
+
+Community planet bases don't run a bus across the planet. They pack production into one dense rectangle and put power and defence around its edge (see the community designs below). This base is built the same way (`lib/base.py`).
+
+- **Shelves**: every line is split into blocks of equal height (stacks of stackable cells) packed side by side into horizontal shelves. The shelves stack up into the rectangle. The packer picks the width that leaves the fewest empty tiles.
+- **Robots between blocks**: every block input gets requester chest → inserter → belt, and every output gets belt end → inserter → provider chest. Belts stay inside blocks, and roboports cover the core on a 40-tile grid.
+- **Fluids in west trunks**: each shelf lays only the fluids it uses, on a short street under it. A vertical trunk per fluid along the west edge joins that fluid across all shelves. External fluids enter at the north end of their trunk (constant-combinator marker).
+
 ## Why robots instead of belts
 
-On Gleba almost everything spoils (yumako mash 3 min, jelly 4 min, nutrients 5 min, eggs 15 min). A belt that stops once rots, jams its line, and **spoiled eggs hatch into enemies**. So this complex has no item bus; robots move everything.
+On Gleba almost everything spoils (yumako mash 3 min, jelly 4 min, nutrients 5 min, eggs 15 min). A belt that stops once rots, jams its line, and **spoiled eggs hatch into enemies**. So every cell in this base takes and gives by robot.
 
 - Every machine has a **requester chest** (ingredients + nutrients, which biochambers burn) and a **passive provider chest** (results, spoilage included). Output inserters are unfiltered, so they also pull spoilage out.
 - **Spoilage is fuel** (250 kJ) and the heating towers burn it: the power plant is the spoilage sink.
 - **Egg control**: the egg machines' input inserters only run while the robot network holds fewer than 40 eggs (logistic condition), so eggs never pile up and are used well within 15 minutes. If the condition does not survive the import, set it in game: connect the input inserter to the logistic network, pentapod egg < 40.
-- The cells are still stackable (fixed width and period); only water comes up the pipes from the bus below. Each line has a roboport in its cap and at its top, so the network is continuous.
 
 ## Farms
 
-Agricultural towers only grow on their soil (yumako / jellynut wetland, or artificial soil), so the farm tiles are separate: place `variants/farm-*.txt` on that soil every 22 tiles (tower radius 3 cells = 21×21). Anywhere inside the robot network, the harvest reaches the complex by itself. 300 science/min needs about 10 yumako/s and 4 jellynut/s.
+Agricultural towers only grow on their soil (yumako / jellynut wetland, or artificial soil), so the farm tiles are separate: place `variants/farm-*.txt` on that soil outside the wall, every 22 tiles (tower radius 3 cells = 21×21). Once the robot network reaches them, the harvest comes to the base by itself. 600 science/min needs about 20 yumako/s and 8 jellynut/s. Farms need turrets too.
 
 ## Defence
 
-Pentapods attack polluted (spore-covered) areas. Every 18 tiles around the complex there is a gun turret with a magazine requester; magazines are made from bacteria iron. Swap in rocket or tesla turrets when available.
+Pentapods attack where pollution (spores) reaches. As in the community bases, the whole base sits inside a wall and a turret ring.
 
-## Community design consulted (its strings are not in this repository)
+- Two rows of stone wall run outside.
+- Inside them, a row of laser turrets stands every 4 tiles, and every third spot is a gun turret. The gun turrets take magazines from a requester chest; the magazines are made from bacteria iron.
+- Poles stand between the turrets.
+- The wall is open only where the water pipes pass.
 
-- Nir Adar, "Gleba Book" (https://factorioprints.com/view/-OvbAwW4CJ0WvO5NsBBm)
+Swap in rocket or tesla turrets when you have them. Rocket turrets are good against big stompers.
+
+## Community designs consulted (their strings are not in this repository)
+
+- "Gleba all production, no mods" — a rectangle with a laser-turret and stone-wall ring and an accumulator band inside it (https://factorioprints.com/view/-OBSabLpqu-pMQbWkKcy)
+- Nir Adar, "Gleba Base (Mall + All)" — an all-in-one inside walls, turrets and land mines (https://factorioprints.com/view/-OFa_ZWh1hQypFqucMTy)
+- Nir Adar, "Gleba Book" — keeping eggs alive, nutrient bootstrap, robot-based agricultural science (https://factorioprints.com/view/-OvbAwW4CJ0WvO5NsBBm)

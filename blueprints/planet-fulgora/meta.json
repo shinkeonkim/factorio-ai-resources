@@ -15,12 +15,12 @@
     "stackable"
   ],
   "title": {
-    "ko": "풀가오라 올인원 단지",
-    "en": "Fulgora all-in-one complex"
+    "ko": "풀가오라 올인원 기지",
+    "en": "Fulgora all-in-one base"
   },
   "summary": {
-    "ko": "고철 초당 160 → 재활용·분류 → 홀뮴·전해액·초전도체·슈퍼커패시터 → 전자기 과학 분당 약 100, 2차 재활용(철·구리·초록 회로·플라스틱), 로켓·수출, 전자기 공장 몰, 번개 발전·보호, 넘침 처리까지 버스 하나에.",
-    "en": "160 scrap/s → recycling and sorting → holmium, electrolyte, superconductors, supercapacitors → about 100 electromagnetic science/min, secondary recycling (iron, copper, green circuits, plastic), rocket and exports, an EM-plant mall, lightning power and protection, and overflow disposal on one bus."
+    "ko": "번개 수집기·축전지 띠로 둘러싼 직사각형 풀가오라 기지: 고철 초당 160 → 고철 선반 2개(재활용·분류·넘침 처리) → 홀뮴·전해액·초전도체·슈퍼커패시터 → 전자기 과학 분당 약 100, 2차 재활용, 전자기 공장 몰, 로켓. 블록 사이는 로봇.",
+    "en": "Fulgora base in one rectangle wrapped in a band of lightning collectors and accumulators: 160 scrap/s → two scrap shelves (recycling, sorting, overflow voids) → holmium, electrolyte, superconductors, supercapacitors → about 100 electromagnetic science/min, secondary recycling, an EM-plant mall, rocket. Robots between blocks."
   },
   "variants": [
     {
@@ -115,13 +115,6 @@
       }
     },
     {
-      "file": "variants/lightning-power.txt",
-      "label": {
-        "ko": "번개 발전 + 축전지",
-        "en": "lightning power + accumulators"
-      }
-    },
-    {
       "file": "variants/scrap-recycling.txt",
       "label": {
         "ko": "고철 재활용 + 분류 (재활용기 16)",
@@ -138,8 +131,8 @@
     {
       "file": "variants/rocket-silo.txt",
       "label": {
-        "ko": "로켓 사일로 + 수출 상자",
-        "en": "rocket silo + export chests"
+        "ko": "로켓 사일로 (로봇 공급)",
+        "en": "rocket silo (robot-fed)"
       }
     },
     {
@@ -148,19 +141,26 @@
         "ko": "넘침 처리 (재활용기)",
         "en": "overflow void (recyclers)"
       }
+    },
+    {
+      "file": "variants/lightning-tile.txt",
+      "label": {
+        "ko": "번개 띠 타일 12×12 (수집기 + 변전소 + 축전지 34)",
+        "en": "lightning band tile 12×12 (collector + substation + 34 accumulators)"
+      }
     }
   ],
   "default_label": {
-    "ko": "단지 전체 (버스 + 모든 줄)",
-    "en": "the whole complex (bus + every line)"
+    "ko": "기지 전체 (코어 + 번개 띠)",
+    "en": "the whole base (core + lightning band)"
   },
   "outputs": [
     {
       "item": "electromagnetic-science-pack",
       "per_minute": "~100",
       "where": {
-        "ko": "로켓 수출 상자",
-        "en": "rocket export chests"
+        "ko": "로봇 네트워크 → 로켓 화물 요청",
+        "en": "robot network → rocket cargo requests"
       }
     }
   ],

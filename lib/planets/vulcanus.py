@@ -1,6 +1,8 @@
 """Vulcanus all-in-one complex: lava -> molten metals -> castings, tungsten, metallurgic science, mall items,
 water/steam, power, rocket and imports. Every production line is a stack of lib/fstack fluid cells standing on
 one planet bus (lib/complex.compose)."""
+import math
+
 from lib.fstack import FluidCell, as_stack, analyse
 
 C = {
@@ -47,20 +49,10 @@ IMPORTS = ["electronic-circuit", "advanced-circuit", "processing-unit", "electri
            "refined-concrete", "express-transport-belt", "express-underground-belt", "express-splitter", "plastic-bar",
            "rocket-fuel"]
 
-LAYOUT = [
-    {"kind": "solid", "lanes": ["calcite", "coal", "tungsten-ore", "tungsten-ore", "carbon", "tungsten-carbide"]},
-    {"kind": "solid", "lanes": ["tungsten-plate", "metallurgic-science-pack", "iron-plate", "steel-plate", "low-density-structure", None]},
-    {"kind": "solid", "lanes": ["stone", "stone", "stone", None, None, None]},
-    {"kind": "solid", "lanes": IMPORTS[:6]},
-    {"kind": "solid", "lanes": IMPORTS[6:] + [None]},
-    {"kind": "fluid", "lanes": ["lava", "lava", "sulfuric-acid", "molten-iron", "molten-copper", "molten-copper"]},
-    {"kind": "fluid", "lanes": ["heavy-oil", "lubricant", None, None, None, None]},
-]
-
 PLAN = [   # (cell key, stacked cells) west -> east: producers before consumers
     ("molten-iron", 3), ("molten-copper", 3), ("molten-copper", 3),
     ("heavy-oil", 1), ("lubricant", 1),
-    ("carbon", 3), ("tungsten-carbide", 3), ("tungsten-plate", 4),
+    ("carbon", 3), ("tungsten-carbide", 3), ("tungsten-plate", 5),
     ("iron-plate", 2), ("steel-plate", 2),
     ("science", 5), ("low-density-structure", 1),
     ("mall-foundry", 1), ("mall-big-drill", 1), ("mall-turbo-belt", 1), ("mall-turbo-underground", 1),
@@ -80,18 +72,11 @@ def balance(plan=PLAN, tier="late"):
     return {k: (round(sup.get(k, 0), 2), round(dem.get(k, 0), 2)) for k in sorted(set(sup) | set(dem))}
 
 
-def stacks(plan=PLAN, tier="mid"):
-    """landing pad, power, every planned line, rocket silo, stone sink (west -> east)."""
-    return ([landing_pad_stack(IMPORTS, tier), power_stack(tier=tier)]
-            + [as_stack(C[k], n, tier) for k, n in plan]
-            + [rocket_stack(tier=tier)] + [stone_sink(tier=tier, name=f"Stone sink {k + 1}") for k in range(3)])
-
-
 # ------------------------------------------------------------------------------------------- special stacks
 from lib.complex import Stack
 from lib.fbp import N, E, S, W
 from lib.fstack import stack as fstack, late_rates, TIERS as FT
-from lib.planets.common import void_sink, landing_pad_stack as _pad, rocket_stack as _rocket
+from lib.planets.common import void_sink
 
 
 def power_stack(turbine_cols=8, turbines_per_col=8, tier="mid"):
@@ -128,14 +113,6 @@ def stone_sink(recyclers_per_side=7, tier="mid", name="Stone sink (recyclers)"):
     return void_sink("stone", recyclers_per_side, tier, name)
 
 
-def landing_pad_stack(imports, tier="mid", count=200):
-    return _pad(imports, tier, count)
-
-
-def rocket_stack(exports=("metallurgic-science-pack", "tungsten-carbide", "tungsten-plate", "iron-plate"), tier="mid"):
-    return _rocket(list(exports), tier=tier)
-
-
 POWER_KW = {"foundry": 2500, "assembling-machine-3": 375, "chemical-plant": 210, "oil-refinery": 420, "recycler": 180,
             "rocket-silo": 250, "roboport": 50, "fast-inserter": 46, "bulk-inserter": 79, "stack-inserter": 133,
             "long-handed-inserter": 20, "cargo-landing-pad": 0}
@@ -148,13 +125,51 @@ def power_budget(bp):
     return use, gen
 
 
-SPECIAL = [("Power", "산 중화 화학 공장 2대 + 증기 터빈 64대 (372 MW)", "2 acid-neutralisation plants + 64 steam turbines (372 MW)"),
-           ("Landing pad", "수입품 11종 → 버스 줄", "11 imports → bus lanes"),
-           ("Rocket silo", "로켓 부품(수입 파랑 회로·주조 LDS·수입 로켓 연료) + 수출 상자", "rocket parts (imported blue circuits, cast LDS, imported rocket fuel) + export chests"),
-           ("Stone sinks ×3", "재활용기 14대씩, 돌 줄마다 하나", "14 recyclers each, one per stone lane")]
+SPECIAL = [("Raw intake (south gate)", "방해석·석탄·텅스텐 광석 벨트 → 공급 상자", "calcite, coal, tungsten ore belts → provider chests"),
+           ("Power", "산 중화 화학 공장 2대 + 증기 터빈 64대 (372 MW)", "2 acid-neutralisation plants + 64 steam turbines (372 MW)"),
+           ("Stone voids ×3", "용암 선반의 돌 벨트 끝, 재활용기 14대씩", "on the lava shelf's stone belts, 14 recyclers each"),
+           ("Landing pad", "수입품 11종 → 로봇 네트워크", "11 imports → the robot network"),
+           ("Rocket silo", "로봇이 재료를 넣는 사일로; 수출은 화물 요청으로", "robot-fed silo; exports via its cargo requests")]
 
 
 def power_line(bp, lang):
     use, gen = power_budget(bp)
     return (f"최대 전력 {use / 1000:,.0f} MW / 발전 {gen / 1000:,.0f} MW." if lang == "ko"
             else f"Peak power {use / 1000:,.0f} MW / generated {gen / 1000:,.0f} MW.")
+
+
+# ------------------------------------------------------------------------------------- the base (lib/base)
+LINES = PLAN
+LAVA = ("molten-iron", "molten-copper")          # foundries on lava: their stone byproduct stays on belts
+RAW = ("calcite", "coal", "tungsten-ore")
+HEIGHT = 44                                      # stacks no taller than this (the power block's height)
+
+
+def intake_stack(tier="mid"):
+    """south gate: calcite / coal / tungsten ore belts unloaded into provider chests (rates from the lines)"""
+    from lib.planets.common import ingress_stack, raw_demand
+    cell = C["steam"]
+    raw = raw_demand(__import__(__name__, fromlist=["x"]), set(RAW), {"calcite": late_rates(cell).get("calcite", 0) / 60})
+    return ingress_stack(raw, tier)
+
+
+def base(label="Vulcanus all-in-one", tier="mid"):
+    """Rectangle base: raw intake gate on the south edge (calcite / coal / tungsten ore belts → provider chests), lava shelf
+    (molten metals + stone voids on a stone belt), then every other line packed into shelves; robots carry the
+    items between blocks, fluids (lava, sulfuric acid, molten metals, oils) run in trunks along the west edge.
+    No frame: demolishers never attack — keep the base outside their territories."""
+    from lib.base import build_base, Shelf, auto_layout, split_line
+    from lib.planets.common import robot_pad, robot_silo
+    intake = intake_stack(tier)
+    lava = []
+    for k, n in PLAN:
+        if k in LAVA:
+            lava += split_line(C[k], n, HEIGHT, as_stack, tier)
+    lava += [stone_sink(tier=tier, name=f"Stone void {k + 1}") for k in range(3)]
+    rest = [power_stack(tier=tier)]
+    for k, n in PLAN:
+        if k not in LAVA:
+            rest += split_line(C[k], n, HEIGHT, as_stack, tier)
+    rest += [robot_silo(tier), robot_pad(IMPORTS, tier)]
+    fixed = [Shelf(lava, ("stone",) * 3)]
+    return build_base(label, rest, frame=None, fixed=fixed, tier="blue", gates=[intake])

@@ -1,6 +1,6 @@
-# 풀가오라 올인원 단지
+# 풀가오라 올인원 기지
 
-> 고철 초당 160 → 재활용·분류 → 홀뮴·전해액·초전도체·슈퍼커패시터 → 전자기 과학 분당 약 100, 2차 재활용(철·구리·초록 회로·플라스틱), 로켓·수출, 전자기 공장 몰, 번개 발전·보호, 넘침 처리까지 버스 하나에.
+> 번개 수집기·축전지 띠로 둘러싼 직사각형 풀가오라 기지: 고철 초당 160 → 고철 선반 2개(재활용·분류·넘침 처리) → 홀뮴·전해액·초전도체·슈퍼커패시터 → 전자기 과학 분당 약 100, 2차 재활용, 전자기 공장 몰, 로켓. 블록 사이는 로봇.
 
 [English](README.en.md)
 
@@ -8,22 +8,19 @@
 
 ![미리보기](images/preview.webp)
 
-**구간별 확대 (서쪽 → 동쪽)**
+**구역별 확대 (북서 → 남동, 줄마다 서 → 동)**
 
 ![part-1](images/part-1.webp)
 ![part-2](images/part-2.webp)
-![part-3](images/part-3.webp)
-![part-4](images/part-4.webp)
-![part-5](images/part-5.webp)
 
 <sub>이미지: [Factorio Blueprint Editor](https://fbe.factorygamefan.com)로 렌더링 (게임 그래픽 © Wube Software)</sub>
 
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
-| 크기 | 975×112 타일 |
-| 엔티티 | 24281 |
-| 주요 설비 | `recycler` ×100<br>`electromagnetic-plant` ×30 (electrolyte 8, electromagnetic-science-pack 8, superconductor 4, accumulator 4, supercapacitor 4, electromagnetic-plant 2)<br>`chemical-plant` ×18 (holmium-solution 12, ice-melting 4, heavy-oil-cracking 2)<br>`assembling-machine-3` ×10 (rocket-fuel 4, refined-concrete 4, iron-stick 2)<br>`passive-provider-chest` ×6<br>`foundry` ×2 (holmium-plate 2)<br>`steel-chest` ×2<br>`rocket-silo` ×1 |
+| 크기 | 336×183 타일 |
+| 엔티티 | 11687 |
+| 주요 설비 | `recycler` ×104<br>`passive-provider-chest` ×75<br>`requester-chest` ×56<br>`electromagnetic-plant` ×30 (electrolyte 8, electromagnetic-science-pack 8, accumulator 4, superconductor 4, supercapacitor 4, electromagnetic-plant 2)<br>`chemical-plant` ×18 (holmium-solution 12, ice-melting 4, heavy-oil-cracking 2)<br>`assembling-machine-3` ×10 (rocket-fuel 4, refined-concrete 4, iron-stick 2)<br>`steel-chest` ×4<br>`foundry` ×2 (holmium-plate 2)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
 ### 입력
@@ -34,7 +31,7 @@
 
 | 아이템 | 분당 | 위치 |
 |---|---:|---|
-| `electromagnetic-science-pack` | ~100 | 로켓 수출 상자 |
+| `electromagnetic-science-pack` | ~100 | 로봇 네트워크 → 로켓 화물 요청 |
 
 ### 단지 구성
 
@@ -53,25 +50,23 @@
 | Iron sticks | 13×4 | 1 | `iron-stick` 600 | `iron-plate` 300 |
 | Refined concrete | 19×8 | 1 | `refined-concrete` 200 | `concrete` 400, `iron-stick` 160, `steel-plate` 20, `water` (fluid) 2,000 |
 | Mall: electromagnetic plant | 17×5 | 1 | 상자 (몰) | `holmium-plate` 432, `steel-plate` 144, `processing-unit` 144, `refined-concrete` 144 |
-| Lightning power | - | - | 번개 수집기 12 + 축전지 408 (2 GJ) + 변전소 | |
-| Scrap recycling + sorting ×4 | - | - | 재활용기 16대씩(고철 초당 40), 12종 분류 + 넘침 줄 | |
+| Scrap shelves ×2 | - | - | 재활용기 16대 + 12종 분류 블록 2개씩, 고철 초당 80 (서쪽 벨트로 입력) | |
 | Secondary recycling | - | - | 톱니→철, 구리선→구리, 파랑 회로→초록 회로, LDS→플라스틱 | |
-| Rocket silo | - | - | 로켓 부품(고철의 파랑 회로·LDS + 로켓 연료) + 수출 상자 | |
-| Void ×2 | - | - | 넘침 줄의 모든 것을 재활용기로 없앰 | |
-| Lightning cover | - | - | 단지 전체에 번개 수집기를 36칸 간격으로 (보호 반경 25) | |
+| Voids ×4 | - | - | 넘침 벨트의 모든 것을 재활용기로 없앰 | |
+| Rocket silo | - | - | 로봇이 재료를 넣는 사일로; 수출은 화물 요청으로 | |
+| Lightning band | - | - | 단지 둘레 12×12 타일마다 번개 수집기 + 변전소 + 축전지 34 (170 MJ) | |
+| Lightning cover | - | - | 코어 안에도 번개 수집기를 36칸 간격으로 | |
 
-버스 (위 → 아래, 6줄 + 빈 2줄 묶음; 유체는 맨 아래):
+선반 (아래 → 위; 줄이 길면 같은 높이의 스택 여러 개로 나뉨):
 
-| 묶음 | 줄 |
+| 선반 | 블록 |
 |---|---|
-| 1 (solid) | `scrap`, `scrap`, `scrap`, `scrap`, `holmium-ore`, `battery` |
-| 2 (solid) | `ice`, `stone`, `processing-unit`, `advanced-circuit`, `low-density-structure`, `solid-fuel` |
-| 3 (solid) | `concrete`, `steel-plate`, `iron-gear-wheel`, `copper-cable`, `signal-T`, `rocket-fuel` |
-| 4 (solid) | `iron-plate`, `copper-plate`, `electronic-circuit`, `plastic-bar`, `holmium-plate`, `superconductor` |
-| 5 (solid) | `accumulator`, `supercapacitor`, `electromagnetic-science-pack`, `iron-stick`, `refined-concrete`, - |
-| 6 (fluid) | `heavy-oil` (fluid), `heavy-oil` (fluid), `water` (fluid), `light-oil` (fluid), `holmium-solution` (fluid), `electrolyte` (fluid) |
+| 1 | Scrap recycling + sorting 1, Scrap recycling + sorting 2, Secondary recycling (iron, copper, green circuits, plastic), Void: overflow 1, Void: overflow 2 |
+| 2 | Scrap recycling + sorting 3, Scrap recycling + sorting 4, Void: overflow 3, Void: overflow 4, Accumulator x1, Iron sticks x1 |
+| 3 | Holmium solution x2, Electrolyte x2, Electromagnetic science x2, Superconductor x1, Supercapacitor x1, Water (ice melting) x1, Rocket fuel x1, Refined concrete x1, Holmium plate x1, Light oil (heavy oil cracking) x1 |
+| 4 | Mall: electromagnetic plant x1, Rocket silo (robot-fed) |
 
-전체 24,281개 엔티티, 폭 946칸. 최대 전력 109 MW, 축전지 2,040 MJ (번개는 폭풍 때만 들어옴). 버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다.
+코어 306×151칸, 전체 336×183칸, 11,687개 엔티티. 최대 전력 121 MW, 축전지 13,260 MJ (번개는 폭풍 때만 들어옴). 블록 사이 아이템은 로봇(요청 상자 → 블록 → 공급 상자), 유체는 서쪽 줄기 배관으로 모든 선반에 이어집니다.
 
 ### 로드맵
 
@@ -86,13 +81,13 @@
 
 **다음에 지을 것**
 
-- [불카누스 올인원 단지](../planet-vulcanus/README.md) — 텅스텐·주조기 쪽 행성
+- [불카누스 올인원 기지](../planet-vulcanus/README.md) — 텅스텐·주조기 쪽 행성
 
 ### 파일
 
 | 파일 | 설명 |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | 단지 전체 (버스 + 모든 줄) |
+| [`blueprint.txt`](blueprint.txt) | 기지 전체 (코어 + 번개 띠) |
 | [`variants/water.txt`](variants/water.txt) | 물 (얼음 녹이기) — 캡 + 셀 1개 |
 | [`variants/light-oil.txt`](variants/light-oil.txt) | 경유 (중유 분해) — 캡 + 셀 1개 |
 | [`variants/holmium-solution.txt`](variants/holmium-solution.txt) | 홀뮴 용액 — 캡 + 셀 1개 |
@@ -106,11 +101,11 @@
 | [`variants/iron-stick.txt`](variants/iron-stick.txt) | 철 막대 — 캡 + 셀 1개 |
 | [`variants/refined-concrete.txt`](variants/refined-concrete.txt) | 정제 콘크리트 — 캡 + 셀 1개 |
 | [`variants/mall-em-plant.txt`](variants/mall-em-plant.txt) | 몰: 전자기 공장 — 캡 + 셀 1개 |
-| [`variants/lightning-power.txt`](variants/lightning-power.txt) | 번개 발전 + 축전지 |
 | [`variants/scrap-recycling.txt`](variants/scrap-recycling.txt) | 고철 재활용 + 분류 (재활용기 16) |
 | [`variants/secondary-recycling.txt`](variants/secondary-recycling.txt) | 2차 재활용 (철·구리·초록 회로·플라스틱) |
-| [`variants/rocket-silo.txt`](variants/rocket-silo.txt) | 로켓 사일로 + 수출 상자 |
+| [`variants/rocket-silo.txt`](variants/rocket-silo.txt) | 로켓 사일로 (로봇 공급) |
 | [`variants/void.txt`](variants/void.txt) | 넘침 처리 (재활용기) |
+| [`variants/lightning-tile.txt`](variants/lightning-tile.txt) | 번개 띠 타일 12×12 (수집기 + 변전소 + 축전지 34) |
 
 문자열을 클립보드에 복사한 뒤 게임에서 블루프린트 라이브러리 → 문자열 가져오기:
 
@@ -128,19 +123,25 @@ python3 tools/build.py planet-fulgora
 
 <!-- AUTO:END -->
 
-## 구조
+## 기지 모양
 
-- **고철 줄**: 입력 벨트 위로 재활용기 16대가 한 줄로 서고, 각 재활용기가 앞쪽(위)의 혼합 벨트에 결과를 떨어뜨립니다. 혼합 벨트는 동쪽 분류 구역에서 필터 인서터로 12종을 각자의 열에 나누고, 남은 것은 넘침 열로 내려갑니다(가상 신호 T로 표시).
-- **스스로 조절**: 어떤 제품 줄이 차면 그 필터 인서터가 멈추고, 그 물건은 혼합 벨트를 따라 넘침으로 갑니다. 넘침 줄은 처리 줄(재활용기 고리)에서 사라지므로 단지 전체가 막히지 않습니다.
-- **같은 줄 합치기**: 고철 줄 4개가 같은 제품을 만들므로, 첫 번째가 버스 줄을 시작하고 나머지는 그 줄에 옆에서 합류합니다.
+커뮤니티의 행성 기지는 행성 전체에 버스를 깔지 않습니다. 빽빽한 직사각형 하나에 생산을 모으고, 전력·방어를 가장자리에 두릅니다(아래 '참고한 커뮤니티 설계'). 이 기지도 그렇게 짓습니다(`lib/base.py`).
+
+- **선반**: 생산 줄을 같은 높이의 블록(쌓는 셀 스택)으로 나눠 가로 선반에 빽빽하게 채웁니다. 선반을 위로 쌓으면 직사각형이 됩니다. 폭은 빈 칸이 가장 적게 남는 값을 찾아 정합니다.
+- **블록 사이는 로봇**: 블록 입력마다 요청 상자 → 인서터 → 벨트, 출력마다 벨트 끝 → 인서터 → 공급 상자를 둡니다. 벨트는 블록 안에만 있고, 로봇 기지는 40칸 격자로 코어 전체를 덮습니다.
+- **유체는 서쪽 줄기**: 선반마다 자기가 쓰는 유체만 선반 아래 짧은 거리에 깝니다. 서쪽 가장자리의 세로 줄기 배관이 같은 유체를 모든 선반에 잇습니다. 바깥에서 들어오는 유체는 줄기의 북쪽 끝 표시(상수 조합기)로 들어옵니다.
+- **번개 띠**: 코어 둘레를 12×12 타일(번개 수집기 + 변전소 + 축전지 34개 = 170 MJ)로 한 겹 두릅니다. 코어 안에도 수집기를 36칸 간격으로 놓아 모든 건물을 보호합니다.
+- **고철 선반 2개**(맨 아래): 고철 벨트가 서쪽에서 들어옵니다. 블록마다 재활용기 16대가 혼합 벨트에 결과를 떨어뜨리고, 동쪽 분류 구역의 필터 인서터가 12종을 나눠 공급 상자로 보냅니다. 남은 것은 넘침 벨트(가상 신호 T)로 같은 선반의 처리 블록에 가서 사라집니다.
+- **스스로 조절**: 공급 상자가 차면 그 필터 인서터가 멈추고, 그 물건은 넘침으로 갑니다. 그래서 기지 전체가 막히지 않습니다.
 - **2차 재활용**: 톱니 → 철, 구리선 → 구리, 파랑 회로 → 초록 회로(+빨강), LDS → 플라스틱(+강철·구리).
-- **전자기 공장 셀**: 유체 입구가 서쪽·동쪽에 하나씩이라, 두 번째 유체(홀뮴 용액)는 가운데 파이프에서 받습니다. 전해액은 출구가 위아래(빈 줄)에 있어 빈 줄의 지하 파이프로 바깥 본관에 내보내고, 두 쪽 본관을 셀 위에서 지하 파이프 사슬로 잇습니다.
-- **번개 보호**: 단지 전체에 번개 수집기(보호 반경 25)를 36칸 간격으로 생성 단계에서 흩어 놓습니다.
+- **전자기 공장 셀**: 유체 입구가 서쪽·동쪽에 하나씩이라, 두 번째 유체(홀뮴 용액)는 가운데 파이프에서 받습니다.
 
 ## 숫자
 
-전자기 과학 1개(전자기 공장·주조기 생산성 +50%)에 홀뮴 광석 약 0.93, 배터리 2.7, 초록 회로 1.8이 들어갑니다. 홀뮴은 고철의 1%라 과학 1개에 고철 약 93개 → 고철 초당 160이면 분당 약 100. 아래 표의 셀 출력은 기계가 쉬지 않을 때 값이고, 실제로는 홀뮴이 한계입니다.
+전자기 과학 1개(전자기 공장·주조기 생산성 +50%)에 홀뮴 광석 약 0.93, 배터리 2.7, 초록 회로 1.8이 들어갑니다. 홀뮴은 고철의 1%라 과학 1개에 고철 약 93개가 듭니다. 고철 초당 160이면 분당 약 100개입니다. 아래 표의 셀 출력은 기계가 쉬지 않을 때 값이고, 실제로는 홀뮴이 한계입니다.
 
 ## 참고한 커뮤니티 설계 (문자열은 저장소에 넣지 않음)
 
+- "Fulgora all production, no mods" — 섬 크기의 축전지·피뢰침 밭이 생산 코어를 감쌈 (https://factorioprints.com/view/-OBM1jc4Izxd8iAZrzKf)
+- "Compact Fulgora Scrap Recycling" — 고밀도 재활용·분류 블록 (https://factorioprints.com/view/-OBdvHoEr2jlVweXSUKW)
 - Space Ghost, "Fulgora blueprint book. All in" (https://factorioprints.com/view/-OUf5gju1G_1O_K38VLl)

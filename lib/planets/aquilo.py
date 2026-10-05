@@ -1,5 +1,5 @@
 """Aquilo all-in-one complex: ammonia ocean -> ammonia + ice, lithium, fluoroketone, cryogenic science, rocket fuel,
-ice platforms, fusion power cells — robot-fed cells (chests do not freeze), fluids on a heated fluid bus, and
+ice platforms, fusion power cells — robot-fed cells (chests do not freeze), fluids in heated pipes, and
 heat pipes beside every building that freezes (lib/heat.py fills and checks them)."""
 from lib.complex import Stack
 from lib.fbp import N, E, S, W
@@ -38,18 +38,6 @@ FUEL = "rocket-fuel"
 # ~576 ammonia/s, a little under what the lines draw, so ammonia never backs up and stalls the ice
 LINES = [("ammonia", 6), ("water", 8), ("lithium", 3), ("lithium-plate", 2), ("solid-fuel", 2), ("fluoroketone", 1),
          ("cooling", 2), ("science", 4), ("rocket-fuel", 2), ("ice-platform", 1), ("fusion-cell", 1)]
-PLAN = LINES
-# fluid bus: two lines per group (rows 0 and 3) so every heat corridor between lines is at least two rows tall
-# (a riser's pipe-to-ground never closes it off); plain pipes, since no two lines touch
-LAYOUT = [
-    {"kind": "fluid", "lanes": ["ammoniacal-solution", None, None, "ammonia", None, None]},
-    {"kind": "fluid", "lanes": ["water", None, None, "lithium-brine", None, None]},
-    {"kind": "fluid", "lanes": ["fluorine", None, None, "crude-oil", None, None]},
-    {"kind": "fluid", "lanes": ["fluoroketone-hot", None, None, "fluoroketone-cold", None, None]},
-]
-FLUID_PLAIN = True
-
-
 def power_stack(units=2, tier="mid"):
     """Heating towers burning ammonia rocket fuel -> heat exchangers -> turbines; the same heat-pipe network keeps
     the whole complex warm (lib/heat fills and checks it). Water from the bus."""
@@ -80,21 +68,6 @@ def pad_stack(tier="mid"):
     return _pad(("holmium-plate", "processing-unit", "low-density-structure"), tier)
 
 
-def stacks(tier="mid"):
-    s = [hstack.as_stack(C[k], n, tier) for k, n in LINES]
-    return s[:2] + [power_stack(3, tier=tier)] + s[2:] + [rocket_stack(tier), pad_stack(tier)]   # power needs water
-
-
-def finish(bp):
-    """Heat everything (bus, caps, roboports, power block), drop useless heat pipes, then prove it stays warm."""
-    _heat.fill(bp)
-    _heat.prune(bp)
-    problems = _heat.check(bp)
-    if problems:
-        raise SystemExit("Aquilo heating: " + "; ".join(problems))
-
-
-FINISH = finish
 CELL_STACK = hstack.as_stack
 CELL_GEO = hstack.Geo
 
@@ -116,6 +89,30 @@ def power_line(bp, lang):
 
 
 SPECIAL = [("Power + heat", "가열탑 3기(암모니아 로켓 연료, 열 300 MW) → 열교환기 12 → 터빈 24; 같은 열 배관이 단지 전체를 데움",
-            "3 heating towers (ammonia rocket fuel, 300 MW of heat) → 12 exchangers → 24 turbines; the same heat pipes warm the whole complex"),
+            "3 heating towers (ammonia rocket fuel, 300 MW of heat) → 12 exchangers → 24 turbines; the same heat pipes warm the whole base"),
            ("Rocket silo", "로봇이 재료를 넣는 사일로", "robot-fed silo"),
            ("Landing pad", "홀뮴 판·파랑 회로·LDS 수입", "imports holmium plates, blue circuits, LDS")]
+
+
+# ------------------------------------------------------------------------------------- the base (lib/base)
+HEIGHT = 40
+
+
+def base(label="Aquilo all-in-one", tier="mid"):
+    """Rectangle base, heated: robot-fed heated cells, fluids (ammoniacal solution, lithium brine, fluorine, crude
+    oil in; ammonia, water, fluoroketone made here) in trunks along the west edge, three heating towers for power
+    and heat; at the end lib/heat fills heat pipe beside everything that freezes and checks it."""
+    from lib.base import build_base
+    from lib.planets.common import line_stacks
+    mod = __import__(__name__, fromlist=["x"])
+    units = [power_stack(3, tier)] + line_stacks(mod, HEIGHT, tier, hstack.as_stack) + [rocket_stack(tier), pad_stack(tier)]
+
+    def warm(bp):
+        _heat.fill(bp)
+        _heat.prune(bp)
+        problems = _heat.check(bp)
+        if problems:
+            raise SystemExit("Aquilo heating: " + "; ".join(problems))
+        return round(_heat.load_kw(bp) / 1000, 1)
+
+    return build_base(label, units, frame=None, tier="blue", finish=warm)

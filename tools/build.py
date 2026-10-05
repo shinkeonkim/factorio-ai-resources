@@ -154,18 +154,17 @@ def family_section(name, lang):
 
 
 def planet_section(name, lang):
-    """Stacks, bus and power of a planet complex (lib/planets/<name>.py), from the same code that built it."""
+    """Lines, shelves and power of a planet base (lib/planets/<name>.py + lib/base.py), from the code that built it."""
     import importlib
     sys.path.insert(0, str(ROOT))
     mod = importlib.import_module(f"lib.planets.{name}")
     from lib.fstack import analyse as fan
-    from lib.planets.common import compose_planet
     ko = lang == "ko"
     geo = getattr(mod, "CELL_GEO", lambda c: c)
-    out = ["", "### " + ("단지 구성" if ko else "Complex"), "",
+    out = ["", "### " + ("단지 구성" if ko else "Base layout"), "",
            ("| 줄 | 셀 크기 | 셀 수 | 출력 (분당, 후반) | 입력 (분당, 후반) |" if ko else
             "| Line | Cell | Cells | Output (/min, late) | Inputs (/min, late) |"), "|---|---|---:|---|---|"]
-    for key, n in getattr(mod, "LINES", mod.PLAN):
+    for key, n in mod.LINES:
         c = mod.C[key]
         a = fan(c, "late")
         outs = ", ".join(f"{icon(k, 'fluid' if k in c.fluids_out else 'item')} {v * 60 * n:,.0f}" for k, v in a["out_per_s"].items())
@@ -175,15 +174,21 @@ def planet_section(name, lang):
         out.append(f"| {c.name} | {geo(c).width}×{geo(c).period} | {n} | {outs} | {ins} |")
     for nm, ko_txt, en_txt in getattr(mod, "SPECIAL", []):
         out.append(f"| {nm} | - | - | {ko_txt if ko else en_txt} | |")
-    bp, rep = compose_planet(mod, name)
-    out += ["", ("버스 (위 → 아래, 6줄 + 빈 2줄 묶음; 유체는 맨 아래):" if ko else "Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):"), "",
-            ("| 묶음 | 줄 |" if ko else "| Group | Lanes |"), "|---|---|"]
-    for g, grp in enumerate(mod.LAYOUT):
-        out.append(f"| {g + 1} ({grp['kind']}) | " + ", ".join(icon(i, 'fluid' if grp['kind'] == 'fluid' else 'item') if i else "-" for i in grp["lanes"]) + " |")
-    out += ["", (f"전체 {len(bp.entities):,}개 엔티티, 폭 {rep['x_end']}칸. {mod.power_line(bp, lang)} "
-                 "버스 줄마다 수요가 한 줄 용량(파랑 벨트 45/s, 파이프 1,200/s)을 넘지 않는지 생성할 때 검사합니다." if ko else
-                 f"{len(bp.entities):,} entities, {rep['x_end']} tiles wide. {mod.power_line(bp, lang)} "
-                 "Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).")]
+    bp, info = mod.base(name)
+    x0, y0, x1, y1 = info["core"]
+    xs = [x for x, _ in bp._grid]; ys = [y for _, y in bp._grid]
+    out += ["", ("선반 (아래 → 위; 줄이 길면 같은 높이의 스택 여러 개로 나뉨):" if ko else
+                 "Shelves (bottom → top; long lines are split into stacks of equal height):"), "",
+            ("| 선반 | 블록 |" if ko else "| Shelf | Blocks |"), "|---|---|"]
+    for i, sh in enumerate(info["shelves"]):
+        out.append(f"| {i + 1} | " + ", ".join(sh) + " |")
+    out += ["", (f"코어 {x1 - x0 + 1}×{y1 - y0 + 1}칸, 전체 {max(xs) - min(xs) + 1}×{max(ys) - min(ys) + 1}칸, "
+                 f"{len(bp.entities):,}개 엔티티. {mod.power_line(bp, lang)} "
+                 "블록 사이 아이템은 로봇(요청 상자 → 블록 → 공급 상자), 유체는 서쪽 줄기 배관으로 모든 선반에 이어집니다." if ko else
+                 f"Core {x1 - x0 + 1}×{y1 - y0 + 1} tiles, overall {max(xs) - min(xs) + 1}×{max(ys) - min(ys) + 1}, "
+                 f"{len(bp.entities):,} entities. {mod.power_line(bp, lang)} "
+                 "Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a "
+                 "trunk along the west edge that joins it in every shelf.")]
     return out
 
 
@@ -288,7 +293,7 @@ def auto_section(d: pathlib.Path, meta: dict, st: dict, lang: str) -> str:
         out += ["", f"**{t['detail']}**", "", f"![{t['detail']}](images/detail.webp)"]
     parts = sorted((d / "images").glob("part-*.webp"), key=lambda q: int(q.stem.split("-")[1])) if (d / "images").exists() else []
     if parts:
-        out += ["", "**" + ("구간별 확대 (서쪽 → 동쪽)" if lang == "ko" else "Zoomed sections (west → east)") + "**", ""]
+        out += ["", "**" + ("구역별 확대 (북서 → 남동, 줄마다 서 → 동)" if lang == "ko" else "Zoomed areas (north-west → south-east, row by row)") + "**", ""]
         out += [f"![{q.stem}](images/{q.name})" for q in parts]
     for v in meta.get("variants", []):
         if v.get("preview") and (d / variant_image(v)).exists():
@@ -467,7 +472,7 @@ def build_one(d: pathlib.Path, regen: bool, images):
                 big = 3200 if meta.get("planet") else 1600
                 save_webp(images.render(obj, title, max_px=big) if images.kind == "fbe" else images.render(obj, title),
                           img_dir / "preview.webp")
-                if meta.get("planet") and images.kind == "fbe":   # zoomed slices along the bus
+                if meta.get("planet") and images.kind == "fbe":   # zoomed quarters (or more) of the rectangle
                     from blueprint import _footprints
                     fps = list(_footprints(obj["blueprint"]))
                     x0 = min(f[2] for f in fps); x1 = max(f[2] + f[4] for f in fps)
@@ -475,9 +480,13 @@ def build_one(d: pathlib.Path, regen: bool, images):
                     for old in img_dir.glob("part-*.webp"):
                         old.unlink()
                     k = 1
-                    for xa in range(int(x0), int(x1), 240):
-                        save_webp(images.render(obj, title, (xa, y0, xa + 240, y1), max_px=1600), img_dir / f"part-{k}.webp")
-                        k += 1
+                    nx = max(1, round((x1 - x0) / 140)); ny = max(1, round((y1 - y0) / 140))
+                    for j in range(ny):
+                        for i in range(nx):
+                            box = (x0 + (x1 - x0) * i / nx, y0 + (y1 - y0) * j / ny,
+                                   x0 + (x1 - x0) * (i + 1) / nx, y0 + (y1 - y0) * (j + 1) / ny)
+                            save_webp(images.render(obj, title, box, max_px=1600), img_dir / f"part-{k}.webp")
+                            k += 1
                 box = focus_box(obj)
                 total = s["w"] * s["h"]
                 if box and (box[2] - box[0]) * (box[3] - box[1]) < 0.5 * total:

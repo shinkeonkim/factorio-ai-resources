@@ -1,26 +1,13 @@
-"""Vulcanus all-in-one complex (lib/planets/vulcanus.py): one bus, every production line as a stack of cells.
-blueprint.txt = the whole complex; variants/<line>.txt = each line alone (cap + 1 cell, markers on its inputs)."""
+"""Vulcanus all-in-one base (lib/planets/vulcanus.py + lib/base.py): one rectangle of shelves, robots between blocks.
+blueprint.txt = the whole base; variants/<line>.txt = each line alone (cap + 1 cell, markers on its inputs)."""
 import sys, pathlib; sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[2]))
-from lib.fbp import *
-from lib.complex import compose
 from lib.planets import vulcanus as V
+from lib.planets.common import write_planet, robot_pad, robot_silo
 
 if __name__ == "__main__":
-    bp, rep = compose("Vulcanus all-in-one", V.LAYOUT, V.stacks(), tier=V.BUS_TIER)
-    if rep["warnings"]:
-        raise SystemExit("\n".join(rep["warnings"]))
-    bp.description = ("Markers on the west end = raw inputs (lava: offshore pumps on lava; calcite, coal, tungsten ore: "
-                      "mining; sulfuric acid: pumpjacks on acid geysers). Imports arrive at the landing pad.")
-    bp.connect_poles()
-    save(bp, __file__)
-    for key, _ in V.PLAN:
-        st = V.as_stack(V.C[key], 1, "mid")
-        one = Blueprint(f"Vulcanus: {V.C[key].name}", game="2.0")
-        st.build(one, "mid")
-        one.connect_poles()
-        save(one, __file__, f"variants/{key}.txt")
-    for st in (V.power_stack(), V.rocket_stack(), V.landing_pad_stack(V.IMPORTS), V.stone_sink()):
-        one = Blueprint(f"Vulcanus: {st.name}", game="2.0")
-        st.build(one, "mid")
-        one.connect_poles()
-        save(one, __file__, f"variants/{st.name.split(':')[0].split(' (')[0].lower().replace(' ', '-').replace('+', 'and')}.txt")
+    write_planet(V, __file__, "Vulcanus all-in-one",
+                 "Inputs: lava and sulfuric acid at the trunk tops (north-west: offshore pumps on lava, pumpjacks on "
+                 "acid geysers); calcite, coal and tungsten ore belts into the south gate. Imports arrive at the "
+                 "landing pad; robots carry items between blocks. Keep it outside demolisher territory.",
+                 [("power", V.power_stack()), ("raw-intake", V.intake_stack()),
+                  ("stone-void", V.stone_sink()), ("landing-pad", robot_pad(V.IMPORTS)), ("rocket-silo", robot_silo())])

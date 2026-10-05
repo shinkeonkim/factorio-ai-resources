@@ -1,5 +1,5 @@
-"""Stacks shared by the planet complexes (all follow lib/complex: cap rows 0..7 with markers on row 8 for inputs,
-everything else at y < 0, products leave as columns through the cap bottom)."""
+"""Stacks shared by the planet bases (all follow lib/complex: cap rows 0..7 with markers on row 8 for inputs,
+everything else at y < 0, products leave as columns through the cap bottom; lib/base wraps them for robots)."""
 from lib.complex import Stack
 from lib.fbp import N, E, S, W
 from lib.fstack import TIERS as FT
@@ -15,59 +15,6 @@ def _filt(*items):
 def _requests(items, count):
     return {"sections": [{"index": 1, "filters": [
         {"index": i + 1, "name": it, "quality": "normal", "comparator": "=", "count": count} for i, it in enumerate(items)]}]}
-
-
-def landing_pad_stack(imports, tier="mid", count=200, name="Landing pad (imports)"):
-    """Imports: the cargo landing pad requests `imports` from orbit; logistic bots carry each item to its own
-    requester chest, which an inserter empties onto a column running down to the bus, where that column
-    starts the item's lane. Columns are 4 apart so the bus taps never collide."""
-    xs = [1 + 4 * k for k in range(len(imports))]
-
-    def build(bp, t):
-        f = FT[t]
-        for x, item in zip(xs, imports):
-            bp.add("requester-chest", x, -3, request_filters=_requests([item], count))
-            bp.add(f["ins"], x, -2, N)                         # picks from the chest above
-            for y in range(-1, 8):
-                bp.add(f["belt"], x, y, S)
-        for x in xs[::2]:
-            bp.add(f["pole"], x + 1, -2)
-        mid = xs[len(xs) // 2]
-        bp.add("cargo-landing-pad", mid - 4, -14, request_filters=_requests(imports, count * 2))
-        bp.add("roboport", mid + 6, -10)
-        bp.add(f["pole"], mid + 5, -5); bp.add(f["pole"], mid + 5, -11)
-
-    return Stack(name, build, tier, [(it, "item", x) for it, x in zip(imports, xs)], {}, {it: 15.0 for it in imports}, gap=4)
-
-
-def rocket_stack(exports, ingredients=("processing-unit", "low-density-structure", "rocket-fuel"), tier="mid",
-                 name="Rocket silo + exports"):
-    """Rocket silo fed from the bus through its bottom edge (one rocket part = one of each ingredient, 3 s).
-    Exports from the bus go into passive provider chests beside it; the silo's cargo requests pull them in
-    with logistic bots (roboport included)."""
-    def build(bp, t):
-        f = FT[t]
-        bp.add("rocket-silo", 0, -12)
-        for k, item in enumerate(ingredients):
-            x = 1 + 4 * k
-            for y in range(-2, 8):
-                bp.add(f["belt"], x, y, N)
-            bp.add(f["ins"], x, -3, S)                        # belt end -> silo
-            bp.add_marker(x, 8, {item: 20})
-        x0 = 1 + 4 * len(ingredients)
-        for k, item in enumerate(exports):
-            x = x0 + 4 * k
-            for y in range(-2, 8):
-                bp.add(f["belt"], x, y, N)
-            bp.add(f["ins"], x, -3, S)
-            bp.add("passive-provider-chest", x, -4)
-            bp.add_marker(x, 8, {item: 60})
-        for x in range(3, x0 + 4 * len(exports), 4):
-            bp.add(f["pole"], x, -2)
-        bp.add("roboport", x0 + 1, -12)
-        bp.add(f["pole"], x0 - 2, -6)
-
-    return Stack(name, build, tier, [], {i: 0.4 for i in ingredients} | {e: 1.0 for e in exports}, gap=4)
 
 
 def void_sink(item, recyclers_per_side=7, tier="mid", name=None, demand=30.0):
@@ -165,31 +112,17 @@ def recycle_sort_stack(name, inputs, products, recyclers, tier="mid", rate_per_s
                  {i: rate.get(i, 0) for i, _ in products} | {TRASH: rate.get(TRASH, 0)}, gap=4)
 
 
-def compose_planet(mod, label, post=None):
-    """The whole complex as the module describes it (optional hooks: COVER, FLUID_PLAIN, POST, FINISH)."""
-    from lib.complex import compose
-    bp, rep = compose(label, mod.LAYOUT, mod.stacks(), tier=mod.BUS_TIER, cover=getattr(mod, "COVER", None),
-                      fluid_plain=getattr(mod, "FLUID_PLAIN", False))
-    if rep["warnings"]:
-        raise SystemExit("\n".join(rep["warnings"]))
-    for fn in (post or getattr(mod, "POST", None), getattr(mod, "FINISH", None)):
-        if fn:
-            fn(bp)
-    bp.connect_poles()
-    return bp, rep
-
-
-def write_planet(mod, script_file, label, description, specials, post=None):
-    """blueprint.txt = the whole complex; variants/<line>.txt = each fluid-cell line alone (cap + 1 cell);
+def write_planet(mod, script_file, label, description, specials):
+    """blueprint.txt = the whole base (mod.base); variants/<line>.txt = each line alone (cap + 1 cell);
     variants/<file>.txt for every (file, stack) in `specials`."""
     from lib.fbp import Blueprint, save
     from lib.fstack import as_stack as _fluid_stack
     as_stack = getattr(mod, "CELL_STACK", _fluid_stack)
-    bp, rep = compose_planet(mod, label, post)
+    bp, info = mod.base(label)
     bp.description = description
     save(bp, script_file)
     done = set()
-    for key, _ in getattr(mod, "LINES", mod.PLAN):
+    for key, _ in mod.LINES:
         if key in done:
             continue
         done.add(key)
@@ -202,3 +135,85 @@ def write_planet(mod, script_file, label, description, specials, post=None):
         st.build(one, "mid")
         one.connect_poles()
         save(one, script_file, f"variants/{fname}.txt")
+
+
+# ------------------------------------------------------------------------------ robot-network blocks (lib/base)
+def ingress_stack(rates, tier="mid", lane=45.0, name="Raw intake (belts → provider chests)"):
+    """Raw items from outside: each belt column (one per `lane` items/s) comes up from the street and ends beside
+    k inserters that unload it into passive provider chests, where the robots pick it up."""
+    from lib.fstack import INSERTER
+    import math
+    ins = FT[tier]["ins"]
+    cols = []
+    for item, r in rates.items():
+        n = max(1, math.ceil(r / lane - 1e-9))
+        cols += [(item, r / n)] * n
+    xs = [1 + 4 * k for k in range(len(cols))]
+    deepest = max(math.ceil(r / INSERTER[ins]) for _, r in cols)
+
+    def build(bp, t):
+        for x, (item, r) in zip(xs, cols):
+            k = max(1, math.ceil(r / INSERTER[ins] - 1e-9))
+            for y in range(-k + 1, 8):
+                bp.add(FT[t]["belt"], x, y, N)
+            for j in range(k):
+                bp.add(ins, x + 1, -j, W)                      # picks from the belt, drops into the chest
+                bp.add("passive-provider-chest", x + 2, -j)
+            bp.add_marker(x, 8, {item: round(r * 60)})
+        for x in xs:
+            for y in range(0, -max(deepest, 1) - 1, -6):              # beside the chests, every 6 rows
+                bp.add(FT[t]["pole"], x + 3, y)
+
+    st = Stack(name, build, tier, [], {}, gap=3)
+    st.demand = {}
+    for item, r in cols:
+        st.demand[item] = r
+    return st
+
+
+def robot_pad(imports, tier="mid", count=200, name="Landing pad (imports into the robot network)"):
+    """Cargo landing pad inside the robot network: it requests the imports from orbit and robots take them from it."""
+    def build(bp, t):
+        bp.add("cargo-landing-pad", 0, -10, request_filters=_requests(imports, count))
+        bp.add("roboport", 9, -8)
+        bp.add(FT[t]["pole"], 8, -3)
+    return Stack(name, build, tier, [], {}, gap=4)
+
+
+def robot_silo(tier="mid", ingredients=("processing-unit", "low-density-structure", "rocket-fuel"),
+               name="Rocket silo (robot-fed)"):
+    """Rocket silo fed by robots (a requester chest per ingredient); its cargo requests take the exports straight
+    from the network."""
+    def build(bp, t):
+        f = FT[t]
+        bp.add("rocket-silo", 0, -12)
+        for k, item in enumerate(ingredients):
+            x = 1 + 3 * k
+            bp.add(f["ins"], x, -3, S)
+            bp.add("requester-chest", x, -2, request_filters=_requests([item], 20))
+        bp.add(f["pole"], 2, -2); bp.add(f["pole"], 10, -4)
+        bp.add("roboport", 11, -10)
+    return Stack(name, build, tier, [], {}, gap=4)
+
+
+def line_stacks(mod, height, tier="mid", make=None):
+    """every line of a planet module as stacks no taller than `height`"""
+    from lib.base import split_line
+    from lib.fstack import as_stack
+    make = make or getattr(mod, "CELL_STACK", as_stack)
+    out = []
+    for key, n in mod.LINES:
+        out += split_line(mod.C[key], n, height, lambda c, m, tr: make(c, m, tr), tier)
+    return out
+
+
+def raw_demand(mod, items, extra=None):
+    """items/s of the given raw items the lines draw (late tier)"""
+    from lib.fstack import analyse
+    need = dict(extra or {})
+    for key, n in mod.LINES:
+        a = analyse(mod.C[key], "late")
+        for k, v in a["in_per_side"].items():
+            if k in items:
+                need[k] = need.get(k, 0) + 2 * v * n
+    return need

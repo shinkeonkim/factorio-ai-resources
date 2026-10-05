@@ -7,7 +7,7 @@ scrap stacks of 16 recyclers (2.5 scrap/s each) = 160 scrap/s."""
 from lib.complex import Stack
 from lib.fbp import N, E, S, W
 from lib.fstack import FluidCell, as_stack, analyse, TIERS as FT
-from lib.planets.common import TRASH, recycle_sort_stack, rocket_stack, void_sink  # noqa: F401
+from lib.planets.common import TRASH, recycle_sort_stack, void_sink
 
 BUS_TIER = "blue"
 SCRAP_PER_STACK = 40.0          # 16 recyclers x 2.5 scrap/s
@@ -38,15 +38,6 @@ C = {
                                   inner=("concrete", "iron-stick"), outer=("steel-plate", None)),
 }
 
-LAYOUT = [
-    {"kind": "solid", "lanes": ["scrap", "scrap", "scrap", "scrap", "holmium-ore", "battery"]},
-    {"kind": "solid", "lanes": ["ice", "stone", "processing-unit", "advanced-circuit", "low-density-structure", "solid-fuel"]},
-    {"kind": "solid", "lanes": ["concrete", "steel-plate", "iron-gear-wheel", "copper-cable", TRASH, "rocket-fuel"]},
-    {"kind": "solid", "lanes": ["iron-plate", "copper-plate", "electronic-circuit", "plastic-bar", "holmium-plate", "superconductor"]},
-    {"kind": "solid", "lanes": ["accumulator", "supercapacitor", "electromagnetic-science-pack", "iron-stick", "refined-concrete", None]},
-    {"kind": "fluid", "lanes": ["heavy-oil", "heavy-oil", "water", "light-oil", "holmium-solution", "electrolyte"]},
-]
-
 SCRAP_SORT = [("holmium-ore", 1), ("battery", 2), ("processing-unit", 1), ("advanced-circuit", 1),
               ("low-density-structure", 1), ("ice", 2), ("stone", 1), ("steel-plate", 1), ("copper-cable", 1),
               ("iron-gear-wheel", 3), ("solid-fuel", 2), ("concrete", 2)]
@@ -74,36 +65,6 @@ def second_stack(tier="mid"):
                               SECOND_SORT, 8, tier, rate)
 
 
-def lightning_field(cols=4, rows=3, tier="mid"):
-    """Lightning power + protection: tiles of 12x12, each a lightning collector (catches strikes within 25 tiles,
-    stores 1 GJ, 40 % efficient), a substation and 34 accumulators (5 MJ each, 170 MJ per tile)."""
-    def build(bp, t):
-        for i in range(cols):
-            for j in range(rows):
-                x0, y0 = 12 * i, -12 * (j + 1) - 1
-                bp.add("substation", x0 + 6, y0 + 6)
-                bp.add("lightning-collector", x0, y0)
-                for ax in range(0, 12, 2):
-                    for ay in range(0, 12, 2):
-                        if (ax, ay) in ((0, 0), (6, 6)):
-                            continue
-                        bp.add("accumulator", x0 + ax, y0 + ay)
-        bp.add("medium-electric-pole", 6, 0)
-
-    return Stack(f"Lightning power ({cols * rows} collectors, {cols * rows * 34} accumulators)", build, tier, [], {}, gap=4)
-
-
-def stacks(tier="mid"):
-    s = [lightning_field(tier=tier)]
-    s += [scrap_stack(k + 1, tier) for k in range(4)]
-    s += [as_stack(C[k], n, tier) for k, n in PLAN]
-    s += [second_stack(tier)]
-    s += [as_stack(C[k], n, tier) for k, n in PLAN2]
-    s += [rocket_stack(["electromagnetic-science-pack", "holmium-plate", "supercapacitor", "superconductor"], tier=tier)]
-    s += [void_sink(TRASH, 7, tier, "Void: overflow 1", 20.0), void_sink(TRASH, 7, tier, "Void: overflow 2", 20.0)]
-    return s
-
-
 POWER_KW = {"recycler": 180, "electromagnetic-plant": 2000, "foundry": 2500, "chemical-plant": 210,
             "assembling-machine-3": 375, "rocket-silo": 250, "roboport": 50, "fast-inserter": 46, "bulk-inserter": 79,
             "long-handed-inserter": 20}
@@ -116,16 +77,37 @@ def power_budget(bp):
 
 
 LINES = PLAN + PLAN2
-COVER = ("lightning-collector", 2, 36)       # lightning protection everywhere (collector range 25)
-SPECIAL = [("Lightning power", "번개 수집기 12 + 축전지 408 (2 GJ) + 변전소", "12 lightning collectors + 408 accumulators (2 GJ) + substations"),
-           ("Scrap recycling + sorting ×4", "재활용기 16대씩(고철 초당 40), 12종 분류 + 넘침 줄", "16 recyclers each (40 scrap/s), sorts 12 items + an overflow lane"),
+SPECIAL = [("Scrap shelves ×2", "재활용기 16대 + 12종 분류 블록 2개씩, 고철 초당 80 (서쪽 벨트로 입력)", "two blocks of 16 recyclers + 12-item sorter each, 80 scrap/s (belts from the west)"),
            ("Secondary recycling", "톱니→철, 구리선→구리, 파랑 회로→초록 회로, LDS→플라스틱", "gears→iron, cable→copper, blue→green circuits, LDS→plastic"),
-           ("Rocket silo", "로켓 부품(고철의 파랑 회로·LDS + 로켓 연료) + 수출 상자", "rocket parts (blue circuits and LDS from scrap + rocket fuel) + export chests"),
-           ("Void ×2", "넘침 줄의 모든 것을 재활용기로 없앰", "recyclers destroy everything on the overflow lane"),
-           ("Lightning cover", "단지 전체에 번개 수집기를 36칸 간격으로 (보호 반경 25)", "lightning collectors every 36 tiles over the whole complex (range 25)")]
+           ("Voids ×4", "넘침 벨트의 모든 것을 재활용기로 없앰", "recyclers destroy everything on the overflow belts"),
+           ("Rocket silo", "로봇이 재료를 넣는 사일로; 수출은 화물 요청으로", "robot-fed silo; exports via its cargo requests"),
+           ("Lightning band", "단지 둘레 12×12 타일마다 번개 수집기 + 변전소 + 축전지 34 (170 MJ)", "around the base, each 12×12 tile: lightning collector + substation + 34 accumulators (170 MJ)"),
+           ("Lightning cover", "코어 안에도 번개 수집기를 36칸 간격으로", "lightning collectors every 36 tiles inside the core too")]
 
 
 def power_line(bp, lang):
     use, store = power_budget(bp)
     return (f"최대 전력 {use / 1000:,.0f} MW, 축전지 {store:,} MJ (번개는 폭풍 때만 들어옴)." if lang == "ko"
             else f"Peak power {use / 1000:,.0f} MW, accumulators {store:,} MJ (lightning arrives only in storms).")
+
+
+# ------------------------------------------------------------------------------------- the base (lib/base)
+HEIGHT = 32
+EXPORTS = ("electromagnetic-science-pack", "holmium-plate", "supercapacitor", "superconductor")
+
+
+def base(label="Fulgora all-in-one", tier="mid"):
+    """Rectangle base wrapped in a band of lightning tiles (collector + substation + 34 accumulators each, 12 x 12)
+    with more collectors over the core. Scrap comes in on belts from the west into two scrap shelves (two blocks of 16
+    recyclers + sorter each; the first also has the secondary recycler); everything sorted goes into provider
+    chests, leftovers ride the overflow belt into a void in the same shelf. Robots carry the rest; fluids (heavy
+    oil in, water / light oil / holmium solution / electrolyte made here) run in trunks along the west edge."""
+    from lib.base import build_base, Shelf, field_frame
+    from lib.planets.common import line_stacks, robot_silo
+    mod = __import__(__name__, fromlist=["x"])
+    void = lambda k: void_sink(TRASH, 4, tier, f"Void: overflow {k}", 12.0)
+    fixed = [Shelf([scrap_stack(1, tier), scrap_stack(2, tier), second_stack(tier), void(1), void(2)],
+                   ("scrap", "scrap", TRASH), dry=True),
+             Shelf([scrap_stack(3, tier), scrap_stack(4, tier), void(3), void(4)], ("scrap", "scrap", TRASH), dry=True)]
+    units = line_stacks(mod, HEIGHT, tier) + [robot_silo(tier)]
+    return build_base(label, units, frame=field_frame(), fixed=fixed, tier="blue")

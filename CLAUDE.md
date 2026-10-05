@@ -11,12 +11,12 @@
   the stacking table. Complex products get their intermediates from their own cells, not one big layout.
 - **Fluid cells** (lib/fstack.py): one recipe per cell, machines rotated so fluid inputs face the belts and outputs
   face the centre; each input fluid gets its own machine row (pipe-to-ground pairs must never share a row).
-- **Planet complexes** (lib/complex.py + lib/planets/<planet>.py): a bus with stacks on its north side, composed into
-  one blueprint. The composer plans every bus tap/crossing (underground spans per row), refuses collisions and lane
-  overloads, and adds a power spine. Producers must stand west of consumers.
-- **Aquilo (freezing)**: heated robot-fed cells (lib/hstack.py), plain-pipe fluid bus (`FLUID_PLAIN`), then
-  lib/heat.py fills/joins heat pipe to the heating towers and `check()` must be empty (every freezable entity has
-  warm heat pipe within one tile). Optional planet-module hooks: COVER, FLUID_PLAIN, POST, FINISH, CELL_STACK, CELL_GEO.
+- **Planet bases** (lib/base.py + lib/planets/<planet>.py `base()`): one compact rectangle like community planet bases,
+  never a planet-wide bus. Lines are split into equal-height stacks and packed into shelves; each shelf has a short
+  street for its own fluids (+ raw belt lanes where needed, e.g. scrap / stone); fluids join across shelves in west
+  trunks; items move between blocks by robots (`robotize`: requester → belt column, belt end → provider); raw ores
+  enter through gate blocks on the south edge; a frame per planet (Gleba wall + turrets, Fulgora lightning band,
+  Aquilo heat fill via lib/heat.py `check()` must be empty, Vulcanus none — demolishers).
 - House rules for new factories: horizontal main bus of 6-lane groups + 2 empty rows (`lib/main_bus.py`,
   docs/guides/main-bus-6x2.md); upgrade in place yellow→red→blue with the same layout (underground spans ≤4,
   no long-handed on bottlenecks, small-pole spacing, 2×2 furnaces; docs/guides/upgrade-in-place.md);

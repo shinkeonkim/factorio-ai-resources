@@ -15,12 +15,12 @@
     "stackable"
   ],
   "title": {
-    "ko": "불카누스 올인원 단지",
-    "en": "Vulcanus all-in-one complex"
+    "ko": "불카누스 올인원 기지",
+    "en": "Vulcanus all-in-one base"
   },
   "summary": {
-    "ko": "용암 → 용융 금속 → 주조·텅스텐·금속 과학 분당 360, 윤활유, 몰(주조기·대형 채굴기·터보 벨트), 전력 372 MW, 착륙장 수입·로켓 수출, 돌 처리까지 버스 하나에 쌓는 셀로.",
-    "en": "Lava → molten metals → castings, tungsten and 360 metallurgic science/min, lubricant, a mall (foundries, big drills, turbo belts), 372 MW of power, landing-pad imports, rocket exports and stone disposal — all stackable cells on one bus."
+    "ko": "직사각형 하나로 지은 불카누스 기지: 용암 선반(용융 금속 + 돌 처리) → 주조·텅스텐·금속 과학 분당 360, 윤활유, 몰(주조기·대형 채굴기·터보 벨트), 전력 372 MW, 남쪽 광석 입구, 로켓·착륙장. 블록 사이는 로봇, 유체는 서쪽 줄기 배관.",
+    "en": "Vulcanus base in one rectangle: a lava shelf (molten metals + stone disposal) → castings, tungsten and 360 metallurgic science/min, lubricant, a mall (foundries, big drills, turbo belts), 372 MW of power, a south ore gate, rocket and landing pad. Robots between blocks, fluids in trunks along the west edge."
   },
   "variants": [
     {
@@ -143,38 +143,45 @@
       }
     },
     {
-      "file": "variants/landing-pad.txt",
+      "file": "variants/rocket-silo.txt",
       "label": {
-        "ko": "착륙장 (수입)",
-        "en": "landing pad (imports)"
+        "ko": "로켓 사일로 (로봇 공급)",
+        "en": "rocket silo (robot-fed)"
       }
     },
     {
-      "file": "variants/rocket-silo-and-exports.txt",
-      "label": {
-        "ko": "로켓 사일로 + 수출 상자",
-        "en": "rocket silo + export chests"
-      }
-    },
-    {
-      "file": "variants/stone-sink.txt",
+      "file": "variants/stone-void.txt",
       "label": {
         "ko": "돌 처리 (재활용기)",
-        "en": "stone sink (recyclers)"
+        "en": "stone void (recyclers)"
+      }
+    },
+    {
+      "file": "variants/landing-pad.txt",
+      "label": {
+        "ko": "착륙장 (로봇 네트워크로 수입)",
+        "en": "landing pad (imports into the robot network)"
+      }
+    },
+    {
+      "file": "variants/raw-intake.txt",
+      "label": {
+        "ko": "남쪽 광석 입구 (벨트 → 공급 상자)",
+        "en": "south ore gate (belts → provider chests)"
       }
     }
   ],
   "default_label": {
-    "ko": "단지 전체 (버스 + 모든 줄)",
-    "en": "the whole complex (bus + every line)"
+    "ko": "기지 전체 (직사각형 코어 + 남쪽 광석 입구)",
+    "en": "the whole base (rectangle core + south ore gate)"
   },
   "outputs": [
     {
       "item": "metallurgic-science-pack",
       "per_minute": "360",
       "where": {
-        "ko": "로켓 수출 상자 (버스 동쪽 끝)",
-        "en": "rocket export chests (east end of the bus)"
+        "ko": "로봇 네트워크 → 로켓 화물 요청",
+        "en": "robot network → rocket cargo requests"
       }
     }
   ],
@@ -217,8 +224,8 @@
         "en": "2. Molten metals & castings"
       },
       "do": {
-        "ko": "용융 철·구리 줄과 철판·강철 주조. 용암은 버스 서쪽 끝 표시 자리에 해양 펌프로. 돌이 나오므로 돌 처리 줄도 같이 놓습니다(재활용 연구 전엔 상자에 쌓임).",
-        "en": "Molten iron/copper lines plus iron and steel casting. Lava from offshore pumps at the bus markers. They make stone, so place the stone sinks too (chests until recycling is researched)."
+        "ko": "용융 철·구리 줄과 철판·강철 주조. 용암은 북서쪽 줄기 배관 끝 표시에 해양 펌프로. 돌이 나오므로 같은 선반의 돌 처리 블록도 같이 놓습니다(재활용 연구 전엔 상자에 쌓임).",
+        "en": "Molten iron/copper lines plus iron and steel casting. Lava from offshore pumps at the trunk markers (north-west). They make stone, so place the stone voids on the same shelf too (chests until recycling is researched)."
       },
       "research": [
         "molten-iron-from-lava",

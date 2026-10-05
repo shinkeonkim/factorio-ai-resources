@@ -1,16 +1,15 @@
 """Gleba all-in-one complex, robot-fed: everything here spoils, so no item sits on a belt. Every machine has a
 requester chest (inputs, plus nutrients to burn in biochambers) and a passive provider chest (outputs, spoilage
-included); logistic robots do all the item moving. Only water comes in pipes (a fluid bus).
+included); logistic robots do all the item moving. Only water comes in pipes.
 
 Spoilage is fuel (250 kJ), so the heating towers that power the complex are also its spoilage sink. Pentapod
 eggs hatch into enemies when they spoil (15 min): the egg machines only take inputs while the network holds
 fewer than 40 eggs, so eggs never pile up.
 
-Sized for ~300 agricultural science/min: one science biochamber makes 0.75 packs/s (4 s, speed 2, +50 %)."""
+Sized for ~600 agricultural science/min: one science biochamber makes 0.75 packs/s (4 s, speed 2, +50 %)."""
 from lib.complex import Stack
 from lib.fbp import N, E, S, W
 from lib.fstack import FluidCell, as_stack, TIERS as FT
-from lib.planets.common import landing_pad_stack
 
 BUS_TIER = "blue"
 NUT = "nutrients"
@@ -36,12 +35,11 @@ C = {
     "rocket-fuel": _bio("Rocket fuel (jelly)", "rocket-fuel-from-jelly", 2),
 }
 
-LINES = [("yumako-processing", 1), ("jellynut-processing", 1), ("bioflux", 1), ("nutrients", 1), ("eggs", 2),
-         ("science", 2), ("iron-bacteria", 1), ("iron-cultivation", 1), ("iron-plate", 1), ("magazine", 1),
-         ("carbon", 1), ("carbon-fiber", 1), ("rocket-fuel", 1)]
-PLAN = LINES
-
-LAYOUT = [{"kind": "fluid", "lanes": ["water", "water", None, None, None, None]}]
+SCALE = 2           # the line counts below are for ~300 agricultural science/min; the base builds twice that
+LINES = [(k, n * SCALE) for k, n in [
+    ("yumako-processing", 1), ("jellynut-processing", 1), ("bioflux", 1), ("nutrients", 1), ("eggs", 2),
+    ("science", 2), ("iron-bacteria", 1), ("iron-cultivation", 1), ("iron-plate", 1), ("magazine", 1),
+    ("carbon", 1), ("carbon-fiber", 1), ("rocket-fuel", 1)]]
 
 
 def power_stack(units=2, tier="mid"):
@@ -122,47 +120,6 @@ def pad_stack(imports=("processing-unit", "low-density-structure"), tier="mid"):
     return Stack("Landing pad (robot network)", build, tier, [], {}, gap=4)
 
 
-def stacks(tier="mid"):
-    return ([power_stack(tier=tier)] + [as_stack(C[k], n, tier) for k, n in LINES] + [rocket_stack(tier), pad_stack(tier=tier)])
-
-
-def defend(bp, spacing=18, margin=6, tier="mid"):
-    """Gun-turret ring around the complex: every `spacing` tiles a turret, a requester chest for magazines and an
-    inserter, joined by medium poles. Pentapods attack polluted / spore areas; rocket or tesla turrets are the
-    next step once available."""
-    f = FT[tier]
-    xs = [k[0] for k in bp._grid]; ys = [k[1] for k in bp._grid]
-    x0, x1, y0, y1 = min(xs) - margin, max(xs) + margin, min(ys) - margin, max(ys) + margin
-    spots = []
-    for x in range(x0, x1 + 1, spacing):
-        spots += [(x, y0, S), (x, y1, N)]
-    for y in range(y0 + spacing, y1, spacing):
-        spots += [(x0, y, E), (x1, y, W)]
-    n = 0
-    for x, y, face in spots:
-        cells = [(x + i, y + j) for i in range(-2, 4) for j in range(-2, 4)]
-        if any(c in bp._grid for c in cells):
-            continue
-        bp.add("gun-turret", x, y)
-        bp.add(f["ins"], x + 2, y, E)                           # picks from the chest east of it
-        bp.add("requester-chest", x + 3, y, request_filters={"sections": [{"index": 1, "filters": [
-            {"index": 1, "name": "firearm-magazine", "quality": "normal", "comparator": "=", "count": 50}]}]})
-        bp.add("medium-electric-pole", x + 2, y + 1)
-        n += 1
-    # poles along the ring so every turret group is powered
-    for x in range(x0, x1 + 1, 8):
-        for y in (y0 + 2, y1 + 2):
-            if (x, y) not in bp._grid:
-                bp.add("medium-electric-pole", x, y)
-    for y in range(y0, y1 + 1, 8):
-        for x in (x0 + 2, x1 + 2):
-            if (x, y) not in bp._grid:
-                bp.add("medium-electric-pole", x, y)
-    return n
-
-
-POST = defend
-
 POWER_KW = {"biochamber": 500, "electric-furnace": 180, "assembling-machine-3": 375, "rocket-silo": 250,
             "roboport": 50, "fast-inserter": 46, "bulk-inserter": 79, "agricultural-tower": 200}
 
@@ -179,7 +136,22 @@ def power_line(bp, lang):
             else f"Peak power {use / 1000:,.0f} MW / turbines {gen / 1000:,.0f} MW (with enough heating-tower fuel).")
 
 
-SPECIAL = [("Power", "가열탑 2기 → 열교환기 8 → 터빈 16 (연료: 부패물·젤리넛)", "2 heating towers → 8 heat exchangers → 16 turbines (fuel: spoilage, jellynut)"),
+SPECIAL = [("Power ×2", "가열탑 2기 → 열교환기 8 → 터빈 16씩 (연료: 부패물·젤리넛)", "2 heating towers → 8 heat exchangers → 16 turbines each (fuel: spoilage, jellynut)"),
            ("Rocket silo", "로봇이 재료를 넣는 사일로; 수출은 화물 요청으로", "robot-fed silo; exports via its cargo requests"),
            ("Landing pad", "파랑 회로·LDS 수입", "imports blue circuits and LDS"),
-           ("Defence ring", "포탑 + 탄창 요청 상자를 단지 둘레에 18칸마다", "gun turret + magazine requester every 18 tiles around the complex")]
+           ("Defence ring", "돌벽 2겹 + 4칸마다 레이저 포탑, 세 번째마다 기관총 포탑(탄창 요청 상자)", "two rows of stone wall + a laser turret every 4 tiles, every third a gun turret with a magazine requester")]
+
+
+# ------------------------------------------------------------------------------------- the base (lib/base)
+HEIGHT = 30
+
+
+def base(label="Gleba all-in-one", tier="mid"):
+    """Rectangle base inside a wall: two rows of stone wall, laser turrets every 4 tiles with a gun turret (magazine
+    requester) every third spot; heating-tower power, every line as robot-fed stacks, silo and landing pad inside.
+    Water enters through the south wall (offshore pumps)."""
+    from lib.base import build_base, defence_frame
+    from lib.planets.common import line_stacks
+    units = [power_stack(tier=tier) for _ in range(SCALE)] + line_stacks(__import__(__name__, fromlist=["x"]), HEIGHT, tier)
+    units += [rocket_stack(tier), pad_stack(tier=tier)]
+    return build_base(label, units, frame=defence_frame(), tier="blue")

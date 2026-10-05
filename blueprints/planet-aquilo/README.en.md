@@ -1,6 +1,6 @@
-# Aquilo all-in-one complex
+# Aquilo all-in-one base
 
-> Heated, robot-fed stackable cells for the frozen planet: ammonia ocean → about 96 cryogenic science/min, rocket fuel, ice platforms, fusion power cells; heating-tower power that also keeps everything warm.
+> Aquilo base in one rectangle with heat pipe woven between every building: ammonia ocean → ammonia, ice, water, lithium, the fluoroketone loop → about 96 cryogenic science/min, ammonia rocket fuel, ice platforms, fusion power cells, heating-tower power that also keeps everything warm, rocket and landing pad. Generation checks that every building that freezes has heat pipe within one tile.
 
 [한국어](README.md)
 
@@ -8,7 +8,7 @@
 
 ![Preview](images/preview.webp)
 
-**Zoomed sections (west → east)**
+**Zoomed areas (north-west → south-east, row by row)**
 
 ![part-1](images/part-1.webp)
 ![part-2](images/part-2.webp)
@@ -18,8 +18,8 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 392×120 tiles |
-| Entities | 16296 |
+| Size | 226×164 tiles |
+| Entities | 18831 |
 | Main machines | `requester-chest` ×84<br>`chemical-plant` ×72 (ice-melting 32, ammoniacal-solution-separation 24, solid-fuel-from-ammonia 8, ammonia-rocket-fuel 8)<br>`passive-provider-chest` ×68<br>`cryogenic-plant` ×30 (cryogenic-science-pack 16, lithium 6, fluoroketone-cooling 4, fluoroketone 2, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
@@ -35,7 +35,7 @@ none
 | `fusion-power-cell` | ~24 | provider chests |
 | `ice-platform` | ~10 | provider chests |
 
-### Complex
+### Base layout
 
 | Line | Cell | Cells | Output (/min, late) | Inputs (/min, late) |
 |---|---|---:|---|---|
@@ -50,20 +50,19 @@ none
 | Rocket fuel (ammonia) | 27×10 | 2 | `rocket-fuel` 48 | `solid-fuel` 480, `water` (fluid) 2,400, `ammonia` (fluid) 24,000 |
 | Ice platform | 21×10 | 1 | `ice-platform` 10 | `ammonia` (fluid) 4,000, `ice` 500 |
 | Fusion power cell | 25×7 | 1 | `fusion-power-cell` 24 | `lithium-plate` 120, `holmium-plate` 24, `ammonia` (fluid) 2,400 |
-| Power + heat | - | - | 3 heating towers (ammonia rocket fuel, 300 MW of heat) → 12 exchangers → 24 turbines; the same heat pipes warm the whole complex | |
+| Power + heat | - | - | 3 heating towers (ammonia rocket fuel, 300 MW of heat) → 12 exchangers → 24 turbines; the same heat pipes warm the whole base | |
 | Rocket silo | - | - | robot-fed silo | |
 | Landing pad | - | - | imports holmium plates, blue circuits, LDS | |
 
-Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
+Shelves (bottom → top; long lines are split into stacks of equal height):
 
-| Group | Lanes |
+| Shelf | Blocks |
 |---|---|
-| 1 (fluid) | `ammoniacal-solution` (fluid), -, -, `ammonia` (fluid), -, - |
-| 2 (fluid) | `water` (fluid), -, -, `lithium-brine` (fluid), -, - |
-| 3 (fluid) | `fluorine` (fluid), -, -, `crude-oil` (fluid), -, - |
-| 4 (fluid) | `fluoroketone-hot` (fluid), -, -, `fluoroketone-cold` (fluid), -, - |
+| 1 | Power + heat: 3 heating towers, Ammonia + ice (separation) x3, Ammonia + ice (separation) x3, Water (ice melting) x3, Water (ice melting) x3, Cryogenic science x2, Cryogenic science x2 |
+| 2 | Water (ice melting) x2, Lithium x3, Lithium plate x2, Solid fuel (ammonia + crude oil) x2, Rocket fuel (ammonia) x2, Fluoroketone cooling x2, Landing pad (robot network) |
+| 3 | Ice platform x1, Fluoroketone (hot) x1, Fusion power cell x1, Rocket silo (robot-fed) |
 
-16,296 entities, 390 tiles wide. Peak power 71 MW / turbines 140 MW, heating load 101.7 MW. Every bus lane is checked at generation time against one lane's capacity (blue belt 45/s, pipe 1,200/s).
+Core 214×159 tiles, overall 226×164, 18,831 entities. Peak power 72 MW / turbines 140 MW, heating load 110.3 MW. Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a trunk along the west edge that joins it in every shelf.
 
 ### Roadmap
 
@@ -78,14 +77,14 @@ Bus (top → bottom, 6 lanes + 2 empty rows per group; fluids at the bottom):
 
 **Build next**
 
-- [Gleba all-in-one complex](../planet-gleba/README.en.md) — the planet that makes carbon fiber (foundation)
-- [Vulcanus all-in-one complex](../planet-vulcanus/README.en.md) — tungsten and foundries
+- [Gleba all-in-one base](../planet-gleba/README.en.md) — the planet that makes carbon fiber (foundation)
+- [Vulcanus all-in-one base](../planet-vulcanus/README.en.md) — tungsten and foundries
 
 ### Files
 
 | File | Description |
 |---|---|
-| [`blueprint.txt`](blueprint.txt) | the whole complex (fluid bus + every line + power and heat) |
+| [`blueprint.txt`](blueprint.txt) | the whole base (heated core + power) |
 | [`variants/ammonia.txt`](variants/ammonia.txt) | Ammonia + ice (separation) — cap + 1 cell |
 | [`variants/water.txt`](variants/water.txt) | Water (ice melting) — cap + 1 cell |
 | [`variants/lithium.txt`](variants/lithium.txt) | Lithium — cap + 1 cell |
@@ -117,6 +116,14 @@ python3 tools/build.py planet-aquilo
 
 <!-- AUTO:END -->
 
+## Shape
+
+Community planet bases don't run a bus across the planet. They pack production into one dense rectangle and put power and defence around its edge (see the community designs below). This base is built the same way (`lib/base.py`).
+
+- **Shelves**: every line is split into blocks of equal height (stacks of stackable cells) packed side by side into horizontal shelves. The shelves stack up into the rectangle. The packer picks the width that leaves the fewest empty tiles.
+- **Robots between blocks**: every block input gets requester chest → inserter → belt, and every output gets belt end → inserter → provider chest. Belts stay inside blocks, and roboports cover the core on a 40-tile grid.
+- **Fluids in west trunks**: each shelf lays only the fluids it uses, on a short street under it. A vertical trunk per fluid along the west edge joins that fluid across all shelves. External fluids enter at the north end of their trunk (constant-combinator marker).
+
 ## Heating (not freezing)
 
 On Aquilo a building freezes and stops unless a heat source above 30 °C is **within one tile (diagonals included)**. Chests, poles and turrets never freeze.
@@ -124,17 +131,17 @@ On Aquilo a building freezes and stops unless a heat source above 30 °C is **wi
 - The cells (`lib/hstack.py`) come with their own heat-pipe columns and rows. Every machine, inserter, pipe and pipe-to-ground has heat pipe next to it.
 - Each fluid main hops once per cell with a pipe-to-ground pair, and the heat pipe crosses under it there. That joins the heat on both sides of the main.
 - After composing, `lib/heat.py` fills the remaining gaps with heat pipe and joins it to the power block's heating towers. Pieces that cannot be joined are removed. It then checks that **every building that freezes has warm heat pipe within one tile**. Generation stops if the check fails, so every string in the repository passes it.
-- The fluid bus uses plain pipes, not pipe-to-ground, because each pipe-to-ground draws 150 kW of heat. Lines are two rows apart, which leaves room for heat pipe between them.
-- The heat needed to keep everything warm is in the table above (about 100 MW). Three heating towers give about 300 MW of heat (40 MW consumption × 250 %). With the steam for about 70 MW of electricity on top, the total is about 170 MW, so there is headroom. They burn about 42 rocket fuel/min, and the complex makes 48.
+- The fluid streets and the west trunks use plain pipes, not pipe-to-ground, because each pipe-to-ground draws 150 kW of heat. Lines are two rows apart, which leaves room for heat pipe between them.
+- The heat needed to keep everything warm is in the table above (about 110 MW). Three heating towers give about 300 MW of heat (40 MW consumption × 250 %). With the steam for about 72 MW of electricity on top, the total is about 180 MW, so there is headroom. They burn about 44 rocket fuel/min, and the base makes 48.
 - The turbine water (about 700/s) is melted ice, which is why there are 8 water cells and 6 ammonia-separation cells. The separation cells make slightly less ammonia than the lines use, because surplus ammonia would back up and stop the ice as well.
 
 ## Why robots
 
-Belts freeze too (10 kW per tile), and heating a belt bus needs far too much heat pipe. Chests do not freeze. So every machine has **requester chest → inserter → machine → inserter → provider chest**, and robots carry everything. Every line has a roboport in its cap, and the roboports are heated as well.
+Belts freeze too (10 kW per tile), and heating long belts needs far too much heat pipe. Chests do not freeze. So every machine has **requester chest → inserter → machine → inserter → provider chest**, and robots carry everything. Every line has a roboport in its cap, and the roboports are heated as well.
 
 ## Inputs
 
-Connect to the markers at the west end (constant combinators, count = per minute).
+Connect to the markers at the north end of the trunks, north-west (constant combinators, count = per minute).
 
 - **Ammoniacal solution**: an offshore pump on the ammonia ocean.
 - **Crude oil, lithium brine, fluorine**: pumpjacks on their vents. Pumpjacks freeze too, so put heat pipe beside them.
@@ -142,14 +149,14 @@ Connect to the markers at the west end (constant combinators, count = per minute
 
 ## Growing it
 
-Every line is a stackable cell. For more science, paste a `variants/science.txt` cell one period above the science line. Its heat-pipe columns join the cell below. Grow the lithium-plate and cooling lines the same way. A bus lane over capacity (pipe 1,200/s) is a generation-time warning.
+Every line is a stackable cell. For more science, paste a `variants/science.txt` cell one period above the science line. Its heat-pipe columns join the cell below. Grow the lithium-plate and cooling lines the same way. A street lane over capacity (pipe 1,200/s) is a generation-time warning.
 
 ## Known limits
 
 - The heating towers burn rocket fuel. Start them by hand.
 - Aquilo has no ground enemies. Asteroids only matter in space.
-- The pumpjacks and the offshore pump sit outside the complex, so heat them separately.
+- The pumpjacks and the offshore pump sit outside the base, so heat them separately.
 
 ## Community design consulted (its strings are not in this repository)
 
-- "Aquilo full production" (https://factorioprints.com/view/-OC9hBfLsZy61BDATFg1)
+- "Aquilo full production" — 열 배관을 모든 건물 사이에 엮은 직사각형, 전력은 한쪽 구석 / heat pipe woven through one rectangle, power in a corner (https://factorioprints.com/view/-OC9hBfLsZy61BDATFg1)

@@ -1,5 +1,5 @@
-"""Compose a planet complex: a horizontal bus (6-lane groups + 2 gap rows, fluid groups at the bottom) with
-stacks of cells standing on its north side, generated as one blueprint.
+"""Compose one shelf of a planet base (lib/base.py): a short horizontal street (6-lane groups + 2 gap rows, fluid
+groups at the bottom) with stacks of cells standing on its north side.
 
 * Raw lanes start at the west end (x = 0) with a constant-combinator marker: those are the external inputs.
 * Each cap input (a marker at the bottom of the stack) is tapped from a lane of that item that starts west of
@@ -52,9 +52,11 @@ def _read(stack):
 
 
 def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=lambda x: True, cover=None,
-            fluid_plain=False):
+            fluid_plain=False, fluid_west=False):
     """cover = (entity, size, spacing): after composing, scatter that entity (e.g. lightning collectors on Fulgora)
-    over the whole area on a `spacing` grid, each on the nearest free size x size spot."""
+    over the whole area on a `spacing` grid, each on the nearest free size x size spot.
+    fluid_west=True: every fluid lane starts at the west end without a marker (lib/base joins it to a trunk there);
+    producers feed into it like a second source. report["fluid_rows"] = [(fluid, row, load, supply)]."""
     belt, ug, spl = BUS_TIER[tier]
     bp = Blueprint(label, game="2.0")
     G = [y_bus + PITCH * g for g in range(len(layout))]
@@ -65,7 +67,7 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
                 lanes.append(dict(item=item, g=g, i=i, row=G[g] + i, kind=grp["kind"], src=None, taps=[], load=0.0, supply=None))
     produced = {p[0] for s in stacks for p in s.products}
     for ln in lanes:
-        if ln["item"] not in produced:
+        if ln["item"] not in produced or (fluid_west and ln["kind"] == "fluid"):
             ln["src"] = 0
     # ---- stacks
     x = 6                                       # room for the west-end markers and first taps
@@ -255,8 +257,9 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
         others = [l2 for l2 in fl if l2["g"] == ln["g"] and l2["i"] > ln["i"]]
         avoid = {t for l2 in others for t in l2["taps"]} | {l2["src"] for l2 in others if l2["src"]}
         _fluid_line(bp, ln, x_end, avoid, G, cap_bottom, fluid_plain)
-        if ln["src"] == 0:
+        if ln["src"] == 0 and not fluid_west:
             bp.add_marker(-1, ln["row"], {ln["item"]: 0})
+    report["fluid_rows"] = [(l["item"], l["row"], l["load"], l["supply"] or 0) for l in fl]
     cap = {"solid": LANE_PER_S[tier], "fluid": FLUID_PER_S}
     report["warnings"] = [f"lane {l['item']} (group {l['g']}, row {l['i']}): demand {l['load']:.1f}/s > {cap[l['kind']]:.0f}/s"
                           for l in lanes if l["load"] > cap[l["kind"]] * 1.0001]

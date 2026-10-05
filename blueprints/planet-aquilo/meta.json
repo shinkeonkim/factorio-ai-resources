@@ -17,12 +17,12 @@
     "heating"
   ],
   "title": {
-    "ko": "아킬로 올인원 단지",
-    "en": "Aquilo all-in-one complex"
+    "ko": "아킬로 올인원 기지",
+    "en": "Aquilo all-in-one base"
   },
   "summary": {
-    "ko": "얼어붙는 행성용 보온·로봇 공급 쌓는 셀: 암모니아 바다 → 암모니아·얼음·물, 리튬, 플루오로케톤 순환 → 극저온 과학 분당 약 96, 암모니아 로켓 연료, 얼음 플랫폼, 핵융합 전지, 가열탑 전력 겸 보온, 로켓·착륙장까지. 어는 건물마다 열 배관이 1칸 안에 있는지 생성할 때 검사합니다.",
-    "en": "Heated, robot-fed stackable cells for the frozen planet: ammonia ocean → ammonia, ice, water, lithium, the fluoroketone loop → about 96 cryogenic science/min, ammonia rocket fuel, ice platforms, fusion power cells, heating-tower power that also keeps everything warm, rocket and landing pad. Generation checks that every building that freezes has heat pipe within one tile."
+    "ko": "직사각형 하나로 지은 아킬로 기지, 열 배관이 모든 건물 사이를 지남: 암모니아 바다 → 암모니아·얼음·물, 리튬, 플루오로케톤 순환 → 극저온 과학 분당 약 96, 암모니아 로켓 연료, 얼음 플랫폼, 핵융합 전지, 가열탑 전력 겸 보온, 로켓·착륙장. 어는 건물마다 열 배관이 1칸 안에 있는지 생성할 때 검사합니다.",
+    "en": "Aquilo base in one rectangle with heat pipe woven between every building: ammonia ocean → ammonia, ice, water, lithium, the fluoroketone loop → about 96 cryogenic science/min, ammonia rocket fuel, ice platforms, fusion power cells, heating-tower power that also keeps everything warm, rocket and landing pad. Generation checks that every building that freezes has heat pipe within one tile."
   },
   "variants": [
     {
@@ -125,8 +125,8 @@
     }
   ],
   "default_label": {
-    "ko": "단지 전체 (유체 버스 + 모든 줄 + 전력·보온)",
-    "en": "the whole complex (fluid bus + every line + power and heat)"
+    "ko": "기지 전체 (보온 코어 + 전력)",
+    "en": "the whole base (heated core + power)"
   },
   "outputs": [
     {
