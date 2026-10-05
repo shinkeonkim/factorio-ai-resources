@@ -21,7 +21,8 @@
   docs/guides/main-bus-6x2.md); upgrade in place yellow→red→blue with the same layout (underground spans ≤4,
   no long-handed on bottlenecks, small-pole spacing, 2×2 furnaces; docs/guides/upgrade-in-place.md);
   water via Waterfill (mark the inlet, no long water pipes).
-- Analysing a blueprint/book: `python3 tools/analyze_blueprint.py <file>` (tiers, upgrade check, I/O).
+- Analysing a blueprint/book: `python3 tools/analyze_blueprint.py <file>` (tiers, upgrade check, I/O); how a design
+  works (density, inserter flows, circuits, inputs, power, defence): `skills/factorio-blueprint/scripts/study.py`.
 - Every external input gets a constant-combinator marker (`bp.add_marker`), count = per minute.
 - Write both `README.md` (Korean) and `README.en.md` (English); keep prose outside the AUTO block.
 - Every blueprint's meta.json has a `roadmap` (stages; `research` = recipe names, resolved to technologies by

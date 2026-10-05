@@ -61,6 +61,8 @@ free tile of that inserter row.
 | one recipe fed from a bus | assembler row between belts (§6) |
 | fluid recipes | §7 |
 | whole chain (e.g. red science from plates) | stack modules vertically, joined by straight belts; or one row with direct insertion |
+| mall, "make everything", planet / all-in-one base | one dense rectangle of islands — `references/base-design.md` (not a bus of modules) |
+| item counts must not pile up / machines must switch recipes | circuit and logistic conditions — `references/circuits.md`, `examples/dynamic_mall_cell.py` |
 
 Size the build with `calc.py` first; build one tileable slice and repeat it.
 

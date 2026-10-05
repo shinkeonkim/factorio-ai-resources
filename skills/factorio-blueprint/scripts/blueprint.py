@@ -164,7 +164,7 @@ _ELECTRIC_TYPES = {
     "assembling-machine", "furnace", "mining-drill", "inserter", "lab", "beacon", "radar",
     "lamp", "pump", "roboport", "electric-turret", "rocket-silo", "offshore-pump",
     "agricultural-tower", "asteroid-collector", "arithmetic-combinator", "decider-combinator",
-    "selector-combinator", "programmable-speaker", "display-panel", "assembling-machine",
+    "selector-combinator", "programmable-speaker", "assembling-machine",   # display panels need no power
 }
 _NOT_ELECTRIC = {"stone-furnace", "steel-furnace", "burner-mining-drill", "burner-inserter",
                  "offshore-pump", "captive-biter-spawner", "pumpjack-burner"}
@@ -318,6 +318,18 @@ class Blueprint:
         else:
             cb = {"filters": filters}
         return self.add("constant-combinator", x, y, direction, control_behavior=cb)
+
+    def add_panel(self, x: int, y: int, icon: str, text: str = "", direction: str = N) -> int:
+        """Display panel (2.0 only) showing an item/fluid icon and text on the map, e.g. at an input:
+        add_panel(x, y, "scrap", "Input"). Shape copied from community bases; no power or wires needed."""
+        if self.game != "2.0":
+            raise ValueError("display panels exist only in 2.0")
+        sig_type = _signal_type(icon)
+        ic = {"name": icon} if sig_type == "item" else {"type": sig_type, "name": icon}
+        fields = {"icon": ic, "always_show": True}
+        if text:
+            fields["text"] = text
+        return self.add("display-panel", x, y, direction, **fields)
 
     def add_tile(self, name: str, x: int, y: int):
         self.tiles.append({"name": name, "position": {"x": x, "y": y}})

@@ -1,6 +1,6 @@
 ---
 name: factorio-blueprint
-description: Design Factorio production setups and output importable blueprint strings. Computes recipe ratios (machines, belts, raw inputs) from real game data, lays out entities on a grid with a builder that handles positions/directions/wires/modules, validates overlaps and power coverage, and encodes to the "0eN..." string. Also decodes, explains, and edits existing blueprint strings. Use this whenever the user mentions Factorio blueprints, blueprint strings, build ratios, "how many assemblers/furnaces/drills", a factory module (green circuits, science, smelting, mining outpost, oil), Space Age builds, or pastes a string starting with "0eN" — even if they don't say the word "blueprint". Korean triggers too: 팩토리오, 블루프린트, 청사진, 생산 비율, 조립기 몇 대, 설계도 문자열.
+description: Design Factorio production setups and output importable blueprint strings. Computes recipe ratios (machines, belts, raw inputs) from real game data, lays out entities on a grid with a builder that handles positions/directions/wires/modules, validates overlaps and power coverage, and encodes to the "0eN..." string. Also decodes, explains, studies (how a community design works) and edits existing blueprint strings, and designs dense all-in-one / planet bases and malls the way top community prints do (circuit-gated, self-powered, defended). Use this whenever the user mentions Factorio blueprints, blueprint strings, build ratios, "how many assemblers/furnaces/drills", a factory module (green circuits, science, smelting, mining outpost, oil), a mall or all-in-one / planet base, circuit conditions, Space Age builds, or pastes a string starting with "0eN" — even if they don't say the word "blueprint". Korean triggers too: 팩토리오, 블루프린트, 청사진, 생산 비율, 조립기 몇 대, 설계도 문자열, 몰, 올인원, 행성 기지, 회로 조건.
 ---
 
 # Factorio Blueprint
@@ -12,9 +12,14 @@ Everything lives next to this file:
 - `scripts/calc.py` — ratio calculator over the real recipe data (vanilla 2.x or Space Age)
 - `scripts/tech.py` — which research unlocks a recipe, its science packs and prerequisite chain (`--plan` merges several)
 - `scripts/blueprint.py` — encode/decode, `Blueprint` builder, `validate()`, ASCII preview, CLI
-- `examples/*.py` — validated layouts to start from (green circuits 3:2, smelting column, mining outpost)
+- `scripts/study.py` — how a design works: size, density, inserter flows (direct insertion, robots…),
+  circuits used, labelled inputs, power, defence, coarse map. Use it on community prints and on your own output
+- `examples/*.py` — validated layouts to start from (green circuits 3:2, smelting column, mining outpost,
+  dynamic mall cell with circuits)
 - `references/blueprint-format.md` — string/JSON spec, 2.0 vs 1.1 differences, wires, modules, fluid ports
 - `references/layout-patterns.md` — game mechanics that break designs + layout patterns
+- `references/base-design.md` — how top community all-in-one / planet bases and malls are built (measured)
+- `references/circuits.md` — exact 2.0 JSON for circuit / logistic conditions, readers, dynamic recipes, alarms
 - `data/` — recipes (extracted from wube/factorio-data 2.1), technology unlocks (`tech-unlocks.json`), entity footprints, machine/belt/pole stats
 
 Use `python3` with absolute paths to these files (`SKILL_DIR` below = this directory).
@@ -56,7 +61,8 @@ than one belt, the layout must deliver it from two belts/sides.
 
 ### 3. Choose a layout
 Read `references/layout-patterns.md` (at least §1 mechanics and the pattern you need). Start from the
-closest `examples/*.py` when one fits. Decide: which belts enter where, lane usage, how many tileable
+closest `examples/*.py` when one fits. **Anything bigger than one module** (a mall, "make everything",
+a planet base, an all-in-one) follows "Designing a big base" below instead of chaining modules on a bus. Decide: which belts enter where, lane usage, how many tileable
 slices, where poles go. Check inserter throughput against per-machine rates (§1) — this is where
 paper-valid designs fail in practice.
 
@@ -103,7 +109,8 @@ what to connect where and how much — the blueprint carries its own documentati
 - Constant combinators need no power and connect to nothing; they're labels only. Don't wire them.
 - Mention the markers in the answer (position + signal + count), and `blueprint.py info` lists them when
   decoding.
-Outputs don't need markers unless the user asks.
+Outputs don't need markers unless the user asks. On big bases also put a display panel at each input
+(`bp.add_panel(x, y, "scrap", "Input")`, no power needed) — that is how community bases label their edges.
 
 ### 5. Verify before answering
 - `report()` must say `Validation: OK`. If it lists problems, fix the layout (move/add poles, fix
@@ -122,11 +129,34 @@ Outputs don't need markers unless the user asks.
 5. Ratio table from calc.py (condensed) when the user asked about rates.
 Write the answer in the user's language.
 
+## Designing a big base (mall, all-in-one, planet base)
+
+Community bases that people actually use are not modules strung along a bus. Read `references/base-design.md`
+(measured from top factorioprints designs) and follow its checklist:
+1. **Study first.** If the user names or pastes reference prints, run `scripts/study.py <file> --map 3` on
+   them and say what you take over (shape, inputs, flow mix, circuits). base-design.md §12 shows how to pull
+   top-rated prints from factorioprints for analysis (keep their strings out of any repo).
+2. **Shape**: one dense rectangle; few inputs, all on the edge, each ending in an underground belt /
+   pipe-to-ground with a marker + display panel; waste has a way out (void or exit belt).
+3. **Inside**: rows of machines between two belts (4 lanes, long-handed for the far belt), direct insertion
+   where one machine feeds one consumer, fluids produced next to their consumers (no fluid main across the
+   base). Belts for volume, robots (requester / buffer chests) for the many low-volume items.
+4. **Control**: gate every output that can pile up with a logistic condition, crack oil by tank level, burn
+   fuel by accumulator charge, add an alarm where the base can starve (`references/circuits.md`). A mall
+   that makes dozens of items uses the dynamic-mall cell (`examples/dynamic_mall_cell.py`).
+5. **Power and frame**: power that restarts itself (heating towers / turbines gated by accumulators, solar);
+   the planet's frame (Gleba mines + walls + turrets with ammo requesters, Fulgora lightning rods +
+   accumulators, Aquilo heat pipes everywhere, Vulcanus none — build outside demolisher territory).
+6. **Measure your result** with `study.py`: density ≥ 0.3 in the core, direct insertion where recipes chain,
+   no empty streets. Write the description the way community prints do: makes / needs (rates) / how to start
+   (robots, fuel, seeds, eggs).
+
 ## House rules when working in factorio-ai-resources
 
 The repo's `docs/guides/` define how new factories should look; follow them unless the user says otherwise:
-- **Main bus**: horizontal, groups of 6 lanes separated by 2 empty rows; branches leave north with the
-  kit in `lib/main_bus.py` (`segment`, `tap`, `crossing`).
+- **Main bus** (for a Nauvis-style factory of modules, not for planet bases / malls): horizontal, groups of
+  6 lanes separated by 2 empty rows; branches leave north with the kit in `lib/main_bus.py`.
+- **Planet bases / malls**: one rectangle per "Designing a big base" above (`lib/base.py` composes one).
 - **Upgrade in place**: one layout for early → late — underground spans ≤ 4, no long-handed inserters on
   throughput bottlenecks, pole spacing valid for small poles, 2×2 furnaces, fluid recipes on AM2+.
 - **Water**: Waterfill is used; mark the water inlet with a marker instead of long pipes.
@@ -149,6 +179,7 @@ Shared generator code belongs in `lib/`; third-party inputs in git-ignored `thir
 
 ```bash
 python3 SKILL_DIR/scripts/blueprint.py info  "<string or file>"   # summary, counts, ASCII map, validation
+python3 SKILL_DIR/scripts/study.py "<file>" --top 4 --map 3      # how it works: flows, circuits, inputs, power
 python3 SKILL_DIR/scripts/blueprint.py decode "<string>" > bp.json
 # edit bp.json (or load with json in Python and modify)
 python3 SKILL_DIR/scripts/blueprint.py encode bp.json
@@ -186,7 +217,8 @@ Blueprint books (`blueprint_book`) contain `blueprints: [{index, blueprint}]` �
   you copy the exact positions from a user-provided blueprint. When the user wants stations added to a
   rail block, ask them to lay the branch + station track in-game and send it; then add stops, signals,
   chests, inserters and circuits around the given track.
-- Complex circuit-network logic (combinator `control_behavior`): generate the entities and wires, but
-  recommend the user set conditions in-game unless you have a decoded example of the exact JSON shape.
+- Circuit logic: the shapes in `references/circuits.md` are decoded from working community prints —
+  generate those directly (and the wires). For anything not listed there, generate the entities and wires,
+  and ask the user to set the condition in-game or to export an example to decode.
 - Modded items/entities: names aren't in `data/`; pass `size=(w, h)` to `add()` if you know the footprint,
   otherwise ask the user for a sample blueprint containing that entity and decode it.
