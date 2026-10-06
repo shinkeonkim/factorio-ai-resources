@@ -17,9 +17,9 @@
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
-| 크기 | 145×98 타일 |
-| 엔티티 | 3240 |
-| 주요 설비 | `requester-chest` ×249<br>`passive-provider-chest` ×120<br>`biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, burnt-spoilage 8, carbon-fiber 8, iron-bacteria-cultivation 8, jellynut-processing 4, nutrients-from-bioflux 4, iron-bacteria 4)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
+| 크기 | 124×89 타일 |
+| 엔티티 | 2404 |
+| 주요 설비 | `biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, iron-bacteria-cultivation 8, burnt-spoilage 8, carbon-fiber 8, iron-bacteria 4, jellynut-processing 4, nutrients-from-bioflux 4)<br>`requester-chest` ×95<br>`passive-provider-chest` ×60<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
 ### 입력
@@ -58,11 +58,10 @@
 
 | 선반 | 블록 |
 |---|---|
-| 1 | Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Pentapod eggs x2, Pentapod eggs x2 |
-| 2 | Rocket fuel (jelly) x2 |
-| 빈자리 채움 | Agricultural science x4, Yumako processing x2, Jellynut processing x2, Bioflux x2, Nutrients x2, Carbon (burnt spoilage) x2, Carbon fiber x2, Iron bacteria x2, Iron bacteria cultivation x2, Iron plates (bacteria ore) x2, Firearm magazines x2, Rocket silo (robot-fed), Landing pad (robot network) |
+| 1 | Pentapod eggs x24 (dense), Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Rocket fuel (jelly) x8 (dense) |
+| 빈자리 채움 | Agricultural science x16 (dense), Iron bacteria x4 + Iron bacteria cultivation x8 + Iron plates (bacteria ore) x8 + Firearm magazines x4 (dense), Yumako processing x12 + Jellynut processing x4 (dense), Bioflux x12 + Nutrients x4 (dense), Carbon (burnt spoilage) x8 + Carbon fiber x8 (dense), Rocket silo (robot-fed), Landing pad (robot network) |
 
-코어 113×73칸, 전체 145×98칸, 3,240개 엔티티, 밀도 0.23 · 타일 점유율 0.38 (참고 커뮤니티 기지: 0.24–0.44 · 0.55–0.82). 최대 전력 74 MW / 터빈 186 MW (가열탑 연료가 충분할 때).
+코어 92×64칸, 전체 124×89칸, 2,404개 엔티티, 밀도 0.22 · 타일 점유율 0.40 (참고 커뮤니티 기지: 0.24–0.44 · 0.55–0.82). 최대 전력 72 MW / 터빈 186 MW (가열탑 연료가 충분할 때).
 
 ### 로드맵
 

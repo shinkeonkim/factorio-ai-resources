@@ -80,11 +80,12 @@ from lib.fstack import stack as fstack, late_rates, TIERS as FT
 from lib.planets.common import void_sink
 
 
-def power_stack(turbine_cols=8, turbines_per_col=8, tier="mid"):
+def power_stack(turbine_cols=8, turbines_per_col=8, tier="mid", bots=False):
     """Acid neutralisation (2 chemical plants, 4,000 steam/s at 500 C) under a field of steam turbines.
     Steam rises up the centre pipe into a header; each column is a chain of turbines (their ports pass steam
-    through vertically). 64 turbines x 5.82 MW = 372 MW. Inputs: calcite (belt) and sulfuric acid (main)."""
-    cell = C["steam"]
+    through vertically). 64 turbines x 5.82 MW = 372 MW. Inputs: calcite (belt, or a requester chest when
+    bots=True) and sulfuric acid (main)."""
+    cell = dataclasses.replace(C["steam"], bots=True, inner=(None, None), outer=None) if bots else C["steam"]
 
     def build(bp, t):
         fstack(bp, cell, t, 1, late_rates(cell))
@@ -140,7 +141,7 @@ def power_line(bp, lang):
 
 
 # ------------------------------------------------------------------------------------- the base (lib/base)
-HEIGHT = 40
+HEIGHT = (24, 30, 36, 44, 52)
 LINES = PLAN
 
 
@@ -196,7 +197,7 @@ def islands():
                                        (bot("low-density-structure"), 1)], waste=stone),
         Island("Mall", [(bot("molten-iron", True), 1), (bot("heavy-oil"), 1), (C["lubricant"], 1)] + [(bot(k), 1) for k in mall],
                waste=stone),
-        Island("Power", [], extra=[lambda t: power_stack(tier=t), solar_bootstrap]),
+        Island("Power", [], extra=[lambda t: power_stack(16, 4, tier=t, bots=True), solar_bootstrap]),
         Island("Rocket", [], extra=[robot_silo, lambda t: robot_pad(IMPORTS, t)]),
     ]
 

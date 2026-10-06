@@ -95,7 +95,7 @@ def power_line(bp, lang):
 
 
 # ------------------------------------------------------------------------------------- the base (lib/base)
-HEIGHT = 32
+HEIGHT = (24, 30, 36, 44, 52)
 EXPORTS = ("electromagnetic-science-pack", "holmium-plate", "supercapacitor", "superconductor")
 
 

@@ -11,16 +11,15 @@
 **Zoomed areas (north-west → south-east, row by row)**
 
 ![part-1](images/part-1.webp)
-![part-2](images/part-2.webp)
 
 <sub>Images rendered with [Factorio Blueprint Editor](https://fbe.factorygamefan.com) (game graphics © Wube Software)</sub>
 
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 221×192 tiles |
-| Entities | 4367 |
-| Main machines | `requester-chest` ×141<br>`passive-provider-chest` ×129<br>`foundry` ×70 (tungsten-plate 20, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 8, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×26<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`steel-chest` ×5<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
+| Size | 205×156 tiles |
+| Entities | 3453 |
+| Main machines | `passive-provider-chest` ×90<br>`foundry` ×70 (tungsten-plate 20, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 8, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2, big-mining-drill 2)<br>`requester-chest` ×66<br>`recycler` ×26<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`steel-chest` ×5<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -29,10 +28,10 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `calcite` | 412 | (15, 190) |
-| `coal` | 2,400 | (19, 190) |
-| `tungsten-ore` | 1,860 | (23, 190) |
-| `tungsten-ore` | 1,860 | (27, 190) |
+| `calcite` | 412 | (15, 154) |
+| `coal` | 2,400 | (19, 154) |
+| `tungsten-ore` | 1,860 | (23, 154) |
+| `tungsten-ore` | 1,860 | (27, 154) |
 
 ### Outputs
 
@@ -71,12 +70,12 @@ Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fil
 
 | Shelf | Blocks |
 |---|---|
-| 1 | Power: acid neutralisation + 64 turbines, Molten iron x2, Iron plates x2, Steel x2, Tungsten plate x3, Tungsten plate x2, Stone void (15/s) |
-| 2 | Molten copper x3, Molten copper x3, Molten iron x1, Carbon x3, Tungsten carbide x3, Metallurgic science x5, Low density structure x1, Stone void (22/s), Stone void (22/s), Stone void (22/s) |
-| 3 | Molten iron x1, Heavy oil (simple coal liquefaction) x1, Lubricant x1, Mall: foundry x1, Mall: big mining drill x1, Mall: turbo belt x1, Mall: turbo underground x1, Mall: turbo splitter x1, Stone void (8/s) |
+| 1 | Power: acid neutralisation + 64 turbines, Molten iron x2, Iron plates x4 + Steel x4 + Tungsten plate x2 (dense), Tungsten plate x10 (dense), Tungsten plate x8 (dense), Stone void (15/s) |
+| 2 | Molten copper x3, Molten copper x3, Molten iron x1, Low density structure x1, Carbon x16 (dense), Carbon x2 + Tungsten carbide x12 (dense), Metallurgic science x10 (dense), Stone void (22/s), Stone void (22/s), Stone void (22/s) |
+| 3 | Molten iron x1, Heavy oil (simple coal liquefaction) x1, Lubricant x1, Mall: foundry x2 + Mall: turbo belt x2 + Mall: turbo underground x2 + Mall: turbo splitter x2 (dense), Mall: big mining drill x2 (dense), Stone void (8/s) |
 | gap fill | Solar restart kit, Rocket silo (robot-fed), Landing pad (imports into the robot network) |
 
-Core 215×185 tiles, overall 221×192, 4,367 entities, density 0.10 · tile coverage 0.19 (community references: 0.24–0.44 · 0.55–0.82). Peak power 208 MW / generated 372 MW.
+Core 199×149 tiles, overall 205×156, 3,453 entities, density 0.11 · tile coverage 0.22 (community references: 0.24–0.44 · 0.55–0.82). Peak power 206 MW / generated 372 MW.
 
 ### Roadmap
 

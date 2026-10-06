@@ -92,10 +92,16 @@ def split_line(cell, n, height, make, tier="mid", max_cells=None):
     return [make(cell, s, tier) for s in sizes if s]
 
 
+def default_make(c, n, t):
+    """dense robot-fed column when the recipe fits one (lib/dense.py), else a compact stackable fluid cell"""
+    from lib.fstack import as_stack
+    from lib.dense import dense_stack, fits
+    return dense_stack(c, n * c.n, t) if fits(c) else as_stack(c, n, t, compact=True)
+
+
 def island_parts(isl: Island, k, height, tier, outside):
     """Split an island into k self-sufficient parts. `outside` = items consumed by other islands."""
-    from lib.fstack import as_stack
-    make = isl.make or (lambda c, n, t: as_stack(c, n, t, compact=True))
+    make = isl.make or default_make
     parts = []
     for i in range(k):
         stacks = []
@@ -114,15 +120,34 @@ def island_parts(isl: Island, k, height, tier, outside):
             for (cell, n), fm in zip(isl.lines, fluid_maker):
                 if fm and set(cell.fluids_out) & consumed and not set(cell.fluids_in) <= consumed:
                     consumed |= set(cell.fluids_in); grow = True
+        from lib.dense import fits, column_key, dense_column
+        columns = {}                                        # dense-capable lines share columns by (size, fluid)
         for idx, ((cell, n), ni, fm) in enumerate(zip(isl.lines, counts, fluid_maker)):
             if fm:                                          # every part makes the fluids its own lines use
                 ni = max(1, ni) if set(cell.fluids_out) & consumed else 0
+            if ni and isl.make is None and fits(cell):
+                columns.setdefault(column_key(cell), []).append((cell, ni * cell.n))
+                continue
             cap = None
             if isl.waste:                                   # one by-product belt must carry a whole stack's waste
                 one = make(cell, 1, tier).supply.get(isl.waste[0], 0)
                 cap = int(LANE // one) if one > 0 else None
             if ni:
                 stacks += split_line(cell, ni, height, make, tier, cap)
+        for (size, fl), segs in columns.items():            # fill columns up to `height` tiles, in line order
+            max_rows = max(1, height // size)
+            total = sum(r for _, r in segs)
+            ncol = math.ceil(total / max_rows)
+            per = math.ceil(total / ncol)                   # even columns
+            col, room = [], per
+            for cell, rows in segs:
+                while rows:
+                    take = min(rows, room)
+                    col.append((cell, take)); rows -= take; room -= take
+                    if room == 0:
+                        stacks.append(dense_column(col, tier)); col, room = [], per
+            if col:
+                stacks.append(dense_column(col, tier))
         stacks += mine
         lanes = []
         for item in isl.raw:
@@ -159,7 +184,7 @@ def consumers_outside(islands):
     from lib.fstack import as_stack
     users = {}
     for isl in islands:
-        make = isl.make or (lambda c, n, t: as_stack(c, n, t, compact=True))
+        make = isl.make or default_make
         stacks = [make(c, 1, "mid") for c, _ in isl.lines] + [f("mid") for f in isl.extra]
         for s in stacks:
             for it in _feeds(s):
@@ -646,7 +671,24 @@ def build_base(label, islands, height, frame=None, aspect=1.4, tier="blue", gate
                controls=None, plain=False, float_dry=True):
     """The whole base: islands → parts → shelves → rectangle → gates → inputs led out through the frame →
     roboport holes filled → frame → controls(bp) (circuits that need the whole picture) → poles → finish.
+    `height` may be a list: every value is tried and the core with the best tile coverage wins.
     Returns (bp, info)."""
+    if isinstance(height, (list, tuple)):
+        best = None
+        for h in height:
+            core_bp, core_info = _core(label, islands, h, aspect, tier, posts, plain, float_dry)
+            x0, y0, x1, y1 = bbox(core_bp)
+            cov = len(core_bp._grid) / ((x1 - x0 + 1) * (y1 - y0 + 1))
+            if best is None or cov > best[0]:
+                best = (cov, h)
+        height = best[1]
+    bp, info = _core(label, islands, height, aspect, tier, posts, plain, float_dry)
+    info["height"] = height
+    return _finish(bp, info, gates, frame, controls, finish, plain)
+
+
+def _core(label, islands, height, aspect, tier, posts, plain, float_dry):
+    """islands → parts → shelves → composed rectangle, fluid-free blocks floated into the gaps"""
     shelves = plan(islands, height, aspect)
     floaters = []
     if float_dry:                                           # fluid-free robot stacks fill the gaps afterwards
@@ -675,6 +717,10 @@ def build_base(label, islands, height, frame=None, aspect=1.4, tier="blue", gate
             raise ValueError(f"no room for {[s.name for s in left]}")
         info["floaters"] = len(floaters)
         info["shelves"].append([s.name for s in floaters])
+    return bp, info
+
+
+def _finish(bp, info, gates, frame, controls, finish, plain):
     place_gates(bp, gates)
     core = bbox(bp)
     info["core"] = core

@@ -20,9 +20,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 287×211 tiles |
-| Entities | 18982 |
-| Main machines | `requester-chest` ×76<br>`passive-provider-chest` ×68<br>`chemical-plant` ×60 (ammoniacal-solution-separation 24, ice-melting 20, ammonia-rocket-fuel 8, solid-fuel-from-ammonia 8)<br>`cryogenic-plant` ×36 (cryogenic-science-pack 16, lithium 6, fluoroketone 6, fluoroketone-cooling 6, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
+| Size | 300×226 tiles |
+| Entities | 23252 |
+| Main machines | `requester-chest` ×74<br>`passive-provider-chest` ×68<br>`chemical-plant` ×56 (ammoniacal-solution-separation 24, ice-melting 16, solid-fuel-from-ammonia 8, ammonia-rocket-fuel 8)<br>`cryogenic-plant` ×40 (cryogenic-science-pack 16, fluoroketone 8, fluoroketone-cooling 8, lithium 6, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -60,12 +60,13 @@ Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fil
 
 | Shelf | Blocks |
 |---|---|
-| 1 | Ammonia + ice (separation) x2, Water (ice melting) x2, Lithium x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1, Ice platform x1, Power + heat: 3 heating towers |
-| 2 | Ammonia + ice (separation) x2, Water (ice melting) x3, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1 |
-| 3 | Ammonia + ice (separation) x2, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x2, Fusion power cell x1 |
-| gap fill | Lithium plate x1, Lithium plate x1, Rocket silo (robot-fed), Landing pad (robot network) |
+| 1 | Ammonia + ice (separation) x1, Ammonia + ice (separation) x1, Water (ice melting) x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Fusion power cell x1, Power + heat: 3 heating towers |
+| 2 | Ammonia + ice (separation) x1, Lithium x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Ammonia + ice (separation) x1 |
+| 3 | Ammonia + ice (separation) x1, Water (ice melting) x1, Water (ice melting) x1, Lithium x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1 |
+| 4 | Ammonia + ice (separation) x1, Water (ice melting) x1, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1, Ice platform x1 |
+| gap fill | Rocket silo (robot-fed), Landing pad (robot network), Lithium plate x1, Lithium plate x1 |
 
-Core 281×209 tiles, overall 287×211, 18,982 entities, density 0.31 · tile coverage 0.35 (community references: 0.24–0.44 · 0.55–0.82). Peak power 78 MW / turbines 140 MW, heating load 126.0 MW.
+Core 293×224 tiles, overall 300×226, 23,252 entities, density 0.34 · tile coverage 0.38 (community references: 0.24–0.44 · 0.55–0.82). Peak power 83 MW / turbines 140 MW, heating load 142.4 MW.
 
 ### Roadmap
 

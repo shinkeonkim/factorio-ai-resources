@@ -17,9 +17,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 145×98 tiles |
-| Entities | 3240 |
-| Main machines | `requester-chest` ×249<br>`passive-provider-chest` ×120<br>`biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, burnt-spoilage 8, carbon-fiber 8, iron-bacteria-cultivation 8, jellynut-processing 4, nutrients-from-bioflux 4, iron-bacteria 4)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
+| Size | 124×89 tiles |
+| Entities | 2404 |
+| Main machines | `biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, iron-bacteria-cultivation 8, burnt-spoilage 8, carbon-fiber 8, iron-bacteria 4, jellynut-processing 4, nutrients-from-bioflux 4)<br>`requester-chest` ×95<br>`passive-provider-chest` ×60<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -58,11 +58,10 @@ Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fil
 
 | Shelf | Blocks |
 |---|---|
-| 1 | Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Pentapod eggs x2, Pentapod eggs x2 |
-| 2 | Rocket fuel (jelly) x2 |
-| gap fill | Agricultural science x4, Yumako processing x2, Jellynut processing x2, Bioflux x2, Nutrients x2, Carbon (burnt spoilage) x2, Carbon fiber x2, Iron bacteria x2, Iron bacteria cultivation x2, Iron plates (bacteria ore) x2, Firearm magazines x2, Rocket silo (robot-fed), Landing pad (robot network) |
+| 1 | Pentapod eggs x24 (dense), Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Rocket fuel (jelly) x8 (dense) |
+| gap fill | Agricultural science x16 (dense), Iron bacteria x4 + Iron bacteria cultivation x8 + Iron plates (bacteria ore) x8 + Firearm magazines x4 (dense), Yumako processing x12 + Jellynut processing x4 (dense), Bioflux x12 + Nutrients x4 (dense), Carbon (burnt spoilage) x8 + Carbon fiber x8 (dense), Rocket silo (robot-fed), Landing pad (robot network) |
 
-Core 113×73 tiles, overall 145×98, 3,240 entities, density 0.23 · tile coverage 0.38 (community references: 0.24–0.44 · 0.55–0.82). Peak power 74 MW / turbines 186 MW (with enough heating-tower fuel).
+Core 92×64 tiles, overall 124×89, 2,404 entities, density 0.22 · tile coverage 0.40 (community references: 0.24–0.44 · 0.55–0.82). Peak power 72 MW / turbines 186 MW (with enough heating-tower fuel).
 
 ### Roadmap
 

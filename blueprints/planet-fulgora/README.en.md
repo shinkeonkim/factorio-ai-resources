@@ -19,8 +19,8 @@
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
 | Size | 234×193 tiles |
-| Entities | 7296 |
-| Main machines | `recycler` ×92<br>`passive-provider-chest` ×90<br>`requester-chest` ×75<br>`electromagnetic-plant` ×30 (electrolyte 8, electromagnetic-science-pack 8, superconductor 4, supercapacitor 4, accumulator 4, electromagnetic-plant 2)<br>`chemical-plant` ×24 (holmium-solution 12, ice-melting 8, heavy-oil-cracking 4)<br>`assembling-machine-3` ×10 (rocket-fuel 4, refined-concrete 4, iron-stick 2)<br>`steel-chest` ×5<br>`foundry` ×2 (holmium-plate 2)<br>`rocket-silo` ×1 |
+| Entities | 7084 |
+| Main machines | `recycler` ×92<br>`passive-provider-chest` ×80<br>`requester-chest` ×55<br>`electromagnetic-plant` ×30 (electrolyte 8, electromagnetic-science-pack 8, superconductor 4, supercapacitor 4, accumulator 4, electromagnetic-plant 2)<br>`chemical-plant` ×24 (holmium-solution 12, ice-melting 8, heavy-oil-cracking 4)<br>`assembling-machine-3` ×10 (rocket-fuel 4, refined-concrete 4, iron-stick 2)<br>`steel-chest` ×5<br>`foundry` ×2 (holmium-plate 2)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -66,10 +66,10 @@ Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fil
 | 3 | Scrap recycling + sorting 3, Void: overflow (10/s) |
 | 4 | Scrap recycling + sorting 4, Void: overflow (10/s) |
 | 5 | Water (ice melting) x1, Light oil (heavy oil cracking) x1, Holmium solution x1, Electrolyte x1, Superconductor x1, Supercapacitor x1, Electromagnetic science x1 |
-| 6 | Water (ice melting) x1, Light oil (heavy oil cracking) x1, Holmium solution x1, Holmium plate x1, Electrolyte x1, Rocket fuel x1, Electromagnetic science x1, Refined concrete x1 |
-| gap fill | Rocket silo (robot-fed), Iron sticks x1, Mall: electromagnetic plant x1, Accumulator x1 |
+| 6 | Water (ice melting) x1, Light oil (heavy oil cracking) x1, Holmium solution x1, Electrolyte x1, Electromagnetic science x1, Holmium plate x2 (dense), Rocket fuel x4 (dense), Refined concrete x4 (dense) |
+| gap fill | Rocket silo (robot-fed), Iron sticks x2 (dense), Mall: electromagnetic plant x2 (dense), Accumulator x4 (dense) |
 
-Core 192×161 tiles, overall 234×193, 7,296 entities, density 0.16 · tile coverage 0.35 (community references: 0.24–0.44 · 0.55–0.82). Peak power 114 MW, accumulators 10,030 MJ (lightning arrives only in storms).
+Core 192×158 tiles, overall 234×193, 7,084 entities, density 0.16 · tile coverage 0.34 (community references: 0.24–0.44 · 0.55–0.82). Peak power 113 MW, accumulators 10,200 MJ (lightning arrives only in storms).
 
 ### Roadmap
 

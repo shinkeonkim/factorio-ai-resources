@@ -14,7 +14,8 @@
 - **Planet bases** (lib/base.py + lib/planets/<planet>.py `islands()` / `base()`): one dense rectangle like community
   planet bases (skills/factorio-blueprint/references/base-design.md), never a planet-wide bus. Islands = lines that
   share fluids/intermediates; split islands keep their own fluid producers (no fluid crosses the base). Parts packed
-  into shelves with short streets; fluid-free robot stacks float into the gaps; robot-fed cells (`bots=True`, or
+  into shelves with short streets; recipes with ≤1 fluid input run in dense robot-fed columns (lib/dense.py,
+  several recipes per column on one pipe); fluid-free robot stacks float into the gaps; robot-fed cells (`bots=True`, or
   `belt_out=True` to keep a by-product on a belt); outputs gated by logistic conditions; self-starting power
   (burner inserters on accumulator charge) + low-power alarm; inputs on the edge (underground/PTG end + marker +
   display panel). Frames: Gleba mines + walls + turrets, Fulgora lightning band, Aquilo heat (lib/heat `check()`

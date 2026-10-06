@@ -20,9 +20,9 @@
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
-| 크기 | 287×211 타일 |
-| 엔티티 | 18982 |
-| 주요 설비 | `requester-chest` ×76<br>`passive-provider-chest` ×68<br>`chemical-plant` ×60 (ammoniacal-solution-separation 24, ice-melting 20, ammonia-rocket-fuel 8, solid-fuel-from-ammonia 8)<br>`cryogenic-plant` ×36 (cryogenic-science-pack 16, lithium 6, fluoroketone 6, fluoroketone-cooling 6, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
+| 크기 | 300×226 타일 |
+| 엔티티 | 23252 |
+| 주요 설비 | `requester-chest` ×74<br>`passive-provider-chest` ×68<br>`chemical-plant` ×56 (ammoniacal-solution-separation 24, ice-melting 16, solid-fuel-from-ammonia 8, ammonia-rocket-fuel 8)<br>`cryogenic-plant` ×40 (cryogenic-science-pack 16, fluoroketone 8, fluoroketone-cooling 8, lithium 6, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
 ### 입력
@@ -60,12 +60,13 @@
 
 | 선반 | 블록 |
 |---|---|
-| 1 | Ammonia + ice (separation) x2, Water (ice melting) x2, Lithium x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1, Ice platform x1, Power + heat: 3 heating towers |
-| 2 | Ammonia + ice (separation) x2, Water (ice melting) x3, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1 |
-| 3 | Ammonia + ice (separation) x2, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x2, Fusion power cell x1 |
-| 빈자리 채움 | Lithium plate x1, Lithium plate x1, Rocket silo (robot-fed), Landing pad (robot network) |
+| 1 | Ammonia + ice (separation) x1, Ammonia + ice (separation) x1, Water (ice melting) x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Fusion power cell x1, Power + heat: 3 heating towers |
+| 2 | Ammonia + ice (separation) x1, Lithium x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Ammonia + ice (separation) x1 |
+| 3 | Ammonia + ice (separation) x1, Water (ice melting) x1, Water (ice melting) x1, Lithium x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1 |
+| 4 | Ammonia + ice (separation) x1, Water (ice melting) x1, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1, Ice platform x1 |
+| 빈자리 채움 | Rocket silo (robot-fed), Landing pad (robot network), Lithium plate x1, Lithium plate x1 |
 
-코어 281×209칸, 전체 287×211칸, 18,982개 엔티티, 밀도 0.31 · 타일 점유율 0.35 (참고 커뮤니티 기지: 0.24–0.44 · 0.55–0.82). 최대 전력 78 MW / 터빈 140 MW, 보온 열 126.0 MW.
+코어 293×224칸, 전체 300×226칸, 23,252개 엔티티, 밀도 0.34 · 타일 점유율 0.38 (참고 커뮤니티 기지: 0.24–0.44 · 0.55–0.82). 최대 전력 83 MW / 터빈 140 MW, 보온 열 142.4 MW.
 
 ### 로드맵
 
