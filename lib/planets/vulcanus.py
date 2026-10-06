@@ -1,6 +1,7 @@
 """Vulcanus all-in-one complex: lava -> molten metals -> castings, tungsten, metallurgic science, mall items,
 water/steam, power, rocket and imports. Every production line is a stack of lib/fstack fluid cells standing on
 one planet bus (lib/complex.compose)."""
+import dataclasses
 import math
 
 from lib.fstack import FluidCell, as_stack, analyse
@@ -139,10 +140,27 @@ def power_line(bp, lang):
 
 
 # ------------------------------------------------------------------------------------- the base (lib/base)
+HEIGHT = 40
 LINES = PLAN
-LAVA = ("molten-iron", "molten-copper")          # foundries on lava: their stone byproduct stays on belts
-RAW = ("calcite", "coal", "tungsten-ore")
-HEIGHT = 44                                      # stacks no taller than this (the power block's height)
+
+
+def stone_voids(rate, n, tier="mid"):
+    """one recycler void per stone belt (`rate` stone/s each)"""
+    per_side = max(2, math.ceil(rate / 16) + 1)                 # a recycler with its two inserters takes ~8 stone/s
+    return [void_sink("stone", per_side, tier, f"Stone void ({rate:.0f}/s)", rate) for _ in range(n)]
+
+
+def solar_bootstrap(tier="mid"):
+    """Restart kit: 8 solar panels (4x output on Vulcanus) and 4 accumulators power the acid-neutralisation
+    plants when the turbines are cold; the first accumulator also drives the low-power alarm."""
+    def build(bp, t):
+        for i in range(4):
+            for j in range(2):
+                bp.add("solar-panel", 3 * i, -3 * (j + 1) - 1)
+        for i in range(4):
+            bp.add("accumulator", 2 * i + 1, -10)
+        bp.add(FT[t]["pole"], 0, -11); bp.add(FT[t]["pole"], 6, -1)
+    return Stack("Solar restart kit", build, tier, [], {}, gap=1)
 
 
 def intake_stack(tier="mid"):
@@ -153,23 +171,45 @@ def intake_stack(tier="mid"):
     return ingress_stack(raw, tier)
 
 
-def base(label="Vulcanus all-in-one", tier="mid"):
-    """Rectangle base: raw intake gate on the south edge (calcite / coal / tungsten ore belts → provider chests), lava shelf
-    (molten metals + stone voids on a stone belt), then every other line packed into shelves; robots carry the
-    items between blocks, fluids (lava, sulfuric acid, molten metals, oils) run in trunks along the west edge.
-    No frame: demolishers never attack — keep the base outside their territories."""
-    from lib.base import build_base, Shelf, auto_layout, split_line
+RAW = ("calcite", "coal", "tungsten-ore")
+
+
+def bot(key, belt_out=False):
+    """robot-fed version of a cell: a requester chest at every input inserter and a provider chest for the output,
+    no belt columns (base-design.md §4: robots for the many low-volume items). belt_out keeps the item product on
+    the centre belt (molten metals: their stone rides a belt into the voids)."""
+    return dataclasses.replace(C[key], bots=True, inner=(None, None), outer=None, belt_out=belt_out)
+
+
+def islands():
+    """Each island makes the fluids it uses next to their consumers (base-design.md §3). Robots feed every
+    machine; molten metals send their stone along a belt into voids in the same island."""
+    from lib.base import Island
     from lib.planets.common import robot_pad, robot_silo
-    intake = intake_stack(tier)
-    lava = []
-    for k, n in PLAN:
-        if k in LAVA:
-            lava += split_line(C[k], n, HEIGHT, as_stack, tier)
-    lava += [stone_sink(tier=tier, name=f"Stone void {k + 1}") for k in range(3)]
-    rest = [power_stack(tier=tier)]
-    for k, n in PLAN:
-        if k not in LAVA:
-            rest += split_line(C[k], n, HEIGHT, as_stack, tier)
-    rest += [robot_silo(tier), robot_pad(IMPORTS, tier)]
-    fixed = [Shelf(lava, ("stone",) * 3)]
-    return build_base(label, rest, frame=None, fixed=fixed, tier="blue", gates=[intake])
+    stone = ("stone", stone_voids)
+    mall = ["mall-foundry", "mall-big-drill", "mall-turbo-belt", "mall-turbo-underground", "mall-turbo-splitter"]
+    return [
+        Island("Iron castings", [(bot("molten-iron", True), 2), (bot("iron-plate"), 2), (bot("steel-plate"), 2),
+                                 (bot("tungsten-plate"), 5)], waste=stone),
+        Island("Metallurgic science", [(bot("molten-copper", True), 6), (bot("molten-iron", True), 1),
+                                       (bot("carbon"), 3), (bot("tungsten-carbide"), 3), (bot("science"), 5),
+                                       (bot("low-density-structure"), 1)], waste=stone),
+        Island("Mall", [(bot("molten-iron", True), 1), (bot("heavy-oil"), 1), (C["lubricant"], 1)] + [(bot(k), 1) for k in mall],
+               waste=stone),
+        Island("Power", [], extra=[lambda t: power_stack(tier=t), solar_bootstrap]),
+        Island("Rocket", [], extra=[robot_silo, lambda t: robot_pad(IMPORTS, t)]),
+    ]
+
+
+def controls(bp):
+    from lib.base import power_alarm
+    acc = next(e["entity_number"] for e in bp.entities if e["name"] == "accumulator")
+    return power_alarm(bp, acc, "Vulcanus base: power low (check calcite / sulfuric acid)")
+
+
+def base(label="Vulcanus all-in-one", tier="mid"):
+    """Dense rectangle: island shelves (iron castings, metallurgic science, mall, power, rocket) with their own
+    molten metals and stone voids; ores through the south gate, lava / sulfuric acid from the west per shelf.
+    No frame: demolishers never attack — keep the base outside their territories."""
+    from lib.base import build_base
+    return build_base(label, islands(), HEIGHT, frame=None, tier="blue", gates=[intake_stack(tier)], controls=controls)

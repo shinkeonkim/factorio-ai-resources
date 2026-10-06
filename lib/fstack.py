@@ -99,6 +99,7 @@ class FluidCell:
     bots: bool = False               # robot-fed: a requester chest per input inserter instead of belts (Gleba)
     fuel: str | None = None          # burner fuel to request as well (biochambers burn nutrients)
     limit: tuple | None = None       # (item, count): input inserters run only while the network holds < count
+    belt_out: bool = False           # robot-fed inputs, but the item product leaves on the centre belt (e.g. stone)
 
     # ---- recipe facts
     @property
@@ -205,10 +206,10 @@ class FluidCell:
     def centre(self):
         cf = self.centre_fluid
         if cf:
-            if self.items_out and self.bots:
+            if self.items_out and self.bots and not self.belt_out:
                 return "pipe+chest"                   # items to a provider chest between the two centre pipes
             return "pipe+belt" if self.items_out else "pipe"
-        if self.sink == "chest" or self.bots:
+        if self.sink == "chest" or (self.bots and not self.belt_out):
             return "chest"
         return "belt" if self.items_out else "none"
 
@@ -600,21 +601,47 @@ def join_top(bp, cell: FluidCell, cells: int):
         rows += 1
 
 
-def as_stack(cell: FluidCell, cells: int, tier: str = "mid", name=None):
-    """A lib.complex.Stack for `cells` copies of this fluid cell on its cap (products and demand filled in)."""
+def cap_rows(cell: FluidCell) -> int:
+    """fewest cap rows the feeds need: none fed by belt (robot cells) 2, inner belt only 3, outer belt 7"""
+    lanes = _lanes(cell)
+    if cell.outer and (("outer", "far") in lanes or ("outer", "near") in lanes):
+        return 7
+    if ("inner", "far") in lanes or ("inner", "near") in lanes:
+        return 3
+    return 2
+
+
+def as_stack(cell: FluidCell, cells: int, tier: str = "mid", name=None, compact=False):
+    """A lib.complex.Stack for `cells` copies of this fluid cell on its cap (products and demand filled in).
+    compact=True (dense bases, lib/base): the cap has only the rows its feeds need (still ending on row 7 with the
+    markers on row 8, so lib/complex places it the same way) and no roboports (the base places its own)."""
     from lib.complex import Stack
 
     def build(bp, t):
-        stack(bp, cell, t, cells, late_rates(cell))
-        join_top(bp, cell, cells)
-        if cell.bots:                                          # logistic coverage: cap and top of the stack
-            bp.add("roboport", cell.c - 2, 2)
-            bp.add("roboport", cell.c - 2, -cell.period * cells - 6)
-            bp.add(TIERS[t]["pole"], cell.c + 2, -cell.period * cells - 2)
+        if not compact:
+            stack(bp, cell, t, cells, late_rates(cell))
+            join_top(bp, cell, cells)
+            if cell.bots:                                          # logistic coverage: cap and top of the stack
+                bp.add("roboport", cell.c - 2, 2)
+                bp.add("roboport", cell.c - 2, -cell.period * cells - 6)
+                bp.add(TIERS[t]["pole"], cell.c + 2, -cell.period * cells - 2)
+            return
+        from lib.fbp import Blueprint
+        rows = cap_rows(cell)
+        part = Blueprint("cell", game="2.0")
+        build_cap(part, cell, t, late_rates(cell), rows=rows)
+        for k in range(cells):
+            build_cell(part, cell, t, -cell.period * (k + 1))
+        join_top(part, cell, cells)
+        dy = 8 - rows                                          # cap bottom on row 7, markers on row 8
+        for e in part.entities:
+            m = part._meta[e["entity_number"]]
+            fields = {k: v for k, v in e.items() if k not in ("entity_number", "name", "position", "direction")}
+            bp.add(e["name"], m["x"], m["y"] + dy, m["dir"], **fields)
 
     products = cell.products()
     a = analyse(cell, "late")
     duty = 0.05 if cell.centre == "chest" else 1.0           # mall cells idle once their chests are full
     demand = {k: v * cells * duty for k, v in a["in_per_side"].items()}
     supply = {k: v * cells for k, v in a["out_per_s"].items()}
-    return Stack(name or f"{cell.name} x{cells}", build, tier, products, demand, supply)
+    return Stack(name or f"{cell.name} x{cells}", build, tier, products, demand, supply, gap=1 if compact else 3)

@@ -30,6 +30,11 @@ Jepakazol "Gleba Base (Mall+All)" (-OFa_ZWh1hQypFqucMTy), "Fulgora Mall" (-OX4QB
 | Fulgora Mall (4-planet tech) | 224×110 | 7,458 | 0.30 | 365 | belt→machine 50 %, chest→belt 11 %, machine→buffer 8 %, machine→machine 5 % | dynamic mall, self-powered heating towers, alarms |
 | Gleba Base (Mall + All) | 218×168 | 8,915 | 0.24 (incl. defence) | 276 | belt→machine 30 %, machine→belt 23 %, machine→machine 10 %, requester→turret 9 % | 1,037 filter inserters, nutrient/fuel gating, alarms |
 | *this repo's first planet bases (for contrast)* | 264×201 | 9,376 | **0.18** | 147 | requester→belt 14 %, belt→provider 13 %, machine→machine 0 % | markers only |
+| *this repo, island generator (lib/base.py, 2026-10)* | 145×98 (Gleba) – 287×211 (Aquilo) | 3k–19k | 0.10–0.31 (coverage 0.19–0.38) | 109–159 | requester→machine dominant | stock limits, burner fuel on accumulator, alarm |
+
+Tile coverage (share of tiles under an entity, `study.py`) is the fairer number when machines are big:
+the references cover **0.55–0.82** of their area. A generator that stands blocks on fluid streets tops out near
+0.35; reaching the references needs hand-designed dense blocks (foundries around a shared pipe, two-belt rows).
 
 Targets for a new dense base: **density ≥ 0.3** in the core, **direct insertion ≥ 5 %** of inserters wherever
 recipes chain, and circuit gating on every output that can pile up.

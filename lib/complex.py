@@ -218,7 +218,11 @@ def compose(label, layout, stacks, tier="red", y_bus=0, gap=2, tail=4, ptg_ok=la
         inside = {xx for a, b in spans for xx in range(a + 1, b)}
         ends = {a: "input" for a, b in spans} | {b: "output" for a, b in spans}
         taps = set(ln["taps"])
-        for xx in range(ln["src"], x_end):
+        stop = min(x_end, max([ln["src"]] + ln["taps"]) + 3)        # the lane ends after its last tap …
+        for a, b in spans:
+            if a < stop <= b:
+                stop = min(x_end, b + 1)                            # … but never inside an underground span
+        for xx in range(ln["src"], stop):
             if xx in inside:
                 continue
             if xx in ends:
@@ -303,7 +307,10 @@ def _fluid_line(bp, ln, x_end, avoid, G, cap_bottom, plain=False):
     pipe-to-ground costs 150 kW of heat each); risers stay pipe-to-ground, which only connect at their open end."""
     r = ln["row"]
     pts = [ln["src"]] + sorted(t for t in ln["taps"] if t > ln["src"])
+    x_end = min(x_end, pts[-1] + 1)                      # the line ends at its last tap
     for k, p in enumerate(pts):
+        if k == 0 and p == 0 and not plain:
+            continue                                     # west end: a pipe-to-ground opening west (no side contact)
         bp.add("pipe", p, r)
         if k > 0 or ln["src"] != 0:
             _fluid_vertical(bp, p, ln, G, cap_bottom)
@@ -313,7 +320,7 @@ def _fluid_line(bp, ln, x_end, avoid, G, cap_bottom, plain=False):
             if x not in stops and (x, r) not in bp._grid:
                 bp.add("pipe", x, r)
         return
-    for a, b in zip(pts, pts[1:] + [x_end]):
+    for a, b in zip([-1 if pts[0] == 0 else pts[0]] + pts[1:], pts[1:]):
         xx = a + 1                                       # pairs: W-facing at xx ... E-facing at end
         while xx < b - 1:
             if xx in avoid:

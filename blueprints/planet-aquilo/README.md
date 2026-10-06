@@ -12,15 +12,17 @@
 
 ![part-1](images/part-1.webp)
 ![part-2](images/part-2.webp)
+![part-3](images/part-3.webp)
+![part-4](images/part-4.webp)
 
 <sub>이미지: [Factorio Blueprint Editor](https://fbe.factorygamefan.com)로 렌더링 (게임 그래픽 © Wube Software)</sub>
 
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
-| 크기 | 226×164 타일 |
-| 엔티티 | 18831 |
-| 주요 설비 | `requester-chest` ×84<br>`chemical-plant` ×72 (ice-melting 32, ammoniacal-solution-separation 24, solid-fuel-from-ammonia 8, ammonia-rocket-fuel 8)<br>`passive-provider-chest` ×68<br>`cryogenic-plant` ×30 (cryogenic-science-pack 16, lithium 6, fluoroketone-cooling 4, fluoroketone 2, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
+| 크기 | 287×211 타일 |
+| 엔티티 | 18982 |
+| 주요 설비 | `requester-chest` ×76<br>`passive-provider-chest` ×68<br>`chemical-plant` ×60 (ammoniacal-solution-separation 24, ice-melting 20, ammonia-rocket-fuel 8, solid-fuel-from-ammonia 8)<br>`cryogenic-plant` ×36 (cryogenic-science-pack 16, lithium 6, fluoroketone 6, fluoroketone-cooling 6, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
 ### 입력
@@ -54,15 +56,16 @@
 | Rocket silo | - | - | 로봇이 재료를 넣는 사일로 | |
 | Landing pad | - | - | 홀뮴 판·파랑 회로·LDS 수입 | |
 
-선반 (아래 → 위; 줄이 길면 같은 높이의 스택 여러 개로 나뉨):
+선반 (아래 → 위; 섬마다 유체를 스스로 만들고, 유체 없는 블록은 빈자리에 채움):
 
 | 선반 | 블록 |
 |---|---|
-| 1 | Power + heat: 3 heating towers, Ammonia + ice (separation) x3, Ammonia + ice (separation) x3, Water (ice melting) x3, Water (ice melting) x3, Cryogenic science x2, Cryogenic science x2 |
-| 2 | Water (ice melting) x2, Lithium x3, Lithium plate x2, Solid fuel (ammonia + crude oil) x2, Rocket fuel (ammonia) x2, Fluoroketone cooling x2, Landing pad (robot network) |
-| 3 | Ice platform x1, Fluoroketone (hot) x1, Fusion power cell x1, Rocket silo (robot-fed) |
+| 1 | Ammonia + ice (separation) x2, Water (ice melting) x2, Lithium x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1, Ice platform x1, Power + heat: 3 heating towers |
+| 2 | Ammonia + ice (separation) x2, Water (ice melting) x3, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1 |
+| 3 | Ammonia + ice (separation) x2, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x2, Fusion power cell x1 |
+| 빈자리 채움 | Lithium plate x1, Lithium plate x1, Rocket silo (robot-fed), Landing pad (robot network) |
 
-코어 214×159칸, 전체 226×164칸, 18,831개 엔티티. 최대 전력 72 MW / 터빈 140 MW, 보온 열 110.3 MW. 블록 사이 아이템은 로봇(요청 상자 → 블록 → 공급 상자), 유체는 서쪽 줄기 배관으로 모든 선반에 이어집니다.
+코어 281×209칸, 전체 287×211칸, 18,982개 엔티티, 밀도 0.31 · 타일 점유율 0.35 (참고 커뮤니티 기지: 0.24–0.44 · 0.55–0.82). 최대 전력 78 MW / 터빈 140 MW, 보온 열 126.0 MW.
 
 ### 로드맵
 
@@ -120,9 +123,11 @@ python3 tools/build.py planet-aquilo
 
 커뮤니티의 행성 기지는 행성 전체에 버스를 깔지 않습니다. 빽빽한 직사각형 하나에 생산을 모으고, 전력·방어를 가장자리에 두릅니다(아래 '참고한 커뮤니티 설계'). 이 기지도 그렇게 짓습니다(`lib/base.py`).
 
-- **선반**: 생산 줄을 같은 높이의 블록(쌓는 셀 스택)으로 나눠 가로 선반에 빽빽하게 채웁니다. 선반을 위로 쌓으면 직사각형이 됩니다. 폭은 빈 칸이 가장 적게 남는 값을 찾아 정합니다.
-- **블록 사이는 로봇**: 블록 입력마다 요청 상자 → 인서터 → 벨트, 출력마다 벨트 끝 → 인서터 → 공급 상자를 둡니다. 벨트는 블록 안에만 있고, 로봇 기지는 40칸 격자로 코어 전체를 덮습니다.
-- **유체는 서쪽 줄기**: 선반마다 자기가 쓰는 유체만 선반 아래 짧은 거리에 깝니다. 서쪽 가장자리의 세로 줄기 배관이 같은 유체를 모든 선반에 잇습니다. 바깥에서 들어오는 유체는 줄기의 북쪽 끝 표시(상수 조합기)로 들어옵니다.
+- **섬**: 유체와 중간재를 함께 쓰는 줄을 한 섬으로 묶습니다(예: 용융 철 + 그 주조, 용융 구리 + 금속 과학). 섬이 선반보다 넓으면 여러 조각으로 나누는데, 조각마다 자기 유체 생산 셀을 가집니다. 그래서 유체가 기지를 가로지르지 않습니다(`references/base-design.md` §3).
+- **선반**: 섬 조각을 키가 비슷한 것끼리 가로 선반에 채우고, 선반을 쌓아 직사각형을 만듭니다. 선반 아래 거리에는 그 선반이 쓰는 유체만 지나갑니다(지하 파이프 6줄 묶음, 마지막 사용처에서 끝남). 유체가 필요 없는 블록(로봇 셀, 사일로, 착륙장 등)은 선반 위 빈자리에 채워 넣습니다.
+- **로봇 셀**: 기계마다 요청 상자(재료)와 공급 상자(결과)가 있어 벨트 열이 필요 없습니다. 섬 안에서만 쓰는 중간재(예: 기어·구리선 → 2차 재활용)와 부산물(돌, 넘침)은 짧은 거리 벨트로 갑니다. 로봇 기지는 블록 사이 기둥에 약 48칸마다 있습니다.
+- **스스로 조절**: 공급 상자로 나가는 출력 인서터는 네트워크에 약 2분치가 쌓이면 멈춥니다(로지스틱 조건). 가열탑 연료는 축전지가 90% 미만일 때만 버너 인서터로 넣습니다. 전기가 없어도 돌아가므로 기지가 스스로 다시 켜집니다. 축전지가 20% 아래로 떨어지면 스피커와 지도 경고가 울립니다(`references/circuits.md`).
+- **입력**: 모두 가장자리에 있습니다. 유체는 선반마다 서쪽, 광석은 남쪽 입구로 들어오고, 바깥 끝은 지하 벨트·지하 파이프입니다. 그 옆에 표시 조합기(분당 수량)와 디스플레이 패널이 있습니다.
 
 ## 보온 (얼지 않게)
 
@@ -131,7 +136,7 @@ python3 tools/build.py planet-aquilo
 - 셀(`lib/hstack.py`)은 처음부터 열 배관 기둥과 가로줄을 품고 있습니다. 기계·인서터·파이프·지하 파이프 옆에는 모두 열 배관이 있습니다.
 - 유체 본선은 셀마다 한 번 지하 파이프로 뛰어서 열 배관이 그 밑을 건너갑니다. 그래서 본선 양쪽의 열이 하나로 이어집니다.
 - 단지를 합친 뒤 `lib/heat.py`가 남은 빈칸에 열 배관을 채우고, 전력 블록의 가열탑까지 잇습니다. 이어지지 않은 조각은 지웁니다. 끝으로 **어는 건물마다 따뜻한 열 배관이 1칸 안에 있는지** 검사합니다. 이 검사에 실패하면 생성이 멈추므로, 저장소의 문자열은 모두 검사를 통과한 것입니다.
-- 선반 거리와 서쪽 줄기의 유체 배관은 지하 파이프 대신 일반 파이프입니다(지하 파이프는 하나에 150 kW씩 열을 먹습니다). 줄 사이에 빈 두 줄을 두어 열 배관이 지나갈 자리를 남깁니다.
+- 선반 거리의 유체 배관은 지하 파이프 대신 일반 파이프입니다(지하 파이프는 하나에 150 kW씩 열을 먹습니다). 줄 사이에 빈 두 줄을 두어 열 배관이 지나갈 자리를 남깁니다.
 - 보온에 드는 열은 위 표에 나옵니다(약 110 MW). 가열탑 3기는 열을 약 300 MW 냅니다(소비 40 MW × 효율 250%). 전기 약 72 MW를 만드는 증기까지 더해도 약 180 MW라 여유가 있습니다. 연료는 로켓 연료 분당 약 44개, 기지가 48개를 만듭니다.
 - 터빈용 물(초당 약 700)은 얼음을 녹여 만듭니다. 그래서 물 셀이 8개, 암모니아 분리 셀이 6개입니다. 분리 셀의 암모니아는 줄들이 쓰는 양보다 조금 적게 나오게 맞췄습니다. 암모니아가 남아 막히면 얼음도 멈추기 때문입니다.
 
@@ -141,7 +146,7 @@ python3 tools/build.py planet-aquilo
 
 ## 입력
 
-북서쪽 줄기 배관 끝 표시(상수 조합기, 분당 수량)에 연결합니다.
+각 선반 서쪽 끝의 지하 파이프(표시 조합기 = 분당 수량, 디스플레이 패널)에 연결합니다.
 
 - **암모니아 용액**: 암모니아 바다 위 해양 펌프
 - **원유 / 리튬 염수 / 불소**: 각 분출구의 펌프잭 (펌프잭도 얼므로 열 배관을 옆에)

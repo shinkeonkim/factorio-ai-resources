@@ -6,8 +6,10 @@ from lib.planets.common import write_planet, robot_pad, robot_silo
 
 if __name__ == "__main__":
     write_planet(V, __file__, "Vulcanus all-in-one",
-                 "Inputs: lava and sulfuric acid at the trunk tops (north-west: offshore pumps on lava, pumpjacks on "
-                 "acid geysers); calcite, coal and tungsten ore belts into the south gate. Imports arrive at the "
-                 "landing pad; robots carry items between blocks. Keep it outside demolisher territory.",
+                 "Makes: ~360 metallurgic science/min, iron / steel / tungsten plates, tungsten carbide, LDS, a mall (foundries, "
+                 "big drills, turbo belts). Needs: lava and sulfuric acid at the west inputs of each shelf (offshore pumps / "
+                 "pumpjacks), calcite + coal + tungsten ore into the south gate (rates on the markers), imports via the landing "
+                 "pad. To start: power is self-starting from the solar kit; add 150 logistic robots. Build outside demolisher "
+                 "territory.",
                  [("power", V.power_stack()), ("raw-intake", V.intake_stack()),
                   ("stone-void", V.stone_sink()), ("landing-pad", robot_pad(V.IMPORTS)), ("rocket-silo", robot_silo())])

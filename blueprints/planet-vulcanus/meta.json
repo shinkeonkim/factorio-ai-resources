@@ -19,8 +19,8 @@
     "en": "Vulcanus all-in-one base"
   },
   "summary": {
-    "ko": "직사각형 하나로 지은 불카누스 기지: 용암 선반(용융 금속 + 돌 처리) → 주조·텅스텐·금속 과학 분당 360, 윤활유, 몰(주조기·대형 채굴기·터보 벨트), 전력 372 MW, 남쪽 광석 입구, 로켓·착륙장. 블록 사이는 로봇, 유체는 서쪽 줄기 배관.",
-    "en": "Vulcanus base in one rectangle: a lava shelf (molten metals + stone disposal) → castings, tungsten and 360 metallurgic science/min, lubricant, a mall (foundries, big drills, turbo belts), 372 MW of power, a south ore gate, rocket and landing pad. Robots between blocks, fluids in trunks along the west edge."
+    "ko": "직사각형 하나로 지은 불카누스 기지: 용융 금속을 스스로 만드는 섬(주조·금속 과학·몰) → 금속 과학 분당 360, 텅스텐, 몰(주조기·대형 채굴기·터보 벨트), 스스로 다시 켜지는 전력 372 MW, 남쪽 광석 입구, 로켓·착륙장. 로봇 셀, 출력마다 재고 한도.",
+    "en": "Vulcanus base in one rectangle: islands that make their own molten metals (castings, metallurgic science, mall) → 360 metallurgic science/min, tungsten, a mall (foundries, big drills, turbo belts), self-restarting 372 MW power, a south ore gate, rocket and landing pad. Robot-fed cells, a stock limit on every output."
   },
   "variants": [
     {
@@ -224,8 +224,8 @@
         "en": "2. Molten metals & castings"
       },
       "do": {
-        "ko": "용융 철·구리 줄과 철판·강철 주조. 용암은 북서쪽 줄기 배관 끝 표시에 해양 펌프로. 돌이 나오므로 같은 선반의 돌 처리 블록도 같이 놓습니다(재활용 연구 전엔 상자에 쌓임).",
-        "en": "Molten iron/copper lines plus iron and steel casting. Lava from offshore pumps at the trunk markers (north-west). They make stone, so place the stone voids on the same shelf too (chests until recycling is researched)."
+        "ko": "용융 철·구리 섬과 철판·강철 주조. 용암은 그 선반 서쪽 끝 지하 파이프에 해양 펌프로 연결합니다. 돌이 나오므로 같은 섬의 돌 처리 블록도 함께 놓습니다(재활용 연구 전엔 상자에 쌓임).",
+        "en": "Molten iron/copper islands plus iron and steel casting. Lava from offshore pumps into the pipe-to-ground at the west end of that shelf. They make stone, so place the island's stone voids too (chests until recycling is researched)."
       },
       "research": [
         "molten-iron-from-lava",

@@ -17,9 +17,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 177×126 tiles |
-| Entities | 4025 |
-| Main machines | `requester-chest` ×263<br>`passive-provider-chest` ×120<br>`biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, iron-bacteria-cultivation 8, burnt-spoilage 8, carbon-fiber 8, jellynut-processing 4, nutrients-from-bioflux 4, iron-bacteria 4)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
+| Size | 145×98 tiles |
+| Entities | 3240 |
+| Main machines | `requester-chest` ×249<br>`passive-provider-chest` ×120<br>`biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, burnt-spoilage 8, carbon-fiber 8, iron-bacteria-cultivation 8, jellynut-processing 4, nutrients-from-bioflux 4, iron-bacteria 4)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -54,15 +54,15 @@ none
 | Landing pad | - | - | imports blue circuits and LDS | |
 | Defence ring | - | - | two rows of stone wall + a laser turret every 4 tiles, every third a gun turret with a magazine requester | |
 
-Shelves (bottom → top; long lines are split into stacks of equal height):
+Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fill the gaps):
 
 | Shelf | Blocks |
 |---|---|
-| 1 | Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Rocket fuel (jelly) x2, Agricultural science x2, Agricultural science x2, Iron bacteria cultivation x2, Iron plates (bacteria ore) x2 |
-| 2 | Carbon (burnt spoilage) x2, Carbon fiber x2, Pentapod eggs x1, Pentapod eggs x1, Pentapod eggs x1, Pentapod eggs x1, Yumako processing x1, Yumako processing x1 |
-| 3 | Bioflux x1, Bioflux x1, Jellynut processing x2, Nutrients x2, Iron bacteria x2, Firearm magazines x2, Rocket silo (robot-fed), Landing pad (robot network) |
+| 1 | Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Pentapod eggs x2, Pentapod eggs x2 |
+| 2 | Rocket fuel (jelly) x2 |
+| gap fill | Agricultural science x4, Yumako processing x2, Jellynut processing x2, Bioflux x2, Nutrients x2, Carbon (burnt spoilage) x2, Carbon fiber x2, Iron bacteria x2, Iron bacteria cultivation x2, Iron plates (bacteria ore) x2, Firearm magazines x2, Rocket silo (robot-fed), Landing pad (robot network) |
 
-Core 160×105 tiles, overall 177×126, 4,025 entities. Peak power 77 MW / turbines 186 MW (with enough heating-tower fuel). Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a trunk along the west edge that joins it in every shelf.
+Core 113×73 tiles, overall 145×98, 3,240 entities, density 0.23 · tile coverage 0.38 (community references: 0.24–0.44 · 0.55–0.82). Peak power 74 MW / turbines 186 MW (with enough heating-tower fuel).
 
 ### Roadmap
 
@@ -123,9 +123,11 @@ python3 tools/build.py planet-gleba
 
 Community planet bases don't run a bus across the planet. They pack production into one dense rectangle and put power and defence around its edge (see the community designs below). This base is built the same way (`lib/base.py`).
 
-- **Shelves**: every line is split into blocks of equal height (stacks of stackable cells) packed side by side into horizontal shelves. The shelves stack up into the rectangle. The packer picks the width that leaves the fewest empty tiles.
-- **Robots between blocks**: every block input gets requester chest → inserter → belt, and every output gets belt end → inserter → provider chest. Belts stay inside blocks, and roboports cover the core on a 40-tile grid.
-- **Fluids in west trunks**: each shelf lays only the fluids it uses, on a short street under it. A vertical trunk per fluid along the west edge joins that fluid across all shelves. External fluids enter at the north end of their trunk (constant-combinator marker).
+- **Islands**: lines that share fluids and intermediates form an island (e.g. molten iron + its castings, molten copper + metallurgic science). An island wider than a shelf is split into parts, each with its own fluid-producing cells, so no fluid crosses the base (`references/base-design.md` §3).
+- **Shelves**: island parts of similar height fill horizontal shelves, which stack into the rectangle. The street under a shelf carries only that shelf's fluids (pipe-to-ground runs, six per group, ending at the last user). Blocks that need no fluid (robot-fed cells, silo, landing pad…) fill the gaps above the shelves.
+- **Robot-fed cells**: every machine has a requester chest (ingredients) and a provider chest (results), so no belt columns are needed. Intermediates used only inside an island (e.g. gears and cable into the secondary recycler) and by-products (stone, overflow) ride short street belts. Roboports stand on posts between blocks about every 48 tiles.
+- **Self-regulating**: every output inserter into a provider chest stops once the network holds about two minutes of the item (logistic condition). Burner inserters feed the heating towers only while the accumulators are below 90 %. They need no power, so a dead base restarts by itself. Below 20 % a speaker and a map alert go off (`references/circuits.md`).
+- **Inputs**: all on the edge. Fluids enter from the west of each shelf, ores through the south gate. Each line ends in an underground belt or pipe-to-ground, with a marker (count per minute) and a display panel beside it.
 
 ## Why robots instead of belts
 
@@ -143,7 +145,7 @@ Agricultural towers only grow on their soil (yumako / jellynut wetland, or artif
 
 Pentapods attack where pollution (spores) reaches. As in the community bases, the whole base sits inside a wall and a turret ring.
 
-- Two rows of stone wall run outside.
+- Two rows of land mines run outermost, then two rows of stone wall.
 - Inside them, a row of laser turrets stands every 4 tiles, and every third spot is a gun turret. The gun turrets take magazines from a requester chest; the magazines are made from bacteria iron.
 - Poles stand between the turrets.
 - The wall is open only where the water pipes pass.

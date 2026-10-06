@@ -1,6 +1,6 @@
 # Vulcanus all-in-one base
 
-> Vulcanus base in one rectangle: a lava shelf (molten metals + stone disposal) → castings, tungsten and 360 metallurgic science/min, lubricant, a mall (foundries, big drills, turbo belts), 372 MW of power, a south ore gate, rocket and landing pad. Robots between blocks, fluids in trunks along the west edge.
+> Vulcanus base in one rectangle: islands that make their own molten metals (castings, metallurgic science, mall) → 360 metallurgic science/min, tungsten, a mall (foundries, big drills, turbo belts), self-restarting 372 MW power, a south ore gate, rocket and landing pad. Robot-fed cells, a stock limit on every output.
 
 [한국어](README.md)
 
@@ -18,9 +18,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 264×201 tiles |
-| Entities | 9376 |
-| Main machines | `requester-chest` ×83<br>`passive-provider-chest` ×80<br>`foundry` ×68 (tungsten-plate 20, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 6, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×42<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`steel-chest` ×3<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
+| Size | 221×192 tiles |
+| Entities | 4367 |
+| Main machines | `requester-chest` ×141<br>`passive-provider-chest` ×129<br>`foundry` ×70 (tungsten-plate 20, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 8, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×26<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`steel-chest` ×5<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -29,10 +29,10 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 
 | Signal | Per minute | Position |
 |---|---:|---|
-| `calcite` | 412 | (22, 200) |
-| `coal` | 2,400 | (26, 200) |
-| `tungsten-ore` | 1,860 | (30, 200) |
-| `tungsten-ore` | 1,860 | (34, 200) |
+| `calcite` | 412 | (15, 190) |
+| `coal` | 2,400 | (19, 190) |
+| `tungsten-ore` | 1,860 | (23, 190) |
+| `tungsten-ore` | 1,860 | (27, 190) |
 
 ### Outputs
 
@@ -67,15 +67,16 @@ _constant-combinator markers inside the blueprint (count = required per minute, 
 | Landing pad | - | - | 11 imports → the robot network | |
 | Rocket silo | - | - | robot-fed silo; exports via its cargo requests | |
 
-Shelves (bottom → top; long lines are split into stacks of equal height):
+Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fill the gaps):
 
 | Shelf | Blocks |
 |---|---|
-| 1 | Molten iron x3, Molten copper x3, Molten copper x3, Stone void 1, Stone void 2, Stone void 3, Power: acid neutralisation + 64 turbines, Carbon x3, Tungsten plate x3, Metallurgic science x5 |
-| 2 | Tungsten carbide x3, Tungsten plate x2, Iron plates x2, Steel x2, Heavy oil (simple coal liquefaction) x1, Low density structure x1, Mall: foundry x1, Lubricant x1 |
-| 3 | Mall: big mining drill x1, Mall: turbo belt x1, Mall: turbo underground x1, Mall: turbo splitter x1, Rocket silo (robot-fed), Landing pad (imports into the robot network) |
+| 1 | Power: acid neutralisation + 64 turbines, Molten iron x2, Iron plates x2, Steel x2, Tungsten plate x3, Tungsten plate x2, Stone void (15/s) |
+| 2 | Molten copper x3, Molten copper x3, Molten iron x1, Carbon x3, Tungsten carbide x3, Metallurgic science x5, Low density structure x1, Stone void (22/s), Stone void (22/s), Stone void (22/s) |
+| 3 | Molten iron x1, Heavy oil (simple coal liquefaction) x1, Lubricant x1, Mall: foundry x1, Mall: big mining drill x1, Mall: turbo belt x1, Mall: turbo underground x1, Mall: turbo splitter x1, Stone void (8/s) |
+| gap fill | Solar restart kit, Rocket silo (robot-fed), Landing pad (imports into the robot network) |
 
-Core 253×196 tiles, overall 264×201, 9,376 entities. Peak power 215 MW / generated 372 MW. Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a trunk along the west edge that joins it in every shelf.
+Core 215×185 tiles, overall 221×192, 4,367 entities, density 0.10 · tile coverage 0.19 (community references: 0.24–0.44 · 0.55–0.82). Peak power 208 MW / generated 372 MW.
 
 ### Roadmap
 
@@ -83,7 +84,7 @@ Core 253×196 tiles, overall 264×201, 9,376 entities. Peak power 215 MW / gener
 |---|---|---|
 | 0. Arrival | `foundry` (on first craft), `rocket-silo` (red·green·blue·purple·yellow) | Before foundries: drop the landing pad, robots and basic buildings from the platform. Pick a spot next to a lava lake, near calcite, coal and tungsten ore, outside demolisher territory. |
 | 1. Power | `calcite-processing` (on first mining), `nuclear-power` (red·green·blue) | Power first: calcite and sulfuric acid (pumpjacks on acid geysers) give 372 MW; a few turbines are enough to start. |
-| 2. Molten metals & castings | `foundry` (on first craft) | Molten iron/copper lines plus iron and steel casting. Lava from offshore pumps at the trunk markers (north-west). They make stone, so place the stone voids on the same shelf too (chests until recycling is researched). |
+| 2. Molten metals & castings | `foundry` (on first craft) | Molten iron/copper islands plus iron and steel casting. Lava from offshore pumps into the pipe-to-ground at the west end of that shelf. They make stone, so place the island's stone voids too (chests until recycling is researched). |
 | 3. Tungsten & science | `tungsten-carbide` (on first mining), `tungsten-steel` (on first craft), `metallurgic-science-pack` (on first craft) | Carbon → tungsten carbide, tungsten plate, metallurgic science (360/min); more cells scale it linearly. |
 | 4. Mall & lubricant | `calcite-processing` (on first mining), `big-mining-drill` (on first craft), `turbo-transport-belt` (red·green·blue·purple·space·Vulcanus) | Simple coal liquefaction → lubricant, then the mall lines (foundries, big drills, turbo belts); circuits, engines and express belts are imported. |
 | 5. Rocket & exports | `foundry` (on first craft), `rocket-silo` (red·green·blue·purple·yellow) | Cast low density structures (plastic imported) and build the silo; metallurgic science, carbide, tungsten plate and iron plate go from the export chests into rocket cargo. |
@@ -139,17 +140,19 @@ python3 tools/build.py planet-vulcanus
 
 Community planet bases don't run a bus across the planet. They pack production into one dense rectangle and put power and defence around its edge (see the community designs below). This base is built the same way (`lib/base.py`).
 
-- **Shelves**: every line is split into blocks of equal height (stacks of stackable cells) packed side by side into horizontal shelves. The shelves stack up into the rectangle. The packer picks the width that leaves the fewest empty tiles.
-- **Robots between blocks**: every block input gets requester chest → inserter → belt, and every output gets belt end → inserter → provider chest. Belts stay inside blocks, and roboports cover the core on a 40-tile grid.
-- **Fluids in west trunks**: each shelf lays only the fluids it uses, on a short street under it. A vertical trunk per fluid along the west edge joins that fluid across all shelves. External fluids enter at the north end of their trunk (constant-combinator marker).
-- **Lava shelf** (bottom): the molten iron/copper foundries and the stone voids share stone belts. That is about 80 stone/s, so it rides belts instead of robots. Piled-up stone stops molten metal, so the voids must sit on the same shelf. Stone recycles into itself 25 % of the time, so 75 % disappears. Before recycling (Fulgora) the stone collects in the chests above the voids.
+- **Islands**: lines that share fluids and intermediates form an island (e.g. molten iron + its castings, molten copper + metallurgic science). An island wider than a shelf is split into parts, each with its own fluid-producing cells, so no fluid crosses the base (`references/base-design.md` §3).
+- **Shelves**: island parts of similar height fill horizontal shelves, which stack into the rectangle. The street under a shelf carries only that shelf's fluids (pipe-to-ground runs, six per group, ending at the last user). Blocks that need no fluid (robot-fed cells, silo, landing pad…) fill the gaps above the shelves.
+- **Robot-fed cells**: every machine has a requester chest (ingredients) and a provider chest (results), so no belt columns are needed. Intermediates used only inside an island (e.g. gears and cable into the secondary recycler) and by-products (stone, overflow) ride short street belts. Roboports stand on posts between blocks about every 48 tiles.
+- **Self-regulating**: every output inserter into a provider chest stops once the network holds about two minutes of the item (logistic condition). Burner inserters feed the heating towers only while the accumulators are below 90 %. They need no power, so a dead base restarts by itself. Below 20 % a speaker and a map alert go off (`references/circuits.md`).
+- **Inputs**: all on the edge. Fluids enter from the west of each shelf, ores through the south gate. Each line ends in an underground belt or pipe-to-ground, with a marker (count per minute) and a display panel beside it.
+- **Lava islands**: the molten iron/copper foundries and the stone voids of an island share stone belts (one per foundry stack). That is about 80 stone/s, so it rides belts instead of robots. Piled-up stone stops molten metal, so the voids must sit on the same shelf. Stone recycles into itself 25 % of the time, so 75 % disappears. Before recycling (Fulgora) the stone collects in the chests above the voids.
 - **South ore gate**: calcite, coal and tungsten ore belts come in from the south and are unloaded into provider chests.
 - **Fluid cells**: foundries face their fluid inputs to the belts and their outputs to the centre, with one machine row per input fluid.
 - **Checked at generation**: tile overlaps, street lane capacity (pipe 1,200/s) and the power network are checked when the base is generated. If anything fails, no string is written.
 
 ## Power & defence
 
-- Power: acid neutralisation (calcite + sulfuric acid → 500 °C steam) in 2 chemical plants drives 64 steam turbines (372 MW). That block sits inside a shelf too.
+- Power: acid neutralisation (calcite + sulfuric acid → 500 °C steam) in 2 chemical plants drives 64 steam turbines (372 MW). A restart kit of 8 solar panels and 4 accumulators runs the chemical plants when the turbines are cold (Vulcanus solar is 400 %).
 - Defence: Vulcanus' enemies are demolishers. Turrets don't stop them, so the rule is to **build outside their territory**. That's why this base has no outer ring.
 
 ## Growing it

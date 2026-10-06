@@ -177,18 +177,21 @@ def planet_section(name, lang):
     bp, info = mod.base(name)
     x0, y0, x1, y1 = info["core"]
     xs = [x for x, _ in bp._grid]; ys = [y for _, y in bp._grid]
-    out += ["", ("선반 (아래 → 위; 줄이 길면 같은 높이의 스택 여러 개로 나뉨):" if ko else
-                 "Shelves (bottom → top; long lines are split into stacks of equal height):"), "",
+    W, H = max(xs) - min(xs) + 1, max(ys) - min(ys) + 1
+    cov = len(bp._grid) / (W * H)
+    out += ["", ("선반 (아래 → 위; 섬마다 유체를 스스로 만들고, 유체 없는 블록은 빈자리에 채움):" if ko else
+                 "Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fill the gaps):"), "",
             ("| 선반 | 블록 |" if ko else "| Shelf | Blocks |"), "|---|---|"]
     for i, sh in enumerate(info["shelves"]):
-        out.append(f"| {i + 1} | " + ", ".join(sh) + " |")
-    out += ["", (f"코어 {x1 - x0 + 1}×{y1 - y0 + 1}칸, 전체 {max(xs) - min(xs) + 1}×{max(ys) - min(ys) + 1}칸, "
-                 f"{len(bp.entities):,}개 엔티티. {mod.power_line(bp, lang)} "
-                 "블록 사이 아이템은 로봇(요청 상자 → 블록 → 공급 상자), 유체는 서쪽 줄기 배관으로 모든 선반에 이어집니다." if ko else
-                 f"Core {x1 - x0 + 1}×{y1 - y0 + 1} tiles, overall {max(xs) - min(xs) + 1}×{max(ys) - min(ys) + 1}, "
-                 f"{len(bp.entities):,} entities. {mod.power_line(bp, lang)} "
-                 "Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a "
-                 "trunk along the west edge that joins it in every shelf.")]
+        label = (f"{i + 1}" if i < len(info["shelves"]) - (1 if info.get("floaters") else 0)
+                 else ("빈자리 채움" if ko else "gap fill"))
+        out.append(f"| {label} | " + ", ".join(sh) + " |")
+    out += ["", (f"코어 {x1 - x0 + 1}×{y1 - y0 + 1}칸, 전체 {W}×{H}칸, {len(bp.entities):,}개 엔티티, "
+                 f"밀도 {len(bp.entities) / (W * H):.2f} · 타일 점유율 {cov:.2f} (참고 커뮤니티 기지: 0.24–0.44 · 0.55–0.82). "
+                 f"{mod.power_line(bp, lang)}" if ko else
+                 f"Core {x1 - x0 + 1}×{y1 - y0 + 1} tiles, overall {W}×{H}, {len(bp.entities):,} entities, "
+                 f"density {len(bp.entities) / (W * H):.2f} · tile coverage {cov:.2f} (community references: 0.24–0.44 · "
+                 f"0.55–0.82). {mod.power_line(bp, lang)}")]
     return out
 
 

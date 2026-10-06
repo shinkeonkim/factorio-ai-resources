@@ -45,7 +45,9 @@ LINES = [(k, n * SCALE) for k, n in [
 def power_stack(units=2, tier="mid"):
     """Heating towers -> heat exchangers -> steam turbines, stacked. One unit: a heating tower (burns spoilage and
     jellynut from a requester chest), a heat-pipe row under 4 heat exchangers (water passes from one exchanger to
-    the next), two turbines on each exchanger. Water comes up the main on the east edge."""
+    the next), two turbines on each exchanger. Water comes up the main on the east edge.
+    Self-starting (base-design.md §7): the fuel goes in through a burner inserter (it needs no electricity, so a
+    dead base restarts as soon as fuel arrives), enabled only while the accumulator beside it is below 90 %."""
     def build(bp, t):
         f = FT[t]
         main = 20
@@ -59,7 +61,11 @@ def power_stack(units=2, tier="mid"):
             for y in range(yh - P + 2, yh + 2):
                 bp.add("pipe", main, y)
             bp.add("heating-tower", 0, yh - 1)
-            bp.add(f["ins"], -1, yh, W)                         # fuel from the chest west of it
+            ins = bp.add("burner-inserter", -1, yh, W, control_behavior={          # fuel from the chest west of it
+                "circuit_enabled": True, "circuit_condition": {
+                    "first_signal": {"type": "virtual", "name": "signal-A"}, "constant": 90, "comparator": "<"}})
+            acc = bp.add("accumulator", -3, yh - 3, control_behavior={"output_signal": {"type": "virtual", "name": "signal-A"}})
+            bp.wire(acc, ins, "red")
             bp.add("requester-chest", -2, yh, request_filters={"sections": [{"index": 1, "filters": [
                 {"index": 1, "name": "spoilage", "quality": "normal", "comparator": "=", "count": 200},
                 {"index": 2, "name": "jellynut", "quality": "normal", "comparator": "=", "count": 50}]}]})
@@ -143,15 +149,32 @@ SPECIAL = [("Power ×2", "가열탑 2기 → 열교환기 8 → 터빈 16씩 (�
 
 
 # ------------------------------------------------------------------------------------- the base (lib/base)
-HEIGHT = 30
+HEIGHT = 34
+
+
+def islands():
+    from lib.base import Island
+    L = dict(LINES)
+    cells = lambda *keys: [(C[k], L[k]) for k in keys]
+    return [
+        Island("Fruit processing", cells("yumako-processing", "jellynut-processing", "bioflux", "nutrients")),
+        Island("Eggs and science", cells("eggs", "science")),
+        Island("Bacteria iron", cells("iron-bacteria", "iron-cultivation", "iron-plate", "magazine")),
+        Island("Carbon and fuel", cells("carbon", "carbon-fiber", "rocket-fuel")),
+        Island("Power", [], extra=[lambda t: power_stack(tier=t)] * SCALE),
+        Island("Rocket", [], extra=[rocket_stack, lambda t: pad_stack(tier=t)]),
+    ]
+
+
+def controls(bp):
+    from lib.base import power_alarm
+    acc = next(e["entity_number"] for e in bp.entities if e["name"] == "accumulator")
+    return power_alarm(bp, acc, "Gleba base: power low (heating towers need spoilage / jellynut)")
 
 
 def base(label="Gleba all-in-one", tier="mid"):
-    """Rectangle base inside a wall: two rows of stone wall, laser turrets every 4 tiles with a gun turret (magazine
-    requester) every third spot; heating-tower power, every line as robot-fed stacks, silo and landing pad inside.
-    Water enters through the south wall (offshore pumps)."""
+    """Dense rectangle inside two rows of land mines, two rows of stone wall and a turret row (laser turrets, gun
+    turrets on magazine requesters); robot-fed cells grouped by island, heating-tower power that restarts by itself,
+    silo and landing pad inside. Water enters from the west per shelf (offshore pumps)."""
     from lib.base import build_base, defence_frame
-    from lib.planets.common import line_stacks
-    units = [power_stack(tier=tier) for _ in range(SCALE)] + line_stacks(__import__(__name__, fromlist=["x"]), HEIGHT, tier)
-    units += [rocket_stack(tier), pad_stack(tier=tier)]
-    return build_base(label, units, frame=defence_frame(), tier="blue")
+    return build_base(label, islands(), HEIGHT, frame=defence_frame(mines=2), tier="blue", controls=controls)

@@ -1,23 +1,23 @@
-"""Planet base: one compact rectangle, the way community planet bases are built (no planet-wide bus).
+"""Planet base: one dense rectangle, built the way the top community bases are
+(skills/factorio-blueprint/references/base-design.md).
 
-    frame (per planet: wall + turret rows, accumulator / lightning field, nothing)
-    ┌──────────────────────────────────────────────┐
-    │ shelf N   stacks of cells … silo, landing pad │   each shelf = a row of stacks standing on a short
-    │ ─ street N (its own fluids, a few raw belts) ─│   street (lib/complex.compose) that carries only the
-    │ …                                             │   fluids that shelf uses and, where needed, raw belts
-    │ shelf 1   power, raw processing …             │
-    │ ─ street 1 ────────────────────────────────── │
-    └──────────────────────────────────────────────┘
+    frame (per planet: mines / walls / turrets, lightning band, heat, or nothing)
+    ┌──────────────────────────────────────────────────────────┐
+ →  │ shelf: island part │ island part │ post │ island part …  │   each island makes its own fluids
+ →  │ ── street: this shelf's fluids + short belts ──────────── │   (lava → molten iron → castings, …)
+ →  │ …                                                        │   and keeps its internal items on belts
+    └──────────────────────────────────────────────────────────┘
+ →  inputs only on the edge: raw fluids / belts from the west per shelf, ores through gates on the south edge,
+    each ending in an underground pair with a display panel and a marker (count = per minute)
 
-* Every fluid lane of every shelf starts at the west edge, where a vertical trunk per fluid joins the same fluid in
-  all shelves (producers feed their own lane, so a fluid made in one shelf reaches the others). Raw fluids enter at
-  the bottom of their trunk.
-* Lines are split into stacks of equal height and packed into shelves tallest-first (strip packing), so the
-  rectangle stays full.
-* Items move between blocks by robots: `robotize` gives every block input a requester chest feeding its belt
-  column and every block output a passive provider chest at the end of its column, so belts stay inside blocks.
-  Items listed as street lanes (e.g. scrap) stay on belts.
-* A roboport grid and the power poles cover the whole rectangle; `power_fix` adds a pole beside anything unpowered.
+* **Islands**: a group of lines that share fluids and intermediates (molten iron + its castings, carbon +
+  tungsten carbide, …). An island too wide for a shelf is split into parts that each carry their own producers,
+  so fluids never cross the base. Items made and used only inside one island stay on short street belts
+  (no robot round trip); everything else leaves through a provider chest and arrives through a requester chest.
+* **Dense**: compact caps, one-tile gaps, roboport posts between blocks instead of roboports on every stack,
+  shelves packed tallest-first at the width that wastes least.
+* **Self-regulating**: every provider-chest output stops while the network holds about two minutes of it
+  (logistic condition), by-products (stone, overflow) ride belts into voids on the same shelf.
 """
 from __future__ import annotations
 
@@ -25,51 +25,174 @@ import json
 import math
 from dataclasses import dataclass, field, replace
 
-from lib.complex import Stack, compose
+from lib.complex import Stack, compose, _read
 from lib.fbp import Blueprint, N, E, S, W, ROOT, POLES
 from lib.fstack import INSERTER, TIERS as FT
 
 _REC = json.loads((ROOT / "skills/factorio-blueprint/data/recipes-space-age.json").read_text())["recipes"]
 FLUIDS = {i["name"] for r in _REC.values() for i in r.get("ingredients", []) + r.get("results", []) if i.get("type") == "fluid"}
 FLUIDS |= {"lava", "ammoniacal-solution", "fluorine", "lithium-brine", "crude-oil", "heavy-oil", "water", "steam"}
-TRASH_SIGNAL = "signal-T"
+LANE = 45.0                   # items/s on one street belt (blue)
+
+
+# ------------------------------------------------------------------------------------------------ islands
+@dataclass
+class Island:
+    """Lines that share fluids / intermediates. `lines` = [(FluidCell, cells)] producers first; `extra` = stack
+    factories (tier -> Stack) handed out to the parts in turn; `waste` = (item, sink(rate_per_lane, lanes, tier) ->
+    [Stack]) for a
+    by-product that rides a street belt into voids in the same part (stone, recycler overflow); `raw` = raw items
+    that enter this island's shelf on belts from the west (scrap). When an island is split, every part gets at
+    least one cell of each fluid-producing line, so each part makes its own fluids."""
+    name: str
+    lines: list
+    extra: list = field(default_factory=list)
+    waste: tuple = None
+    raw: tuple = ()              # raw items that arrive on street belts from the west (scrap), lanes sized per part
+    make: callable = None
 
 
 @dataclass
-class Shelf:
+class Part:
+    island: Island
     stacks: list
-    solid: tuple = ()                   # raw belt lanes kept in this shelf's street (e.g. scrap, stone)
-    layout: list = None                 # computed by auto_layout when None
-    owners: int = None                  # only the first `owners` stacks use the solid lanes (default: all)
-    dry: bool = False                   # only stacks without fluids may join (raw belts enter across the west edge)
-
-    def street(self):
-        return self.layout if self.layout is not None else auto_layout(self.stacks, self.solid)
+    lanes: tuple                 # solid lanes this part needs in its street (waste, raw, internal items)
+    keep: set                    # items that stay on belts for this part's stacks
 
 
-def _lanes(layout):
-    return {i for g in layout for i in g["lanes"] if i}
+def _feeds(st):
+    if id(st) not in _FEEDS:
+        _, feeds, _, _ = _read(st)
+        _FEEDS[id(st)] = ([i for _, i in feeds], st)
+    return _FEEDS[id(st)][0]
 
 
+_SIZE, _FEEDS = {}, {}
+
+
+def stack_size(st):
+    """(width incl. its gap, height) of a stack as compose places it (cached per stack object)"""
+    if id(st) not in _SIZE:
+        ents, feeds, lo, hi = _read(st)
+        ys = [e[2] for e in ents] + [e[2] + e[5] - 1 for e in ents]
+        _SIZE[id(st)] = (hi - lo + 1 + st.gap, max(ys) - min(ys) + 1, st)
+    return _SIZE[id(st)][:2]
+
+
+def split_line(cell, n, height, make, tier="mid", max_cells=None):
+    """A line of n cells as stacks no taller than `height` and of at most `max_cells` cells (as even as possible)."""
+    h1 = stack_size(make(cell, 1, tier))[1]
+    h2 = stack_size(make(cell, 2, tier))[1]
+    per = h2 - h1
+    m = max(1, (height - (h1 - per)) // per) if per > 0 else n
+    if max_cells:
+        m = max(1, min(m, max_cells))
+    k = math.ceil(n / m)
+    sizes = [n // k + (1 if i < n % k else 0) for i in range(k)]
+    return [make(cell, s, tier) for s in sizes if s]
+
+
+def island_parts(isl: Island, k, height, tier, outside):
+    """Split an island into k self-sufficient parts. `outside` = items consumed by other islands."""
+    from lib.fstack import as_stack
+    make = isl.make or (lambda c, n, t: as_stack(c, n, t, compact=True))
+    parts = []
+    for i in range(k):
+        stacks = []
+        counts = []
+        for li, (cell, n) in enumerate(isl.lines):            # remainders rotate, so single cells spread out
+            counts.append(n // k + (1 if (i - li) % k < n % k else 0))
+        fluid_maker = [bool(cell.fluids_out and not cell.items_out) for cell, _ in isl.lines]
+        mine = [f(tier) for j, f in enumerate(isl.extra) if j % k == i]
+        consumed = {x for st in mine for x in _feeds(st) if x in FLUIDS}
+        for (cell, n), ni, fm in zip(isl.lines, counts, fluid_maker):
+            if ni and not fm:
+                consumed |= set(cell.fluids_in)
+        grow = True
+        while grow:                                         # producers of producers (heavy oil -> lubricant)
+            grow = False
+            for (cell, n), fm in zip(isl.lines, fluid_maker):
+                if fm and set(cell.fluids_out) & consumed and not set(cell.fluids_in) <= consumed:
+                    consumed |= set(cell.fluids_in); grow = True
+        for idx, ((cell, n), ni, fm) in enumerate(zip(isl.lines, counts, fluid_maker)):
+            if fm:                                          # every part makes the fluids its own lines use
+                ni = max(1, ni) if set(cell.fluids_out) & consumed else 0
+            cap = None
+            if isl.waste:                                   # one by-product belt must carry a whole stack's waste
+                one = make(cell, 1, tier).supply.get(isl.waste[0], 0)
+                cap = int(LANE // one) if one > 0 else None
+            if ni:
+                stacks += split_line(cell, ni, height, make, tier, cap)
+        stacks += mine
+        lanes = []
+        for item in isl.raw:
+            rate = sum(s.demand.get(item, 0) * _feeds(s).count(item) for s in stacks)
+            if rate > 0:
+                lanes += [item] * max(1, math.ceil(rate / LANE - 1e-9))
+        if isl.waste:
+            item, sink = isl.waste
+            makers = [s for s in stacks if s.supply.get(item, 0) > 0]
+            rate = sum(s.supply[item] for s in makers)
+            if makers:
+                n = max(len(makers), math.ceil(rate / LANE - 1e-9))   # one lane (and one void) per maker
+                stacks += sink(rate / n, n, tier)
+                lanes += [item] * n
+        made, used = {}, {}
+        for s in stacks:
+            for it, kind, _ in s.products:
+                if kind == "item":
+                    made[it] = made.get(it, 0) + s.supply.get(it, 0)
+            for it in _feeds(s):
+                if it not in FLUIDS:
+                    used[it] = used.get(it, 0) + s.demand.get(it, 0)
+        internal = [it for it in made if it in used and it not in outside and it not in lanes and it not in isl.raw]
+        for it in internal:
+            lanes += [it] * max(1, math.ceil(max(made[it], used[it]) / LANE - 1e-9))
+        if not stacks:
+            continue
+        parts.append(Part(isl, stacks, tuple(lanes), set(lanes)))
+    return parts
+
+
+def consumers_outside(islands):
+    """item -> set of island names that consume it"""
+    from lib.fstack import as_stack
+    users = {}
+    for isl in islands:
+        make = isl.make or (lambda c, n, t: as_stack(c, n, t, compact=True))
+        stacks = [make(c, 1, "mid") for c, _ in isl.lines] + [f("mid") for f in isl.extra]
+        for s in stacks:
+            for it in _feeds(s):
+                users.setdefault(it, set()).add(isl.name)
+    return users
+
+
+# ------------------------------------------------------------------------------------------ robots
 def _depth(rate, ins):
     return max(1, min(4, math.ceil(rate / INSERTER[ins] - 1e-9)))
 
 
-def robotize(st: Stack, keep=frozenset(), ins="bulk-inserter"):
+def _limit(item, rate):
+    """stop an output while the network holds about two minutes of it"""
+    return {"connect_to_logistic_network": True, "logistic_condition": {
+        "first_signal": {"name": item}, "constant": max(200, int(rate * 120)), "comparator": "<"}}
+
+
+def robotize(st: Stack, keep=frozenset(), ins="bulk-inserter", gate=True):
     """Inputs and outputs of `st` by robots, except items in `keep` (street lanes) and fluids.
 
-    input  (marker at (x, 8)):  belt column continues south to row 8+k-1, k inserters beside it drop onto it from
-                                k requester chests (k from the column's demand)
-    output (product column x):  belt continues south, k inserters take from it into passive provider chests
-    The adapters sit east of the column, or west if that side is taken. Returns the wrapped Stack and its depth."""
+    input  (marker at (x, 8)):  belt column continues south, k inserters beside it drop onto it from k requester
+                                chests (k from the column's demand); or one chest straight below when the sides are
+                                taken
+    output (product column x):  belt continues south, k inserters take from it into passive provider chests; each
+                                stops while the network holds ~2 minutes of the item (gate=True)
+    The stack keeps no roboports of its own (the base places posts)."""
     keep = set(keep)
     outs = [(it, x) for it, kind, x in st.products if kind == "item" and it not in keep]
-    depth = 1
-    for it, _ in outs:
-        depth = max(depth, _depth(st.supply.get(it, 0), ins))
 
     def build(bp, t):
         st.build(bp, t)
+        bp.remove([e["entity_number"] for e in bp.entities if e["name"] == "roboport"])
         feeds, fluid_cols = [], set()
         for e in list(bp.entities):
             if e["name"] != "constant-combinator":
@@ -91,13 +214,13 @@ def robotize(st: Stack, keep=frozenset(), ins="bulk-inserter"):
                     continue
                 if all((c, 8 + j) not in bp._grid for c in cols for j in range(k)):
                     return sgn
-            return None                                    # no room beside it: chest straight below instead
+            return None
 
         req = lambda item: {"sections": [{"index": 1, "filters": [
             {"index": 1, "name": item, "quality": "normal", "comparator": "=", "count": 100}]}]}
         cols = sorted([(x, item, "in") for _, x, item in feeds] + [(x, item, "out") for item, x in outs])
         plan = {}
-        for x, item, kind in cols:                         # side adapters first (they need two free columns)
+        for x, item, kind in cols:
             k = _depth((st.demand if kind == "in" else st.supply).get(item, 0), ins)
             sgn = side(x, k)
             plan[x] = (sgn, k)
@@ -106,29 +229,73 @@ def robotize(st: Stack, keep=frozenset(), ins="bulk-inserter"):
                 reserved.update({x + sgn, x + 2 * sgn})
         for x, item, kind in cols:
             sgn, k = plan[x]
+            cb = {"control_behavior": _limit(item, st.supply.get(item, 0))} if (kind == "out" and gate) else {}
             if sgn is None:
-                d = N if kind == "in" else S
-                bp.add(tb, x, 8, d)
+                bp.add(tb, x, 8, N if kind == "in" else S)
                 if kind == "in":
                     bp.add(ins, x, 9, S)                   # picks from the chest below, drops on the belt
                     bp.add("requester-chest", x, 10, request_filters=req(item))
                 else:
-                    bp.add(ins, x, 9, N)                   # picks from the belt end above
+                    bp.add(ins, x, 9, N, **cb)             # picks from the belt end above
                     bp.add("passive-provider-chest", x, 10)
                 continue
             for j in range(k):
                 bp.add(tb, x, 8 + j, N if kind == "in" else S)
                 if kind == "in":
-                    bp.add(ins, x + sgn, 8 + j, E if sgn > 0 else W)      # picks from the chest, drops on the belt
+                    bp.add(ins, x + sgn, 8 + j, E if sgn > 0 else W)
                     bp.add("requester-chest", x + 2 * sgn, 8 + j, request_filters=req(item))
                 else:
-                    bp.add(ins, x + sgn, 8 + j, W if sgn > 0 else E)      # picks from the belt, drops in the chest
+                    bp.add(ins, x + sgn, 8 + j, W if sgn > 0 else E, **cb)
                     bp.add("passive-provider-chest", x + 2 * sgn, 8 + j)
 
-    new = replace(st, build=build, products=[p for p in st.products if not (p[1] == "item" and p[0] not in keep)])
-    d_in = max([_depth(v, ins) for k, v in st.demand.items() if k not in FLUIDS and k not in keep] + [1])
-    new._depth = max(depth, d_in, 3)
+    new = replace(st, build=build, products=[p for p in st.products if not (p[1] == "item" and p[0] not in keep)],
+                  gap=1)
+    d_out = max([_depth(st.supply.get(it, 0), ins) for it, _ in outs] + [0])
+    item_feeds = [i for i in _feeds(st) if i not in FLUIDS and i not in keep]
+    d_in = max([_depth(st.demand.get(i, 0), ins) for i in item_feeds] + [0])
+    new._depth = max(d_out, d_in, 3) if (outs or item_feeds) else 0
     return new
+
+
+def post_stack(height, tier="mid"):
+    """Roboport post between blocks: a roboport half-way up the shelf and a pole column down to the cap row."""
+    y_r = -max(4, height // 2)
+
+    def build(bp, t):
+        bp.add("roboport", 0, y_r)
+        for y in range(6, y_r + 4, -6):
+            bp.add(FT[t]["pole"], 1, y)
+        if (1, y_r + 4) not in bp._grid:
+            bp.add(FT[t]["pole"], 1, y_r + 4)
+    return Stack("Roboport post", build, tier, [], {}, gap=1)
+
+
+# ----------------------------------------------------------------------------------------- composing
+def auto_layout(stacks, solid=(), plain=False):
+    """Street for one shelf: the solid lanes given, then a lane per fluid the shelf uses (more when one pipe is not
+    enough), six per 6-row group as pipe-to-ground runs, or two per group as plain pipes that never touch
+    (plain=True, for Aquilo where every pipe-to-ground costs heat). Nothing to carry: no street."""
+    from lib.complex import FLUID_PER_S
+    need, made = {}, []
+    for st in stacks:
+        for item in _feeds(st):
+            if item in FLUIDS:
+                need[item] = need.get(item, 0) + st.demand.get(item, 0)
+        made += [p[0] for p in st.products if p[1] == "fluid"]
+    fl = []
+    for item in list(dict.fromkeys(made + list(need))):
+        fl += [item] * max(1, math.ceil(need.get(item, 0) / FLUID_PER_S - 1e-9))
+    groups = []
+    for i in range(0, len(solid), 6):
+        groups.append({"kind": "solid", "lanes": (list(solid[i:i + 6]) + [None] * 6)[:6]})
+    if not plain:
+        for i in range(0, len(fl), 6):
+            groups.append({"kind": "fluid", "lanes": (fl[i:i + 6] + [None] * 6)[:6]})
+        return groups
+    for i in range(0, len(fl), 2):
+        chunk = fl[i:i + 2]
+        groups.append({"kind": "fluid", "lanes": [chunk[0], None, None, chunk[1] if len(chunk) > 1 else None, None, None]})
+    return groups
 
 
 def _paste(dst, src, dx, dy):
@@ -143,143 +310,152 @@ def bbox(bp):
     return min(xs), min(ys), max(xs), max(ys)
 
 
-def stack_size(st):
-    """(width incl. its gap, height) of a stack as compose places it"""
-    from lib.complex import _read
-    ents, feeds, lo, hi = _read(st)
-    ys = [e[2] for e in ents] + [e[2] + e[5] - 1 for e in ents]
-    return hi - lo + 1 + st.gap, max(ys) - min(ys) + 1
+def _shelf_stacks(parts, posts, tier, ins):
+    """robotized stacks of the parts in order, roboport posts every ~44 tiles"""
+    out, used, next_post = [], 6, 20
+    height = max(stack_size(s)[1] for p in parts for s in p.stacks)
+    for p in parts:
+        for s in p.stacks:
+            r = robotize(s, p.keep, ins)
+            w = stack_size(r)[0]
+            if posts and used + w > next_post:
+                out.append(post_stack(height, tier)); used += 5; next_post = used + 48
+            out.append(r); used += w
+    return out
 
 
-def split_line(cell, n, height, make, tier="mid"):
-    """A line of n cells as stacks no taller than `height` (as even as possible)."""
-    h1 = stack_size(make(cell, 1, tier))[1]
-    h2 = stack_size(make(cell, 2, tier))[1]
-    per = h2 - h1
-    m = max(1, (height - (h1 - per)) // per) if per > 0 else n
-    k = math.ceil(n / m)
-    sizes = [n // k + (1 if i < n % k else 0) for i in range(k)]
-    return [make(cell, s, tier) for s in sizes if s]
+def street_rows(parts):
+    """rows a shelf of these parts needs under its stacks: lane groups (8 rows each) + adapter rows"""
+    fluids, solid, adapters = set(), 0, 0
+    for p in parts:
+        solid += len(p.lanes)
+        for s in p.stacks:
+            fluids |= {i for i in _feeds(s) if i in FLUIDS} | {q[0] for q in s.products if q[1] == "fluid"}
+            if any(i not in FLUIDS and i not in p.keep for i in _feeds(s)) or any(
+                    k == "item" and it not in p.keep for it, k, _ in s.products):
+                adapters = 5
+    return 8 * (math.ceil(solid / 6) + math.ceil(len(fluids) / 6)) + adapters + 2
 
 
-_FL = {}
-
-
-def fluids_of(st):
-    """fluids the stack takes or makes (cached per stack object)"""
-    if id(st) not in _FL:
-        from lib.complex import _read
-        _, feeds, _, _ = _read(st)
-        _FL[id(st)] = ({i for _, i in feeds if i in FLUIDS} | {p[0] for p in st.products if p[1] == "fluid"}, st)
-    return _FL[id(st)][0]
-
-
-def wet(st):
-    """does the stack take or make a fluid?"""
-    return bool(fluids_of(st))
-
-
-def pack(stacks, width, start=()):
-    """First-fit decreasing height into shelves of at most `width` tiles; `start` = [(used width, [stacks], dry)] of
-    shelves that already hold something (they are filled first). Returns lists of stacks (bottom first)."""
-    items = sorted(((stack_size(s), i, s) for i, s in enumerate(stacks)), key=lambda t: (-t[0][1], t[1]))
-    shelves = [[u, list(lst), dry] for u, lst, dry in start]
-    for (w, h), _, st in items:
+def pack(parts, width):
+    """first-fit decreasing height of parts into shelves of at most `width` tiles"""
+    size = {id(p): (sum(stack_size(s)[0] for s in p.stacks), max(stack_size(s)[1] for s in p.stacks)) for p in parts}
+    shelves = []
+    for p in sorted(parts, key=lambda p: -size[id(p)][1]):
+        w = size[id(p)][0]
         for sh in shelves:
-            if sh[0] + w <= width and not (sh[2] and wet(st)):
-                sh[0] += w; sh[1].append(st); break
+            if sh[0] + w <= width:
+                sh[0] += w; sh[1].append(p); break
         else:
-            shelves.append([6 + 4 + w, [st], False])
-    return [sh[1] for sh in shelves]
+            shelves.append([10 + w, [p]])
+    return [sh[1] for sh in shelves], size
 
 
-def compose_base(label, shelves, tier="blue", street_gap=1, ins="bulk-inserter"):
-    """Shelves bottom → top into one rectangle, fluids joined by trunks at the west edge. Returns (bp, info)."""
+def plan(islands, height, aspect=1.4, tier="mid"):
+    """Choose the shelf width (and how many parts each island splits into) that wastes least near `aspect`."""
+    users = consumers_outside(islands)
+    outside_of = {isl.name: {it for it, who in users.items() if who - {isl.name}} for isl in islands}
+    cache = {}
+
+    def parts_of(isl, k):
+        if (isl.name, k) not in cache:
+            cache[(isl.name, k)] = island_parts(isl, k, height, tier, outside_of[isl.name])
+        return cache[(isl.name, k)]
+
+    whole = {isl.name: sum(stack_size(s)[0] for p in parts_of(isl, 1) for s in p.stacks) for isl in islands}
+    area = sum(stack_size(s)[0] * stack_size(s)[1] for isl in islands for p in parts_of(isl, 1) for s in p.stacks)
+    best = None
+    w_lo = max(60, int(math.sqrt(area * aspect) * 0.7))
+    for width in range(w_lo, int(math.sqrt(area * aspect) * 1.8) + 2, 4):
+        parts = []
+        for isl in islands:
+            k = max(1, math.ceil(whole[isl.name] / (width - 10)))
+            ps = parts_of(isl, k)
+            if any(sum(stack_size(s)[0] for s in p.stacks) > width - 10 for p in ps):
+                ps = parts_of(isl, k + 1)
+            parts += ps
+        shelves, size = pack(parts, width)
+        used = [10 + sum(size[id(p)][0] for p in sh) for sh in shelves]
+        hs = [max(size[id(p)][1] for p in sh) + street_rows(sh) for sh in shelves]
+        Wd, H = max(used), sum(hs)
+        waste = sum((Wd - u) * h for u, h in zip(used, hs)) + sum(
+            (h - size[id(p)][1]) * size[id(p)][0] for sh, h in zip(shelves, hs) for p in sh)
+        score = waste + abs(math.log(Wd / H / aspect)) * area * 0.5
+        if best is None or score < best[0]:
+            best = (score, shelves)
+    return best[1]
+
+
+def compose_base(label, shelves, tier="blue", street_gap=1, ins="bulk-inserter", posts=True, plain=False):
+    """Shelves (lists of parts) bottom → top into one rectangle. Returns (bp, info)."""
     bp = Blueprint(label, game="2.0")
     y_top = None
-    rows = []                                   # (fluid, y, load, supply)
-    widths = []
-    for sh in shelves:
-        layout = sh.street()
-        keep = _lanes(layout)
-        own = len(sh.stacks) if sh.owners is None else sh.owners
-        stacks = [robotize(s, keep if i < own else keep - _lanes([{"lanes": list(sh.solid)}]), ins)
-                  for i, s in enumerate(sh.stacks)]
-        gap = max(getattr(s, "_depth", 1) for s in stacks) + 2
-        part, rep = compose(label, layout, stacks, tier=tier, gap=gap, fluid_plain=True, fluid_west=True)
+    names = []
+    for parts in shelves:
+        stacks = _shelf_stacks(parts, posts, "mid", ins)
+        layout = auto_layout(stacks, tuple(l for p in parts for l in p.lanes), plain)
+        gap = max(getattr(s, "_depth", 0) for s in stacks) + 2
+        part, rep = compose(label, layout, stacks, tier=tier, gap=gap, fluid_plain=plain)
         if rep["warnings"]:
             raise ValueError("; ".join(rep["warnings"]))
         x0, y0, x1, y1 = bbox(part)
         dy = 0 if y_top is None else (y_top - street_gap - 1 - y1)
         _paste(bp, part, 0, dy)
-        rows += [(f, r + dy, ld, sp) for f, r, ld, sp in rep["fluid_rows"]]
-        widths.append(rep["x_end"])
         y_top = y0 + dy
-    raw = trunks(bp, rows)
-    return bp, {"widths": widths, "raw": raw, "fluid_rows": rows}
+        names.append([s.name for s in stacks if s.name != "Roboport post"])
+    return bp, {"shelves": names}
 
 
-def _trunk_x(k):
-    """trunk columns: banks of five (x = -3, -5, … -11), then a two-column relay gap, then the next bank"""
-    return -3 - 2 * (k % 5) - 11 * (k // 5)
+def _floatable(st):
+    """a stack that needs nothing from a street: no fluids, no belt lanes (robots bring and take everything)"""
+    return not any(i in FLUIDS for i in _feeds(st)) and not any(k == "fluid" for _, k, _ in st.products)
 
 
-def _connect_lane(bp, y, k):
-    """lane end at (0, y) → trunk k: pipe at -1, then pipe-to-ground hops under the trunks in between (a hop spans
-    one bank; consecutive hops meet back to back in the relay gap)."""
-    xt = _trunk_x(k)
-    bp.add("pipe", -1, y)
-    if k == 0:
-        bp.add("pipe", -2, y)
-        return
-    start = -2
-    bank = k // 5
-    for b in range(bank + 1):
-        last = b == bank
-        end = xt + 1 if last else -12 - 11 * b          # exit: beside the trunk, or the relay gap's east column
-        if end == start:                                 # trunk right beside the relay: a plain pipe joins them
-            bp.add("pipe", start, y)
-            return
-        bp.add("pipe-to-ground", start, y, E)
-        bp.add("pipe-to-ground", end, y, W)
-        start = end - 1
-        if last:
-            return
+def place_floaters(bp, stacks, box, margin=1):
+    """Put robot-fed, fluid-free stacks into the empty space of the core (above short blocks, ends of shelves):
+    bottom-left first fit over a prefix-sum grid of occupied tiles. Returns the stacks that found no room."""
+    x0, y0, x1, y1 = box
+    W, H = x1 - x0 + 1, y1 - y0 + 1
+
+    def table():
+        occ = [[0] * (W + 1) for _ in range(H + 1)]
+        for (x, y) in bp._grid:
+            if x0 <= x <= x1 and y0 <= y <= y1:
+                occ[y - y0 + 1][x - x0 + 1] = 1
+        for j in range(1, H + 1):
+            row, prev = occ[j], occ[j - 1]
+            acc = 0
+            for i in range(1, W + 1):
+                acc += row[i]
+                row[i] = acc + prev[i]
+        return occ
+
+    def empty(occ, i, j, w, h):                            # i, j = top-left (0-based) incl. margin
+        if i < 0 or j < 0 or i + w > W or j + h > H:
+            return False
+        return occ[j + h][i + w] - occ[j][i + w] - occ[j + h][i] + occ[j][i] == 0
+
+    left = []
+    for st in sorted(stacks, key=lambda s: -stack_size(s)[0] * stack_size(s)[1]):
+        part = Blueprint(st.name, game="2.0")
+        st.build(part, st.tier)
+        gx0, gy0, gx1, gy1 = bbox(part)
+        w, h = gx1 - gx0 + 1 + 2 * margin, gy1 - gy0 + 1 + 2 * margin
+        occ = table()
+        spot = None
+        for j in range(H - h, -1, -1):                    # bottom first
+            for i in range(0, W - w + 1):
+                if empty(occ, i, j, w, h):
+                    spot = (i, j); break
+            if spot:
+                break
+        if not spot:
+            left.append(st); continue
+        _paste(bp, part, x0 + spot[0] + margin - gx0, y0 + spot[1] + margin - gy0)
+    return left
 
 
-def trunks(bp, rows):
-    """Vertical pipes west of the shelves joining every shelf's lane of the same fluid (more than one trunk when the
-    lanes' total load needs it). Fluids nobody produces enter at the top of their trunk (the north edge stays free
-    of raw belts, which come from the west into the bottom shelves). Returns {fluid: [(trunk x, top y)]}."""
-    from lib.complex import FLUID_PER_S
-    by = {}
-    for f, y, ld, sp in rows:
-        by.setdefault(f, []).append((y, ld, sp))
-    out = {}
-    k = 0
-    for f, lst in by.items():
-        load = sum(l for _, l, _ in lst)
-        made = sum(s for _, _, s in lst) > 0
-        n = max(1, math.ceil(load / FLUID_PER_S - 1e-9))
-        if len(lst) < 2 and made:
-            continue                                     # produced and used in one shelf only: no trunk needed
-        for g in [lst[i::n] for i in range(n)]:
-            if not g:
-                continue
-            xt = _trunk_x(k)
-            ys = sorted(y for y, _, _ in g)
-            for y in ys:
-                _connect_lane(bp, y, k)
-            for y in range(ys[0], ys[-1] + 1):
-                if (xt, y) not in bp._grid:
-                    bp.add("pipe", xt, y)
-            if not made:
-                out.setdefault(f, []).append((xt, ys[0]))
-            k += 1
-    return out
-
-
-def place_gates(bp, gates, tier="mid"):
+def place_gates(bp, gates):
     """Gate blocks (e.g. raw-ore intake) below the core, side by side from the west: their input markers end up on
     the south edge, where extend_inputs leads them out through the frame."""
     if not gates:
@@ -294,34 +470,54 @@ def place_gates(bp, gates, tier="mid"):
         x += gx1 - gx0 + 1 + st.gap
 
 
-def extend_inputs(bp, raw, depth, tier="mid"):
-    """Lead every external input out through the frame: raw fluid trunks run north and end in a marker; markers on
-    the south edge (gates) get a belt / pipe southwards, markers on the west edge (raw belt lanes) a belt
-    westwards. Call before the frame so the frame leaves gaps for them."""
-    belt = FT[tier]["belt"]
-    y_top = bbox(bp)[1]
-    for f, ends in raw.items():
-        for xt, y in ends:
-            for yy in range(y - 1, y_top - depth - 1, -1):
-                if (xt, yy) not in bp._grid:
-                    bp.add("pipe", xt, yy)
-            bp.add_marker(xt, y_top - depth - 1, {f: 0})
-    y_bot = bbox(bp)[3]
+def extend_inputs(bp, depth, tier="mid", plain=False):
+    """Lead every external input out through the frame (`depth` tiles): west-edge markers (raw lanes of a street)
+    run west, south-edge markers (gates) run south. Each line ends in an underground pair (belt) / pipe-to-ground
+    pair (fluid) whose outer piece is what the player connects to, with the marker and a display panel beyond it.
+    Call before the frame, so the frame leaves gaps where the lines pass."""
+    belt, ug = FT[tier]["belt"], FT[tier]["ug"]
+    x0, y0, x1, y1 = bbox(bp)
     for e in list(bp.entities):
         if e["name"] != "constant-combinator":
             continue
         m = bp._meta[e["entity_number"]]
         sig = e["control_behavior"]["sections"]["sections"][0]["filters"][0]
-        if m["x"] == -1:                                  # raw lane of a shelf street, entering from the west
+        item, count = sig["name"], sig.get("count", 0)
+        fluid = item in FLUIDS
+        if m["x"] == -1:
+            y = m["y"]
             bp.remove([e["entity_number"]])
-            for xx in range(-1, -1 - depth, -1):
-                bp.add(belt, xx, m["y"], E)
-            bp.add_marker(-1 - depth, m["y"], {sig["name"]: sig.get("count", 0)})
-        elif m["y"] >= y_bot - 1 and sig["name"] not in FLUIDS:   # gate input on the south edge
+            end = -1 - depth                                # outer piece
+            if fluid and not plain:
+                # pipe-to-ground pairs only (lanes on neighbouring rows must not touch): the first piece opens east
+                # onto the street's west pipe-to-ground, relays meet open end to open end
+                x = -1
+                while True:
+                    far = max(end, x - 10)
+                    bp.add("pipe-to-ground", x, y, E); bp.add("pipe-to-ground", far, y, W)
+                    if far == end:
+                        break
+                    x = far - 1
+                bp.add_marker(end - 1, y, {item: count})
+                bp.add_panel(end - 2, y, item, "Input")
+                continue
+            for xx in range(-1, end + 3, -1):
+                bp.add("pipe" if fluid else belt, xx, y, **({} if fluid else {"direction": E}))
+            if fluid:
+                bp.add("pipe-to-ground", end + 3, y, E); bp.add("pipe-to-ground", end, y, W)
+            else:
+                bp.add(ug, end + 3, y, E, type="output"); bp.add(ug, end, y, E, type="input")
+            bp.add_marker(end - 1, y, {item: count})
+            bp.add_panel(end - 2, y, item, "Input")
+        elif m["y"] >= y1 - 1 and not fluid:                # gate input on the south edge
+            x, y = m["x"], m["y"]
             bp.remove([e["entity_number"]])
-            for yy in range(m["y"], m["y"] + depth):
-                bp.add(belt, m["x"], yy, N)
-            bp.add_marker(m["x"], m["y"] + depth, {sig["name"]: sig.get("count", 0)})
+            end = y + depth
+            for yy in range(y, end - 2):
+                bp.add(belt, x, yy, N)
+            bp.add(ug, x, end - 2, N, type="output"); bp.add(ug, x, end + 1, N, type="input")
+            bp.add_marker(x, end + 2, {item: count})
+            bp.add_panel(x, end + 3, item, "Input")
 
 
 # ------------------------------------------------------------------------------------- grid services
@@ -338,18 +534,26 @@ def _spot(bp, gx, gy, w, h, rmax=12):
     return None
 
 
-def roboports(bp, spacing=40, box=None):
-    """A roboport near every grid point (logistic area 50 x 50, so a 40 grid leaves slack for displaced spots)."""
-    x0, y0, x1, y1 = box or bbox(bp)
-    have = [(bp._meta[e["entity_number"]]["x"], bp._meta[e["entity_number"]]["y"]) for e in bp.entities if e["name"] == "roboport"]
+LOGISTIC = ("requester-chest", "passive-provider-chest", "buffer-chest", "active-provider-chest", "storage-chest",
+            "rocket-silo", "cargo-landing-pad")
+
+
+def roboports(bp, box=None):
+    """A roboport wherever a logistic chest is outside every roboport's 50 x 50 area (placed on the nearest free
+    4x4 spot, preferring the chest's own neighbourhood)."""
+    have = [(bp._meta[e["entity_number"]]["x"] + 2, bp._meta[e["entity_number"]]["y"] + 2)
+            for e in bp.entities if e["name"] == "roboport"]
     n = 0
-    for gy in range(y0 + spacing // 2, y1 + spacing // 2, spacing):
-        for gx in range(x0 + spacing // 2, x1 + spacing // 2, spacing):
-            if any(abs(hx - gx) < spacing // 2 and abs(hy - gy) < spacing // 2 for hx, hy in have):
-                continue
-            s = _spot(bp, gx, gy, 4, 4)
-            if s:
-                bp.add("roboport", *s); have.append(s); n += 1
+    for e in list(bp.entities):
+        if e["name"] not in LOGISTIC:
+            continue
+        m = bp._meta[e["entity_number"]]
+        cx, cy = m["x"] + m["w"] / 2, m["y"] + m["h"] / 2
+        if any(abs(hx - cx) <= 25 and abs(hy - cy) <= 25 for hx, hy in have):
+            continue
+        s = _spot(bp, int(cx) - 2, int(cy) - 2, 4, 4, 18)
+        if s:
+            bp.add("roboport", *s); have.append((s[0] + 2, s[1] + 2)); n += 1
     return n
 
 
@@ -359,7 +563,7 @@ def _electric(bp):
 
 
 def power_fix(bp, pole="medium-electric-pole"):
-    """A pole beside every electric entity that no pole covers, then a chain joining every pole group."""
+    """A pole beside every electric entity that no pole covers."""
     sup = POLES[pole]["supply"]
     poles = [e for e in bp.entities if e["name"] in POLES]
 
@@ -387,21 +591,18 @@ def power_fix(bp, pole="medium-electric-pole"):
                         best = (d, x, y)
         if best is None:
             raise ValueError(f"no room for a pole beside {e['name']} at ({m['x']},{m['y']})")
-        num = bp.add(pole, best[1], best[2])
-        poles.append(bp._ent(num) if hasattr(bp, "_ent") else bp.entities[-1])
+        bp.add(pole, best[1], best[2])
+        poles.append(bp.entities[-1])
         added += 1
     return added
 
 
 def link_poles(bp, pole="medium-electric-pole"):
-    """Join pole groups that are out of reach of each other with a chain of poles over free tiles (BFS)."""
-    from collections import deque
+    """Join pole groups that are out of reach of each other with a straight chain of poles on free tiles."""
     reach = POLES[pole]["reach"]
-    step = int(reach)
     while True:
         ps = [e for e in bp.entities if e["name"] in POLES]
         pos = {e["entity_number"]: (e["position"]["x"], e["position"]["y"], POLES[e["name"]]["reach"]) for e in ps}
-        # groups by reach
         seen, groups = set(), []
         for n in pos:
             if n in seen:
@@ -434,11 +635,80 @@ def link_poles(bp, pole="medium-electric-pole"):
             last = (x + .5, y + .5)
 
 
+def density(bp, box):
+    """entities per tile inside `box` (the core) — community bases reach 0.3-0.45"""
+    x0, y0, x1, y1 = box
+    n = sum(1 for e in bp.entities if x0 <= e["position"]["x"] <= x1 + 1 and y0 <= e["position"]["y"] <= y1 + 1)
+    return n / ((x1 - x0 + 1) * (y1 - y0 + 1))
+
+
+def build_base(label, islands, height, frame=None, aspect=1.4, tier="blue", gates=(), finish=None, posts=True,
+               controls=None, plain=False, float_dry=True):
+    """The whole base: islands → parts → shelves → rectangle → gates → inputs led out through the frame →
+    roboport holes filled → frame → controls(bp) (circuits that need the whole picture) → poles → finish.
+    Returns (bp, info)."""
+    shelves = plan(islands, height, aspect)
+    floaters = []
+    if float_dry:                                           # fluid-free robot stacks fill the gaps afterwards
+        parts = [p for sh in shelves for p in sh]
+        for p in parts:
+            if not p.keep:
+                floaters += [s for s in p.stacks if _floatable(s)]
+                p.stacks = [s for s in p.stacks if not _floatable(s)]
+        parts = [p for p in parts if p.stacks]
+        area = sum(stack_size(s)[0] * stack_size(s)[1] for p in parts for s in p.stacks) * 1.6 + \
+            sum(stack_size(s)[0] * stack_size(s)[1] for s in floaters) * 1.15
+        width = max([int(math.sqrt(area * aspect))] + [10 + sum(stack_size(s)[0] for s in p.stacks) for p in parts])
+        shelves, _ = pack(parts, width) if parts else ([], None)
+    bp, info = compose_base(label, shelves, tier, posts=posts, plain=plain) if shelves else (Blueprint(label, game="2.0"), {"shelves": []})
+    if floaters:
+        robo = [robotize(s, set(), "bulk-inserter") for s in floaters]
+        if bp.entities:
+            x0, y0, x1, y1 = bbox(bp)
+        else:
+            x0, y0, x1, y1 = -1, 0, width, 0
+        x1 = max(x1, x0 + width - 1)
+        spare = sum(stack_size(s)[0] * stack_size(s)[1] for s in robo) * 1.5 / (x1 - x0 + 1)
+        top = y0 - int(spare) - max(stack_size(s)[1] for s in robo) - 4
+        left = place_floaters(bp, robo, (x0, top, x1, y1))
+        if left:
+            raise ValueError(f"no room for {[s.name for s in left]}")
+        info["floaters"] = len(floaters)
+        info["shelves"].append([s.name for s in floaters])
+    place_gates(bp, gates)
+    core = bbox(bp)
+    info["core"] = core
+    extend_inputs(bp, (frame.thickness if frame else 0) + 4, plain=plain)
+    roboports(bp)
+    if frame:
+        info["frame"] = frame(bp, core)
+    if controls:
+        info["controls"] = controls(bp)
+    power_fix(bp)
+    link_poles(bp)
+    if finish:
+        info["finish"] = finish(bp)
+    bp.connect_poles()
+    info["density"] = round(density(bp, core), 2)
+    return bp, info
+
+
 # ------------------------------------------------------------------------------------------ frames
-def wall_and_turrets(bp, box=None, margin=4, spacing=4, gun_every=3, walls=2, ammo="firearm-magazine", tier="mid"):
-    """Defence ring (Gleba): `walls` rows of stone wall outside a row of turrets every `spacing` tiles — laser
-    turrets, and every `gun_every`-th a gun turret with an inserter and a requester chest for `ammo` on its inner
-    side — with medium poles between them. Anything already crossing the ring (input pipes / belts) leaves a gap."""
+class Frame:
+    """A ring around the core: `build(bp, core_box)`; `thickness` tiles outside the core box."""
+    def __init__(self, build, thickness):
+        self.build, self.thickness = build, thickness
+
+    def __call__(self, bp, core):
+        return self.build(bp, core)
+
+
+def wall_and_turrets(bp, box=None, margin=4, spacing=4, gun_every=3, walls=2, ammo="firearm-magazine", tier="mid",
+                     mines=0):
+    """Defence ring (Gleba): optional land-mine rows outside, `walls` rows of stone wall, a row of turrets every
+    `spacing` tiles inside them — laser turrets, every `gun_every`-th a gun turret fed from a requester chest (its
+    inserter stops at 500 magazines in the network) — with medium poles between them. Lines already crossing the
+    ring (inputs) leave gaps."""
     ins = FT[tier]["ins"]
     x0, y0, x1, y1 = box or bbox(bp)
     tx0, ty0, tx1, ty1 = x0 - margin - 2, y0 - margin - 2, x1 + margin, y1 + margin       # turret row (2x2)
@@ -449,7 +719,6 @@ def wall_and_turrets(bp, box=None, margin=4, spacing=4, gun_every=3, walls=2, am
         if not _free(bp, x, y, 2, 2):
             continue
         if k % gun_every == 0:
-            # inserter + chest on the inner side, picking from the chest and dropping into the turret
             ix, iy, d, cx, cy = {"N": (x, y + 2, S, x, y + 3), "S": (x, y - 1, N, x, y - 2),
                                  "W": (x + 2, y, E, x + 3, y), "E": (x - 1, y, W, x - 2, y)}[side]
             if _free(bp, ix, iy, 1, 1) and _free(bp, cx, cy, 1, 1):
@@ -472,18 +741,31 @@ def wall_and_turrets(bp, box=None, margin=4, spacing=4, gun_every=3, walls=2, am
         for x, y in ring:
             if (x, y) not in bp._grid:
                 bp.add("stone-wall", x, y); wn += 1
-    return n, wn
+    mn = 0
+    for r in range(mines):                                  # mine rows outside the walls, every other tile
+        a0, b0, a1, b1 = tx0 - 3 - walls - 2 * r, ty0 - 3 - walls - 2 * r, tx1 + 4 + walls + 2 * r, ty1 + 4 + walls + 2 * r
+        ring = [(x, b0) for x in range(a0, a1 + 1, 2)] + [(x, b1) for x in range(a0, a1 + 1, 2)]
+        ring += [(a0, y) for y in range(b0 + 2, b1, 2)] + [(a1, y) for y in range(b0 + 2, b1, 2)]
+        for x, y in ring:
+            if (x, y) not in bp._grid:
+                bp.add("land-mine", x, y); mn += 1
+    return n, wn, mn
+
+
+def defence_frame(**kw):
+    """wall_and_turrets as a Frame (thickness: margin + turret + gap + walls + mine rows)"""
+    margin, walls, mines = kw.get("margin", 4), kw.get("walls", 2), kw.get("mines", 0)
+    return Frame(lambda bp, core: wall_and_turrets(bp, core, **kw), margin + 2 + 2 + walls + 2 * mines)
 
 
 def field_ring(bp, tile, size=12, rings=1, margin=2, box=None):
-    """A band of `tile(bp, x, y)` blocks (size x size) all around the rectangle (Fulgora: accumulators +
-    lightning collector + substation per tile). Returns the number of tiles placed."""
+    """A band of `tile(bp, x, y)` blocks (size x size) all around the rectangle. Returns the tiles placed."""
     x0, y0, x1, y1 = box or bbox(bp)
     n = 0
     for r in range(rings):
         ax0 = x0 - margin - size * (r + 1)
         ay0 = y0 - margin - size * (r + 1)
-        nx = math.ceil((x1 + margin + 1 + size * r - ax0) / size)      # tiles from the west band to the east band
+        nx = math.ceil((x1 + margin + 1 + size * r - ax0) / size)
         ny = math.ceil((y1 + margin + 1 + size * r - ay0) / size)
         for i in range(nx + 1):
             for j in range(ny + 1):
@@ -492,164 +774,6 @@ def field_ring(bp, tile, size=12, rings=1, margin=2, box=None):
                     if _free(bp, x, y, size, size):
                         tile(bp, x, y); n += 1
     return n
-
-
-def auto_layout(stacks, solid=()):
-    """Street for one shelf: a lane per fluid the shelf uses (more lanes when one pipe is not enough), two per
-    6-row group so no two lanes touch (plain pipes, and the lane starts at the west edge never touch), plus the
-    solid lanes given (raw belts such as scrap). No fluids and no solids: no street at all."""
-    from lib.complex import _read, FLUID_PER_S
-    need, made = {}, []
-    for st in stacks:
-        _, feeds, _, _ = _read(st)
-        for _, item in feeds:
-            if item in FLUIDS:
-                need[item] = need.get(item, 0) + st.demand.get(item, 0)
-        made += [p[0] for p in st.products if p[1] == "fluid"]
-    fl = []
-    for item in list(dict.fromkeys(made + list(need))):
-        fl += [item] * max(1, math.ceil(need.get(item, 0) / FLUID_PER_S - 1e-9))
-    groups = []
-    for i in range(0, len(solid), 6):
-        groups.append({"kind": "solid", "lanes": (list(solid[i:i + 6]) + [None] * 6)[:6]})
-    for i in range(0, len(fl), 2):
-        chunk = fl[i:i + 2]
-        groups.append({"kind": "fluid", "lanes": [chunk[0], None, None, chunk[1] if len(chunk) > 1 else None, None, None]})
-    return groups
-
-
-def shelf_width(sh):
-    return 10 + sum(stack_size(s)[0] for s in sh.stacks)
-
-
-def plan_shelves(stacks, aspect=1.4, fixed=(), street=8):
-    """Pack stacks into shelves, trying widths around the square root of the total area and keeping the one that
-    wastes least (empty shelf ends) while staying near `aspect` (width / height). `fixed` are Shelf objects that
-    must exist (e.g. one with raw belt lanes); they come first, at the bottom, and are filled up with other stacks."""
-    sizes = {id(s): stack_size(s) for s in list(stacks) + [x for f in fixed for x in f.stacks]}
-    area = sum(w * h for w, h in sizes.values())
-    w_min = max([w for w, _ in sizes.values()]) + 10
-    w_fix = max([shelf_width(f) for f in fixed] + [0])
-    start = [(shelf_width(f), f.stacks, f.dry) for f in fixed]
-    best = None
-    lo = max(w_min, w_fix, int(math.sqrt(area * aspect) * 0.7))
-    for width in range(lo, max(int(math.sqrt(area * aspect) * 1.6), lo) + 2, 2):
-        shelves = pack(stacks, width, start)
-        used = [10 + sum(sizes[id(s)][0] for s in sh) for sh in shelves]
-        hs = [max(sizes[id(s)][1] for s in sh) + 6 + 8 * math.ceil(len(set().union(*map(fluids_of, sh))) / 2)
-              for sh in shelves]
-        W, H = max(used), sum(hs)
-        waste = sum((W - u) * h for u, h in zip(used, hs)) + sum(
-            (h - street - sizes[id(s)][1]) * sizes[id(s)][0] for sh, h in zip(shelves, hs) for s in sh)
-        score = waste + abs(math.log(W / H / aspect)) * area * 0.5
-        if best is None or score < best[0]:
-            best = (score, shelves)
-    out = []
-    for i, g in enumerate(best[1]):
-        out.append(Shelf(g, fixed[i].solid, owners=len(fixed[i].stacks), dry=fixed[i].dry) if i < len(fixed) else Shelf(g))
-    return out
-
-
-def build_base(label, stacks, frame=None, fixed=(), aspect=1.4, tier="blue", robot_spacing=40, post=None, gates=(),
-               finish=None):
-    """The whole base: shelves → rectangle → raw inputs led out through the frame → roboports and poles over the
-    core → frame(bp, core_box) (returns its thickness) → poles for everything. Returns (bp, info)."""
-    shelves = plan_shelves(stacks, aspect, fixed)
-    bp, info = compose_base(label, shelves, tier)
-    place_gates(bp, gates)
-    core = bbox(bp)
-    info["core"] = core
-    thick = frame.thickness if frame else 0
-    extend_inputs(bp, info["raw"], thick + 2)
-    roboports(bp, robot_spacing, core)
-    if post:
-        post(bp)
-    if frame:
-        info["frame"] = frame(bp, core)
-    power_fix(bp)
-    link_poles(bp)
-    if finish:
-        info["finish"] = finish(bp)
-    bp.connect_poles()
-    info["shelves"] = [[s.name for s in sh.stacks] for sh in shelves]
-    return bp, info
-
-
-class Frame:
-    """A ring around the core: `build(bp, core_box)`; `thickness` tiles outside the core box."""
-    def __init__(self, build, thickness):
-        self.build, self.thickness = build, thickness
-
-    def __call__(self, bp, core):
-        return self.build(bp, core)
-
-
-def plan_shelves(stacks, aspect=1.4, fixed=(), street=8):
-    """Pack stacks into shelves, trying widths around the square root of the total area and keeping the one that
-    wastes least (empty shelf ends) while staying near `aspect` (width / height). `fixed` are Shelf objects that
-    must exist (e.g. one with raw belt lanes); they come first, at the bottom, and are filled up with other stacks."""
-    sizes = {id(s): stack_size(s) for s in list(stacks) + [x for f in fixed for x in f.stacks]}
-    area = sum(w * h for w, h in sizes.values())
-    w_min = max([w for w, _ in sizes.values()]) + 10
-    w_fix = max([shelf_width(f) for f in fixed] + [0])
-    start = [(shelf_width(f), f.stacks, f.dry) for f in fixed]
-    best = None
-    lo = max(w_min, w_fix, int(math.sqrt(area * aspect) * 0.7))
-    for width in range(lo, max(int(math.sqrt(area * aspect) * 1.6), lo) + 2, 2):
-        shelves = pack(stacks, width, start)
-        used = [10 + sum(sizes[id(s)][0] for s in sh) for sh in shelves]
-        hs = [max(sizes[id(s)][1] for s in sh) + 6 + 8 * math.ceil(len(set().union(*map(fluids_of, sh))) / 2)
-              for sh in shelves]
-        W, H = max(used), sum(hs)
-        waste = sum((W - u) * h for u, h in zip(used, hs)) + sum(
-            (h - street - sizes[id(s)][1]) * sizes[id(s)][0] for sh, h in zip(shelves, hs) for s in sh)
-        score = waste + abs(math.log(W / H / aspect)) * area * 0.5
-        if best is None or score < best[0]:
-            best = (score, shelves)
-    out = []
-    for i, g in enumerate(best[1]):
-        out.append(Shelf(g, fixed[i].solid, owners=len(fixed[i].stacks), dry=fixed[i].dry) if i < len(fixed) else Shelf(g))
-    return out
-
-
-def build_base(label, stacks, frame=None, fixed=(), aspect=1.4, tier="blue", robot_spacing=40, post=None, gates=(),
-               finish=None):
-    """The whole base: shelves → rectangle → raw inputs led out through the frame → roboports and poles over the
-    core → frame(bp, core_box) (returns its thickness) → poles for everything. Returns (bp, info)."""
-    shelves = plan_shelves(stacks, aspect, fixed)
-    bp, info = compose_base(label, shelves, tier)
-    place_gates(bp, gates)
-    core = bbox(bp)
-    info["core"] = core
-    thick = frame.thickness if frame else 0
-    extend_inputs(bp, info["raw"], thick + 2)
-    roboports(bp, robot_spacing, core)
-    if post:
-        post(bp)
-    if frame:
-        info["frame"] = frame(bp, core)
-    power_fix(bp)
-    link_poles(bp)
-    if finish:
-        info["finish"] = finish(bp)
-    bp.connect_poles()
-    info["shelves"] = [[s.name for s in sh.stacks] for sh in shelves]
-    return bp, info
-
-
-class Frame:
-    """A ring around the core: `build(bp, core_box)`; `thickness` tiles outside the core box."""
-    def __init__(self, build, thickness):
-        self.build, self.thickness = build, thickness
-
-    def __call__(self, bp, core):
-        return self.build(bp, core)
-
-
-def defence_frame(**kw):
-    """wall_and_turrets as a Frame (thickness: margin + turret + gap + walls)"""
-    margin, walls = kw.get("margin", 4), kw.get("walls", 2)
-    return Frame(lambda bp, core: wall_and_turrets(bp, core, **kw), margin + 2 + 2 + walls)
 
 
 def scatter(bp, name, size, spacing, box):
@@ -677,7 +801,7 @@ def lightning_tile(bp, x0, y0):
 
 def field_frame(rings=1):
     """Fulgora: a band of lightning tiles all around the core, plus collectors scattered over the core so every
-    building is protected (lightning hits the tallest / nearest rod within range)."""
+    building is protected (lightning hits the nearest rod within range)."""
     def build(bp, core):
         n = field_ring(bp, lightning_tile, 12, rings, 2, core)
         c = scatter(bp, "lightning-collector", 2, 36, core)
@@ -689,3 +813,24 @@ def field_frame(rings=1):
                 bp.add("medium-electric-pole", x, y)
         return n, c
     return Frame(build, 12 * rings + 2)
+
+
+# --------------------------------------------------------------------------------------- controls
+def power_alarm(bp, accumulator_num, message="Power low", threshold=20):
+    """Programmable speaker + map alert while the accumulator charge (signal A) is below `threshold` %, wired to
+    the given accumulator (which outputs signal A)."""
+    m = bp._meta[accumulator_num]
+    acc = bp._ent(accumulator_num)
+    acc["control_behavior"] = {"output_signal": {"type": "virtual", "name": "signal-A"}}
+    sp = _spot(bp, m["x"] + 2, m["y"], 1, 1, 6)
+    num = bp.add("programmable-speaker", *sp, control_behavior={
+        "circuit_condition": {"first_signal": {"type": "virtual", "name": "signal-A"}, "constant": threshold,
+                              "comparator": "<"},
+        "circuit_parameters": {"signal_value_is_pitch": False, "stop_playing_sounds": False, "instrument_id": 0,
+                               "note_id": 1}},
+        parameters={"playback_volume": 1, "playback_mode": "global", "allow_polyphony": False,
+                    "volume_controlled_by_signal": False},
+        alert_parameters={"show_alert": True, "show_on_map": True,
+                          "icon_signal_id": {"type": "virtual", "name": "signal-A"}, "alert_message": message})
+    bp.wire(accumulator_num, num, "red")
+    return num

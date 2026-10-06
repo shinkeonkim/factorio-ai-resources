@@ -98,21 +98,36 @@ SPECIAL = [("Power + heat", "가열탑 3기(암모니아 로켓 연료, 열 300 
 HEIGHT = 40
 
 
+def islands():
+    """One heated island (split into parts that each make their own ammonia, water and fluoroketone) with the
+    power block, and the rocket / landing pad (no fluids, so they fill gaps)."""
+    from lib.base import Island
+    return [
+        Island("Aquilo", [(C[k], n) for k, n in LINES], extra=[lambda t: power_stack(3, t)],
+               make=lambda c, n, t: hstack.as_stack(c, n, t)),
+        Island("Rocket", [], extra=[rocket_stack, pad_stack]),
+    ]
+
+
+def controls(bp):
+    from lib.base import power_alarm
+    acc = next(e["entity_number"] for e in bp.entities if e["name"] == "accumulator")
+    return power_alarm(bp, acc, "Aquilo base: power low (heating towers need rocket fuel)")
+
+
+def warm(bp):
+    _heat.fill(bp)
+    _heat.prune(bp)
+    problems = _heat.check(bp)
+    if problems:
+        raise SystemExit("Aquilo heating: " + "; ".join(problems))
+    return round(_heat.load_kw(bp) / 1000, 1)
+
+
 def base(label="Aquilo all-in-one", tier="mid"):
-    """Rectangle base, heated: robot-fed heated cells, fluids (ammoniacal solution, lithium brine, fluorine, crude
-    oil in; ammonia, water, fluoroketone made here) in trunks along the west edge, three heating towers for power
-    and heat; at the end lib/heat fills heat pipe beside everything that freezes and checks it."""
+    """Dense heated rectangle: robot-fed heated cells, plain-pipe streets (every pipe-to-ground costs 150 kW of
+    heat), raw fluids (ammoniacal solution, lithium brine, fluorine, crude oil) from the west of each shelf, three
+    heating towers that restart by themselves; at the end lib/heat fills heat pipe beside everything that freezes
+    and checks it."""
     from lib.base import build_base
-    from lib.planets.common import line_stacks
-    mod = __import__(__name__, fromlist=["x"])
-    units = [power_stack(3, tier)] + line_stacks(mod, HEIGHT, tier, hstack.as_stack) + [rocket_stack(tier), pad_stack(tier)]
-
-    def warm(bp):
-        _heat.fill(bp)
-        _heat.prune(bp)
-        problems = _heat.check(bp)
-        if problems:
-            raise SystemExit("Aquilo heating: " + "; ".join(problems))
-        return round(_heat.load_kw(bp) / 1000, 1)
-
-    return build_base(label, units, frame=None, tier="blue", finish=warm)
+    return build_base(label, islands(), HEIGHT, frame=None, tier="blue", finish=warm, controls=controls, plain=True)

@@ -5,7 +5,8 @@ which circuit tricks it uses, where its inputs are, how it is powered and defend
     python3 study.py <string|file> [--top 6] [--match TEXT] [--map [SCALE]]
 
 Per blueprint it prints
-  size, entities, density (entities per tile of the bounding box — dense community bases are 0.3-0.5)
+  size, entities, density (entities per tile of the bounding box — dense community bases are 0.24-0.44) and
+      coverage (share of tiles under an entity — 0.55-0.82 for dense community bases)
   machines by recipe, beacons and modules (+ quality)
   inserter flows: what each inserter picks from → drops into (belt→machine, machine→machine = direct
       insertion, requester→machine, machine→buffer, …) — the clearest fingerprint of a design style
@@ -147,7 +148,8 @@ def study(label, bp, show_map=0):
                 requested[f.get("name")] += 1
     filt = sum(1 for e in es if e.get("use_filters") and type_of(e["name"]) == "inserter")
     print(f"\n### {label or '(unnamed)'}")
-    print(f"  {W}x{H} tiles, {len(es)} entities, density {len(es) / (W * H):.2f}, machines {len(machines)}, "
+    print(f"  {W}x{H} tiles, {len(es)} entities, density {len(es) / (W * H):.2f}, coverage {len(grid) / (W * H):.2f}, "
+          f"machines {len(machines)}, "
           f"beacons {c['beacon']}, wires {len(bp.get('wires', []))}, filter inserters {filt}")
     print("  recipes:", ", ".join(f"{k} {v}" for k, v in recipes.most_common(16)))
     if mods:

@@ -11,12 +11,14 @@
   the stacking table. Complex products get their intermediates from their own cells, not one big layout.
 - **Fluid cells** (lib/fstack.py): one recipe per cell, machines rotated so fluid inputs face the belts and outputs
   face the centre; each input fluid gets its own machine row (pipe-to-ground pairs must never share a row).
-- **Planet bases** (lib/base.py + lib/planets/<planet>.py `base()`): one compact rectangle like community planet bases,
-  never a planet-wide bus. Lines are split into equal-height stacks and packed into shelves; each shelf has a short
-  street for its own fluids (+ raw belt lanes where needed, e.g. scrap / stone); fluids join across shelves in west
-  trunks; items move between blocks by robots (`robotize`: requester → belt column, belt end → provider); raw ores
-  enter through gate blocks on the south edge; a frame per planet (Gleba wall + turrets, Fulgora lightning band,
-  Aquilo heat fill via lib/heat.py `check()` must be empty, Vulcanus none — demolishers).
+- **Planet bases** (lib/base.py + lib/planets/<planet>.py `islands()` / `base()`): one dense rectangle like community
+  planet bases (skills/factorio-blueprint/references/base-design.md), never a planet-wide bus. Islands = lines that
+  share fluids/intermediates; split islands keep their own fluid producers (no fluid crosses the base). Parts packed
+  into shelves with short streets; fluid-free robot stacks float into the gaps; robot-fed cells (`bots=True`, or
+  `belt_out=True` to keep a by-product on a belt); outputs gated by logistic conditions; self-starting power
+  (burner inserters on accumulator charge) + low-power alarm; inputs on the edge (underground/PTG end + marker +
+  display panel). Frames: Gleba mines + walls + turrets, Fulgora lightning band, Aquilo heat (lib/heat `check()`
+  must be empty), Vulcanus none. Measure with `scripts/study.py` (density, coverage).
 - House rules for new factories: horizontal main bus of 6-lane groups + 2 empty rows (`lib/main_bus.py`,
   docs/guides/main-bus-6x2.md); upgrade in place yellow→red→blue with the same layout (underground spans ≤4,
   no long-handed on bottlenecks, small-pole spacing, 2×2 furnaces; docs/guides/upgrade-in-place.md);

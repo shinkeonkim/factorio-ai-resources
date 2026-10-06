@@ -12,15 +12,17 @@
 
 ![part-1](images/part-1.webp)
 ![part-2](images/part-2.webp)
+![part-3](images/part-3.webp)
+![part-4](images/part-4.webp)
 
 <sub>Images rendered with [Factorio Blueprint Editor](https://fbe.factorygamefan.com) (game graphics © Wube Software)</sub>
 
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 226×164 tiles |
-| Entities | 18831 |
-| Main machines | `requester-chest` ×84<br>`chemical-plant` ×72 (ice-melting 32, ammoniacal-solution-separation 24, solid-fuel-from-ammonia 8, ammonia-rocket-fuel 8)<br>`passive-provider-chest` ×68<br>`cryogenic-plant` ×30 (cryogenic-science-pack 16, lithium 6, fluoroketone-cooling 4, fluoroketone 2, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
+| Size | 287×211 tiles |
+| Entities | 18982 |
+| Main machines | `requester-chest` ×76<br>`passive-provider-chest` ×68<br>`chemical-plant` ×60 (ammoniacal-solution-separation 24, ice-melting 20, ammonia-rocket-fuel 8, solid-fuel-from-ammonia 8)<br>`cryogenic-plant` ×36 (cryogenic-science-pack 16, lithium 6, fluoroketone 6, fluoroketone-cooling 6, fusion-power-cell 2)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (ice-platform 4)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -54,15 +56,16 @@ none
 | Rocket silo | - | - | robot-fed silo | |
 | Landing pad | - | - | imports holmium plates, blue circuits, LDS | |
 
-Shelves (bottom → top; long lines are split into stacks of equal height):
+Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fill the gaps):
 
 | Shelf | Blocks |
 |---|---|
-| 1 | Power + heat: 3 heating towers, Ammonia + ice (separation) x3, Ammonia + ice (separation) x3, Water (ice melting) x3, Water (ice melting) x3, Cryogenic science x2, Cryogenic science x2 |
-| 2 | Water (ice melting) x2, Lithium x3, Lithium plate x2, Solid fuel (ammonia + crude oil) x2, Rocket fuel (ammonia) x2, Fluoroketone cooling x2, Landing pad (robot network) |
-| 3 | Ice platform x1, Fluoroketone (hot) x1, Fusion power cell x1, Rocket silo (robot-fed) |
+| 1 | Ammonia + ice (separation) x2, Water (ice melting) x2, Lithium x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1, Ice platform x1, Power + heat: 3 heating towers |
+| 2 | Ammonia + ice (separation) x2, Water (ice melting) x3, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x1, Rocket fuel (ammonia) x1 |
+| 3 | Ammonia + ice (separation) x2, Lithium x1, Solid fuel (ammonia + crude oil) x1, Fluoroketone (hot) x1, Fluoroketone cooling x1, Cryogenic science x2, Fusion power cell x1 |
+| gap fill | Lithium plate x1, Lithium plate x1, Rocket silo (robot-fed), Landing pad (robot network) |
 
-Core 214×159 tiles, overall 226×164, 18,831 entities. Peak power 72 MW / turbines 140 MW, heating load 110.3 MW. Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a trunk along the west edge that joins it in every shelf.
+Core 281×209 tiles, overall 287×211, 18,982 entities, density 0.31 · tile coverage 0.35 (community references: 0.24–0.44 · 0.55–0.82). Peak power 78 MW / turbines 140 MW, heating load 126.0 MW.
 
 ### Roadmap
 
@@ -120,9 +123,11 @@ python3 tools/build.py planet-aquilo
 
 Community planet bases don't run a bus across the planet. They pack production into one dense rectangle and put power and defence around its edge (see the community designs below). This base is built the same way (`lib/base.py`).
 
-- **Shelves**: every line is split into blocks of equal height (stacks of stackable cells) packed side by side into horizontal shelves. The shelves stack up into the rectangle. The packer picks the width that leaves the fewest empty tiles.
-- **Robots between blocks**: every block input gets requester chest → inserter → belt, and every output gets belt end → inserter → provider chest. Belts stay inside blocks, and roboports cover the core on a 40-tile grid.
-- **Fluids in west trunks**: each shelf lays only the fluids it uses, on a short street under it. A vertical trunk per fluid along the west edge joins that fluid across all shelves. External fluids enter at the north end of their trunk (constant-combinator marker).
+- **Islands**: lines that share fluids and intermediates form an island (e.g. molten iron + its castings, molten copper + metallurgic science). An island wider than a shelf is split into parts, each with its own fluid-producing cells, so no fluid crosses the base (`references/base-design.md` §3).
+- **Shelves**: island parts of similar height fill horizontal shelves, which stack into the rectangle. The street under a shelf carries only that shelf's fluids (pipe-to-ground runs, six per group, ending at the last user). Blocks that need no fluid (robot-fed cells, silo, landing pad…) fill the gaps above the shelves.
+- **Robot-fed cells**: every machine has a requester chest (ingredients) and a provider chest (results), so no belt columns are needed. Intermediates used only inside an island (e.g. gears and cable into the secondary recycler) and by-products (stone, overflow) ride short street belts. Roboports stand on posts between blocks about every 48 tiles.
+- **Self-regulating**: every output inserter into a provider chest stops once the network holds about two minutes of the item (logistic condition). Burner inserters feed the heating towers only while the accumulators are below 90 %. They need no power, so a dead base restarts by itself. Below 20 % a speaker and a map alert go off (`references/circuits.md`).
+- **Inputs**: all on the edge. Fluids enter from the west of each shelf, ores through the south gate. Each line ends in an underground belt or pipe-to-ground, with a marker (count per minute) and a display panel beside it.
 
 ## Heating (not freezing)
 
@@ -131,7 +136,7 @@ On Aquilo a building freezes and stops unless a heat source above 30 °C is **wi
 - The cells (`lib/hstack.py`) come with their own heat-pipe columns and rows. Every machine, inserter, pipe and pipe-to-ground has heat pipe next to it.
 - Each fluid main hops once per cell with a pipe-to-ground pair, and the heat pipe crosses under it there. That joins the heat on both sides of the main.
 - After composing, `lib/heat.py` fills the remaining gaps with heat pipe and joins it to the power block's heating towers. Pieces that cannot be joined are removed. It then checks that **every building that freezes has warm heat pipe within one tile**. Generation stops if the check fails, so every string in the repository passes it.
-- The fluid streets and the west trunks use plain pipes, not pipe-to-ground, because each pipe-to-ground draws 150 kW of heat. Lines are two rows apart, which leaves room for heat pipe between them.
+- The fluid streets use plain pipes, not pipe-to-ground, because each pipe-to-ground draws 150 kW of heat. Lines are two rows apart, which leaves room for heat pipe between them.
 - The heat needed to keep everything warm is in the table above (about 110 MW). Three heating towers give about 300 MW of heat (40 MW consumption × 250 %). With the steam for about 72 MW of electricity on top, the total is about 180 MW, so there is headroom. They burn about 44 rocket fuel/min, and the base makes 48.
 - The turbine water (about 700/s) is melted ice, which is why there are 8 water cells and 6 ammonia-separation cells. The separation cells make slightly less ammonia than the lines use, because surplus ammonia would back up and stop the ice as well.
 
@@ -141,7 +146,7 @@ Belts freeze too (10 kW per tile), and heating long belts needs far too much hea
 
 ## Inputs
 
-Connect to the markers at the north end of the trunks, north-west (constant combinators, count = per minute).
+Connect to the pipe-to-ground at the west end of each shelf (marker = per minute, display panel).
 
 - **Ammoniacal solution**: an offshore pump on the ammonia ocean.
 - **Crude oil, lithium brine, fluorine**: pumpjacks on their vents. Pumpjacks freeze too, so put heat pipe beside them.

@@ -7,8 +7,8 @@ from lib.planets.common import write_planet
 
 if __name__ == "__main__":
     write_planet(A, __file__, "Aquilo all-in-one",
-                 "Robot-fed and heated: every building that freezes has a heat pipe within one tile, joined to the "
-                 "heating towers of the power block. Fluids at the trunk tops (north-west: offshore pump on the "
-                 "ammonia ocean, pumpjacks on crude oil / lithium brine / fluorine vents). Put rocket fuel into the network "
-                 "to start the heating towers; the landing pad imports holmium plates, blue circuits and LDS.",
+                 "Makes: ~96 cryogenic science/min, lithium plates, ice platforms, fusion power cells, ammonia rocket fuel. "
+                 "Needs: ammoniacal solution, lithium brine, fluorine and crude oil at the west inputs of each shelf, "
+                 "imports (holmium plates, blue circuits, LDS) via the landing pad. To start: rocket fuel in the heating "
+                 "towers' chests, 100 logistic robots; everything that freezes has heat pipe beside it.",
                  [("power", A.power_stack()), ("rocket-silo", A.rocket_stack()), ("landing-pad", A.pad_stack())])

@@ -1,6 +1,6 @@
 # 불카누스 올인원 기지
 
-> 직사각형 하나로 지은 불카누스 기지: 용암 선반(용융 금속 + 돌 처리) → 주조·텅스텐·금속 과학 분당 360, 윤활유, 몰(주조기·대형 채굴기·터보 벨트), 전력 372 MW, 남쪽 광석 입구, 로켓·착륙장. 블록 사이는 로봇, 유체는 서쪽 줄기 배관.
+> 직사각형 하나로 지은 불카누스 기지: 용융 금속을 스스로 만드는 섬(주조·금속 과학·몰) → 금속 과학 분당 360, 텅스텐, 몰(주조기·대형 채굴기·터보 벨트), 스스로 다시 켜지는 전력 372 MW, 남쪽 광석 입구, 로켓·착륙장. 로봇 셀, 출력마다 재고 한도.
 
 [English](README.en.md)
 
@@ -18,9 +18,9 @@
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
-| 크기 | 264×201 타일 |
-| 엔티티 | 9376 |
-| 주요 설비 | `requester-chest` ×83<br>`passive-provider-chest` ×80<br>`foundry` ×68 (tungsten-plate 20, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 6, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×42<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`steel-chest` ×3<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
+| 크기 | 221×192 타일 |
+| 엔티티 | 4367 |
+| 주요 설비 | `requester-chest` ×141<br>`passive-provider-chest` ×129<br>`foundry` ×70 (tungsten-plate 20, molten-copper-from-lava 12, metallurgic-science-pack 10, molten-iron-from-lava 8, casting-iron 4, casting-steel 4, casting-low-density-structure 2, foundry 2, big-mining-drill 2, turbo-transport-belt 2, turbo-underground-belt 2, turbo-splitter 2)<br>`recycler` ×26<br>`chemical-plant` ×22 (carbon 18, acid-neutralisation 2, lubricant 2)<br>`assembling-machine-3` ×12 (tungsten-carbide 12)<br>`steel-chest` ×5<br>`oil-refinery` ×2 (simple-coal-liquefaction 2)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
 ### 입력
@@ -29,10 +29,10 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 
 | 신호 | 분당 | 위치 |
 |---|---:|---|
-| `calcite` | 412 | (22, 200) |
-| `coal` | 2,400 | (26, 200) |
-| `tungsten-ore` | 1,860 | (30, 200) |
-| `tungsten-ore` | 1,860 | (34, 200) |
+| `calcite` | 412 | (15, 190) |
+| `coal` | 2,400 | (19, 190) |
+| `tungsten-ore` | 1,860 | (23, 190) |
+| `tungsten-ore` | 1,860 | (27, 190) |
 
 ### 출력
 
@@ -67,15 +67,16 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 | Landing pad | - | - | 수입품 11종 → 로봇 네트워크 | |
 | Rocket silo | - | - | 로봇이 재료를 넣는 사일로; 수출은 화물 요청으로 | |
 
-선반 (아래 → 위; 줄이 길면 같은 높이의 스택 여러 개로 나뉨):
+선반 (아래 → 위; 섬마다 유체를 스스로 만들고, 유체 없는 블록은 빈자리에 채움):
 
 | 선반 | 블록 |
 |---|---|
-| 1 | Molten iron x3, Molten copper x3, Molten copper x3, Stone void 1, Stone void 2, Stone void 3, Power: acid neutralisation + 64 turbines, Carbon x3, Tungsten plate x3, Metallurgic science x5 |
-| 2 | Tungsten carbide x3, Tungsten plate x2, Iron plates x2, Steel x2, Heavy oil (simple coal liquefaction) x1, Low density structure x1, Mall: foundry x1, Lubricant x1 |
-| 3 | Mall: big mining drill x1, Mall: turbo belt x1, Mall: turbo underground x1, Mall: turbo splitter x1, Rocket silo (robot-fed), Landing pad (imports into the robot network) |
+| 1 | Power: acid neutralisation + 64 turbines, Molten iron x2, Iron plates x2, Steel x2, Tungsten plate x3, Tungsten plate x2, Stone void (15/s) |
+| 2 | Molten copper x3, Molten copper x3, Molten iron x1, Carbon x3, Tungsten carbide x3, Metallurgic science x5, Low density structure x1, Stone void (22/s), Stone void (22/s), Stone void (22/s) |
+| 3 | Molten iron x1, Heavy oil (simple coal liquefaction) x1, Lubricant x1, Mall: foundry x1, Mall: big mining drill x1, Mall: turbo belt x1, Mall: turbo underground x1, Mall: turbo splitter x1, Stone void (8/s) |
+| 빈자리 채움 | Solar restart kit, Rocket silo (robot-fed), Landing pad (imports into the robot network) |
 
-코어 253×196칸, 전체 264×201칸, 9,376개 엔티티. 최대 전력 215 MW / 발전 372 MW. 블록 사이 아이템은 로봇(요청 상자 → 블록 → 공급 상자), 유체는 서쪽 줄기 배관으로 모든 선반에 이어집니다.
+코어 215×185칸, 전체 221×192칸, 4,367개 엔티티, 밀도 0.10 · 타일 점유율 0.19 (참고 커뮤니티 기지: 0.24–0.44 · 0.55–0.82). 최대 전력 208 MW / 발전 372 MW.
 
 ### 로드맵
 
@@ -83,7 +84,7 @@ _블루프린트 안의 일정 신호 조합기 표시 (값 = 분당 필요량, 
 |---|---|---|
 | 0. 도착 | `foundry` (아이템을 처음 만들면), `rocket-silo` (빨강·초록·파랑·보라·노랑) | 주조기 연구 전: 우주 플랫폼에서 착륙장·로봇·기본 건물을 내립니다. 용암 호수 옆, 방해석·석탄·텅스텐 광맥 근처의 디몰리셔 영역 밖에 자리를 잡습니다. |
 | 1. 전력 | `calcite-processing` (처음 캐면), `nuclear-power` (빨강·초록·파랑) | 전력 줄(산 중화 + 터빈)을 먼저: 방해석과 황산(산 간헐천 펌프잭)만 있으면 372 MW. 처음엔 터빈 몇 대로 시작해도 됩니다. |
-| 2. 용융 금속·주조 | `foundry` (아이템을 처음 만들면) | 용융 철·구리 줄과 철판·강철 주조. 용암은 북서쪽 줄기 배관 끝 표시에 해양 펌프로. 돌이 나오므로 같은 선반의 돌 처리 블록도 같이 놓습니다(재활용 연구 전엔 상자에 쌓임). |
+| 2. 용융 금속·주조 | `foundry` (아이템을 처음 만들면) | 용융 철·구리 섬과 철판·강철 주조. 용암은 그 선반 서쪽 끝 지하 파이프에 해양 펌프로 연결합니다. 돌이 나오므로 같은 섬의 돌 처리 블록도 함께 놓습니다(재활용 연구 전엔 상자에 쌓임). |
 | 3. 텅스텐·과학 | `tungsten-carbide` (처음 캐면), `tungsten-steel` (아이템을 처음 만들면), `metallurgic-science-pack` (아이템을 처음 만들면) | 탄소 → 탄화 텅스텐, 텅스텐 판, 금속 과학(분당 360). 셀을 더 쌓으면 비례해서 늘어납니다. |
 | 4. 몰·윤활유 | `calcite-processing` (처음 캐면), `big-mining-drill` (아이템을 처음 만들면), `turbo-transport-belt` (빨강·초록·파랑·보라·우주·불카누스) | 간이 석탄 액화 → 윤활유, 몰 줄(주조기·대형 채굴기·터보 벨트류). 회로·엔진·급행 벨트는 착륙장 수입. |
 | 5. 로켓·수출 | `foundry` (아이템을 처음 만들면), `rocket-silo` (빨강·초록·파랑·보라·노랑) | 저밀도 구조물 주조(플라스틱 수입)와 로켓 사일로. 금속 과학·탄화 텅스텐·텅스텐 판·철판을 수출 상자에서 로켓 화물로. |
@@ -139,17 +140,19 @@ python3 tools/build.py planet-vulcanus
 
 커뮤니티의 행성 기지는 행성 전체에 버스를 깔지 않습니다. 빽빽한 직사각형 하나에 생산을 모으고, 전력·방어를 가장자리에 두릅니다(아래 '참고한 커뮤니티 설계'). 이 기지도 그렇게 짓습니다(`lib/base.py`).
 
-- **선반**: 생산 줄을 같은 높이의 블록(쌓는 셀 스택)으로 나눠 가로 선반에 빽빽하게 채웁니다. 선반을 위로 쌓으면 직사각형이 됩니다. 폭은 빈 칸이 가장 적게 남는 값을 찾아 정합니다.
-- **블록 사이는 로봇**: 블록 입력마다 요청 상자 → 인서터 → 벨트, 출력마다 벨트 끝 → 인서터 → 공급 상자를 둡니다. 벨트는 블록 안에만 있고, 로봇 기지는 40칸 격자로 코어 전체를 덮습니다.
-- **유체는 서쪽 줄기**: 선반마다 자기가 쓰는 유체만 선반 아래 짧은 거리에 깝니다. 서쪽 가장자리의 세로 줄기 배관이 같은 유체를 모든 선반에 잇습니다. 바깥에서 들어오는 유체는 줄기의 북쪽 끝 표시(상수 조합기)로 들어옵니다.
-- **용암 선반**(맨 아래): 용융 철·구리 주조기와 돌 처리 재활용기가 돌 벨트를 함께 씁니다. 돌은 초당 약 80개라 로봇 대신 벨트로 처리합니다. 돌이 쌓이면 용융 금속 생산이 멈추므로 처리 블록이 같은 선반에 있어야 합니다(돌은 25% 확률로 자기 자신이 되므로 75%가 사라짐). 재활용 연구(풀가오라) 전에는 처리 블록 위쪽 상자에 쌓입니다.
+- **섬**: 유체와 중간재를 함께 쓰는 줄을 한 섬으로 묶습니다(예: 용융 철 + 그 주조, 용융 구리 + 금속 과학). 섬이 선반보다 넓으면 여러 조각으로 나누는데, 조각마다 자기 유체 생산 셀을 가집니다. 그래서 유체가 기지를 가로지르지 않습니다(`references/base-design.md` §3).
+- **선반**: 섬 조각을 키가 비슷한 것끼리 가로 선반에 채우고, 선반을 쌓아 직사각형을 만듭니다. 선반 아래 거리에는 그 선반이 쓰는 유체만 지나갑니다(지하 파이프 6줄 묶음, 마지막 사용처에서 끝남). 유체가 필요 없는 블록(로봇 셀, 사일로, 착륙장 등)은 선반 위 빈자리에 채워 넣습니다.
+- **로봇 셀**: 기계마다 요청 상자(재료)와 공급 상자(결과)가 있어 벨트 열이 필요 없습니다. 섬 안에서만 쓰는 중간재(예: 기어·구리선 → 2차 재활용)와 부산물(돌, 넘침)은 짧은 거리 벨트로 갑니다. 로봇 기지는 블록 사이 기둥에 약 48칸마다 있습니다.
+- **스스로 조절**: 공급 상자로 나가는 출력 인서터는 네트워크에 약 2분치가 쌓이면 멈춥니다(로지스틱 조건). 가열탑 연료는 축전지가 90% 미만일 때만 버너 인서터로 넣습니다. 전기가 없어도 돌아가므로 기지가 스스로 다시 켜집니다. 축전지가 20% 아래로 떨어지면 스피커와 지도 경고가 울립니다(`references/circuits.md`).
+- **입력**: 모두 가장자리에 있습니다. 유체는 선반마다 서쪽, 광석은 남쪽 입구로 들어오고, 바깥 끝은 지하 벨트·지하 파이프입니다. 그 옆에 표시 조합기(분당 수량)와 디스플레이 패널이 있습니다.
+- **용암 섬**: 용융 철·구리 주조기와 돌 처리 재활용기가 같은 섬에서 돌 벨트를 함께 씁니다(주조기 스택마다 벨트 하나). 돌은 초당 약 80개라 로봇 대신 벨트로 처리합니다. 돌이 쌓이면 용융 금속 생산이 멈추므로 처리 블록이 같은 선반에 있어야 합니다(돌은 25% 확률로 자기 자신이 되므로 75%가 사라짐). 재활용 연구(풀가오라) 전에는 처리 블록 위쪽 상자에 쌓입니다.
 - **남쪽 광석 입구**: 방해석·석탄·텅스텐 광석 벨트가 남쪽에서 들어와 공급 상자로 내려집니다.
 - **유체 셀**: 주조기는 유체 입력이 벨트 쪽, 출력이 가운데를 보도록 돌려 놓습니다. 입력 유체마다 기계 행을 따로 씁니다.
 - **생성할 때 검사**: 모든 타일 충돌, 선반 거리의 줄 용량(파이프 1,200/s), 전력망 연결을 생성 단계에서 검사합니다. 하나라도 어긋나면 문자열을 만들지 않습니다.
 
 ## 전력·방어
 
-- 전력: 산 중화(방해석 + 황산 → 500°C 증기) 화학 공장 2대가 증기 터빈 64대를 돌립니다(372 MW). 이 블록도 선반 안에 들어갑니다.
+- 전력: 산 중화(방해석 + 황산 → 500°C 증기) 화학 공장 2대가 증기 터빈 64대를 돌립니다(372 MW). 태양광 8장 + 축전지 4개의 재시동 키트가 터빈이 식었을 때 화학 공장을 돌립니다(불카누스 태양광 400%).
 - 방어: 불카누스의 적은 디몰리셔입니다. 포탑으로 막는 대상이 아니므로 둘레 방어 대신 **영역 밖에 짓는 것**이 원칙입니다. 그래서 이 기지에는 외곽 띠가 없습니다.
 
 ## 늘리는 법

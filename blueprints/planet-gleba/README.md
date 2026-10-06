@@ -17,9 +17,9 @@
 | 항목 | 값 |
 |---|---|
 | 게임 | Factorio 2.0 (base, space-age) |
-| 크기 | 177×126 타일 |
-| 엔티티 | 4025 |
-| 주요 설비 | `requester-chest` ×263<br>`passive-provider-chest` ×120<br>`biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, iron-bacteria-cultivation 8, burnt-spoilage 8, carbon-fiber 8, jellynut-processing 4, nutrients-from-bioflux 4, iron-bacteria 4)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
+| 크기 | 145×98 타일 |
+| 엔티티 | 3240 |
+| 주요 설비 | `requester-chest` ×249<br>`passive-provider-chest` ×120<br>`biochamber` ×108 (pentapod-egg 24, agricultural-science-pack 16, yumako-processing 12, bioflux 12, rocket-fuel-from-jelly 8, burnt-spoilage 8, carbon-fiber 8, iron-bacteria-cultivation 8, jellynut-processing 4, nutrients-from-bioflux 4, iron-bacteria 4)<br>`electric-furnace` ×8<br>`assembling-machine-3` ×4 (firearm-magazine 4)<br>`rocket-silo` ×1 |
 | 검사 | 통과 |
 
 ### 입력
@@ -54,15 +54,15 @@
 | Landing pad | - | - | 파랑 회로·LDS 수입 | |
 | Defence ring | - | - | 돌벽 2겹 + 4칸마다 레이저 포탑, 세 번째마다 기관총 포탑(탄창 요청 상자) | |
 
-선반 (아래 → 위; 줄이 길면 같은 높이의 스택 여러 개로 나뉨):
+선반 (아래 → 위; 섬마다 유체를 스스로 만들고, 유체 없는 블록은 빈자리에 채움):
 
 | 선반 | 블록 |
 |---|---|
-| 1 | Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Rocket fuel (jelly) x2, Agricultural science x2, Agricultural science x2, Iron bacteria cultivation x2, Iron plates (bacteria ore) x2 |
-| 2 | Carbon (burnt spoilage) x2, Carbon fiber x2, Pentapod eggs x1, Pentapod eggs x1, Pentapod eggs x1, Pentapod eggs x1, Yumako processing x1, Yumako processing x1 |
-| 3 | Bioflux x1, Bioflux x1, Jellynut processing x2, Nutrients x2, Iron bacteria x2, Firearm magazines x2, Rocket silo (robot-fed), Landing pad (robot network) |
+| 1 | Power: 2 heating towers, 16 turbines, Power: 2 heating towers, 16 turbines, Pentapod eggs x2, Pentapod eggs x2 |
+| 2 | Rocket fuel (jelly) x2 |
+| 빈자리 채움 | Agricultural science x4, Yumako processing x2, Jellynut processing x2, Bioflux x2, Nutrients x2, Carbon (burnt spoilage) x2, Carbon fiber x2, Iron bacteria x2, Iron bacteria cultivation x2, Iron plates (bacteria ore) x2, Firearm magazines x2, Rocket silo (robot-fed), Landing pad (robot network) |
 
-코어 160×105칸, 전체 177×126칸, 4,025개 엔티티. 최대 전력 77 MW / 터빈 186 MW (가열탑 연료가 충분할 때). 블록 사이 아이템은 로봇(요청 상자 → 블록 → 공급 상자), 유체는 서쪽 줄기 배관으로 모든 선반에 이어집니다.
+코어 113×73칸, 전체 145×98칸, 3,240개 엔티티, 밀도 0.23 · 타일 점유율 0.38 (참고 커뮤니티 기지: 0.24–0.44 · 0.55–0.82). 최대 전력 74 MW / 터빈 186 MW (가열탑 연료가 충분할 때).
 
 ### 로드맵
 
@@ -123,9 +123,11 @@ python3 tools/build.py planet-gleba
 
 커뮤니티의 행성 기지는 행성 전체에 버스를 깔지 않습니다. 빽빽한 직사각형 하나에 생산을 모으고, 전력·방어를 가장자리에 두릅니다(아래 '참고한 커뮤니티 설계'). 이 기지도 그렇게 짓습니다(`lib/base.py`).
 
-- **선반**: 생산 줄을 같은 높이의 블록(쌓는 셀 스택)으로 나눠 가로 선반에 빽빽하게 채웁니다. 선반을 위로 쌓으면 직사각형이 됩니다. 폭은 빈 칸이 가장 적게 남는 값을 찾아 정합니다.
-- **블록 사이는 로봇**: 블록 입력마다 요청 상자 → 인서터 → 벨트, 출력마다 벨트 끝 → 인서터 → 공급 상자를 둡니다. 벨트는 블록 안에만 있고, 로봇 기지는 40칸 격자로 코어 전체를 덮습니다.
-- **유체는 서쪽 줄기**: 선반마다 자기가 쓰는 유체만 선반 아래 짧은 거리에 깝니다. 서쪽 가장자리의 세로 줄기 배관이 같은 유체를 모든 선반에 잇습니다. 바깥에서 들어오는 유체는 줄기의 북쪽 끝 표시(상수 조합기)로 들어옵니다.
+- **섬**: 유체와 중간재를 함께 쓰는 줄을 한 섬으로 묶습니다(예: 용융 철 + 그 주조, 용융 구리 + 금속 과학). 섬이 선반보다 넓으면 여러 조각으로 나누는데, 조각마다 자기 유체 생산 셀을 가집니다. 그래서 유체가 기지를 가로지르지 않습니다(`references/base-design.md` §3).
+- **선반**: 섬 조각을 키가 비슷한 것끼리 가로 선반에 채우고, 선반을 쌓아 직사각형을 만듭니다. 선반 아래 거리에는 그 선반이 쓰는 유체만 지나갑니다(지하 파이프 6줄 묶음, 마지막 사용처에서 끝남). 유체가 필요 없는 블록(로봇 셀, 사일로, 착륙장 등)은 선반 위 빈자리에 채워 넣습니다.
+- **로봇 셀**: 기계마다 요청 상자(재료)와 공급 상자(결과)가 있어 벨트 열이 필요 없습니다. 섬 안에서만 쓰는 중간재(예: 기어·구리선 → 2차 재활용)와 부산물(돌, 넘침)은 짧은 거리 벨트로 갑니다. 로봇 기지는 블록 사이 기둥에 약 48칸마다 있습니다.
+- **스스로 조절**: 공급 상자로 나가는 출력 인서터는 네트워크에 약 2분치가 쌓이면 멈춥니다(로지스틱 조건). 가열탑 연료는 축전지가 90% 미만일 때만 버너 인서터로 넣습니다. 전기가 없어도 돌아가므로 기지가 스스로 다시 켜집니다. 축전지가 20% 아래로 떨어지면 스피커와 지도 경고가 울립니다(`references/circuits.md`).
+- **입력**: 모두 가장자리에 있습니다. 유체는 선반마다 서쪽, 광석은 남쪽 입구로 들어오고, 바깥 끝은 지하 벨트·지하 파이프입니다. 그 옆에 표시 조합기(분당 수량)와 디스플레이 패널이 있습니다.
 
 ## 왜 벨트 대신 로봇인가
 
@@ -143,7 +145,7 @@ python3 tools/build.py planet-gleba
 
 펜타포드는 오염(포자)이 닿은 곳을 공격합니다. 커뮤니티 기지처럼 기지 전체를 벽과 포탑으로 두릅니다.
 
-- 바깥에 돌벽 두 겹이 있습니다.
+- 맨 바깥에 지뢰 두 줄, 그 안에 돌벽 두 겹이 있습니다.
 - 그 안쪽 줄에 4칸마다 레이저 포탑이 서고, 세 번째 자리마다 기관총 포탑이 섭니다. 기관총 포탑은 탄창을 요청 상자에서 받는데, 탄창은 박테리아 철로 만듭니다.
 - 포탑 사이에는 전신주가 있습니다.
 - 물 배관이 지나가는 자리만 벽이 비어 있습니다.

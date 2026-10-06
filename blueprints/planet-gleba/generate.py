@@ -7,9 +7,9 @@ from lib.planets.common import write_planet
 
 if __name__ == "__main__":
     write_planet(G, __file__, "Gleba all-in-one",
-                 "Robot-fed: every machine has a requester chest (inputs + nutrients) and a passive provider chest. "
-                 "Water at the trunk tops (north-west, offshore pumps). Farms (variants/farm-*.txt) go on yumako / "
-                 "jellynut soil within reach of the robot network. Put a few pentapod eggs and nutrients into the "
-                 "network to start; turrets take magazines from the network.",
+                 "Makes: ~600 agricultural science/min, bioflux, nutrients, carbon fiber, rocket fuel, bacteria iron, "
+                 "magazines for its own turrets. Needs: water at the west inputs (offshore pumps), yumako + jellynut from "
+                 "the farm tiles (variants/farm-*.txt, inside the robot network). To start: 150 logistic robots, 2000 "
+                 "spoilage or some rocket fuel for the heating towers, nutrients, one pentapod egg.",
                  [("power", G.power_stack()), ("rocket-silo", G.rocket_stack()), ("landing-pad", G.pad_stack()),
                   ("farm-yumako", G.farm_tile("yumako-seed")), ("farm-jellynut", G.farm_tile("jellynut-seed"))])

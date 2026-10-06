@@ -18,9 +18,9 @@
 | Item | Value |
 |---|---|
 | Game | Factorio 2.0 (base, space-age) |
-| Size | 336×183 tiles |
-| Entities | 11687 |
-| Main machines | `recycler` ×104<br>`passive-provider-chest` ×75<br>`requester-chest` ×56<br>`electromagnetic-plant` ×30 (electrolyte 8, electromagnetic-science-pack 8, accumulator 4, superconductor 4, supercapacitor 4, electromagnetic-plant 2)<br>`chemical-plant` ×18 (holmium-solution 12, ice-melting 4, heavy-oil-cracking 2)<br>`assembling-machine-3` ×10 (rocket-fuel 4, refined-concrete 4, iron-stick 2)<br>`steel-chest` ×4<br>`foundry` ×2 (holmium-plate 2)<br>`rocket-silo` ×1 |
+| Size | 234×193 tiles |
+| Entities | 7296 |
+| Main machines | `recycler` ×92<br>`passive-provider-chest` ×90<br>`requester-chest` ×75<br>`electromagnetic-plant` ×30 (electrolyte 8, electromagnetic-science-pack 8, superconductor 4, supercapacitor 4, accumulator 4, electromagnetic-plant 2)<br>`chemical-plant` ×24 (holmium-solution 12, ice-melting 8, heavy-oil-cracking 4)<br>`assembling-machine-3` ×10 (rocket-fuel 4, refined-concrete 4, iron-stick 2)<br>`steel-chest` ×5<br>`foundry` ×2 (holmium-plate 2)<br>`rocket-silo` ×1 |
 | Validation | OK |
 
 ### Inputs
@@ -57,16 +57,19 @@ none
 | Lightning band | - | - | around the base, each 12×12 tile: lightning collector + substation + 34 accumulators (170 MJ) | |
 | Lightning cover | - | - | lightning collectors every 36 tiles inside the core too | |
 
-Shelves (bottom → top; long lines are split into stacks of equal height):
+Shelves (bottom → top; each island makes its own fluids, fluid-free blocks fill the gaps):
 
 | Shelf | Blocks |
 |---|---|
-| 1 | Scrap recycling + sorting 1, Scrap recycling + sorting 2, Secondary recycling (iron, copper, green circuits, plastic), Void: overflow 1, Void: overflow 2 |
-| 2 | Scrap recycling + sorting 3, Scrap recycling + sorting 4, Void: overflow 3, Void: overflow 4, Accumulator x1, Iron sticks x1 |
-| 3 | Holmium solution x2, Electrolyte x2, Electromagnetic science x2, Superconductor x1, Supercapacitor x1, Water (ice melting) x1, Rocket fuel x1, Refined concrete x1, Holmium plate x1, Light oil (heavy oil cracking) x1 |
-| 4 | Mall: electromagnetic plant x1, Rocket silo (robot-fed) |
+| 1 | Scrap recycling + sorting 1, Secondary recycling (iron, copper, green circuits, plastic), Void: overflow (6/s), Void: overflow (6/s) |
+| 2 | Scrap recycling + sorting 2, Void: overflow (10/s) |
+| 3 | Scrap recycling + sorting 3, Void: overflow (10/s) |
+| 4 | Scrap recycling + sorting 4, Void: overflow (10/s) |
+| 5 | Water (ice melting) x1, Light oil (heavy oil cracking) x1, Holmium solution x1, Electrolyte x1, Superconductor x1, Supercapacitor x1, Electromagnetic science x1 |
+| 6 | Water (ice melting) x1, Light oil (heavy oil cracking) x1, Holmium solution x1, Holmium plate x1, Electrolyte x1, Rocket fuel x1, Electromagnetic science x1, Refined concrete x1 |
+| gap fill | Rocket silo (robot-fed), Iron sticks x1, Mall: electromagnetic plant x1, Accumulator x1 |
 
-Core 306×151 tiles, overall 336×183, 11,687 entities. Peak power 121 MW, accumulators 13,260 MJ (lightning arrives only in storms). Items move between blocks by robots (requester chest → block → provider chest); each fluid runs in a trunk along the west edge that joins it in every shelf.
+Core 192×161 tiles, overall 234×193, 7,296 entities, density 0.16 · tile coverage 0.35 (community references: 0.24–0.44 · 0.55–0.82). Peak power 114 MW, accumulators 10,030 MJ (lightning arrives only in storms).
 
 ### Roadmap
 
@@ -127,11 +130,13 @@ python3 tools/build.py planet-fulgora
 
 Community planet bases don't run a bus across the planet. They pack production into one dense rectangle and put power and defence around its edge (see the community designs below). This base is built the same way (`lib/base.py`).
 
-- **Shelves**: every line is split into blocks of equal height (stacks of stackable cells) packed side by side into horizontal shelves. The shelves stack up into the rectangle. The packer picks the width that leaves the fewest empty tiles.
-- **Robots between blocks**: every block input gets requester chest → inserter → belt, and every output gets belt end → inserter → provider chest. Belts stay inside blocks, and roboports cover the core on a 40-tile grid.
-- **Fluids in west trunks**: each shelf lays only the fluids it uses, on a short street under it. A vertical trunk per fluid along the west edge joins that fluid across all shelves. External fluids enter at the north end of their trunk (constant-combinator marker).
+- **Islands**: lines that share fluids and intermediates form an island (e.g. molten iron + its castings, molten copper + metallurgic science). An island wider than a shelf is split into parts, each with its own fluid-producing cells, so no fluid crosses the base (`references/base-design.md` §3).
+- **Shelves**: island parts of similar height fill horizontal shelves, which stack into the rectangle. The street under a shelf carries only that shelf's fluids (pipe-to-ground runs, six per group, ending at the last user). Blocks that need no fluid (robot-fed cells, silo, landing pad…) fill the gaps above the shelves.
+- **Robot-fed cells**: every machine has a requester chest (ingredients) and a provider chest (results), so no belt columns are needed. Intermediates used only inside an island (e.g. gears and cable into the secondary recycler) and by-products (stone, overflow) ride short street belts. Roboports stand on posts between blocks about every 48 tiles.
+- **Self-regulating**: every output inserter into a provider chest stops once the network holds about two minutes of the item (logistic condition). Burner inserters feed the heating towers only while the accumulators are below 90 %. They need no power, so a dead base restarts by itself. Below 20 % a speaker and a map alert go off (`references/circuits.md`).
+- **Inputs**: all on the edge. Fluids enter from the west of each shelf, ores through the south gate. Each line ends in an underground belt or pipe-to-ground, with a marker (count per minute) and a display panel beside it.
 - **Lightning band**: one ring of 12×12 tiles around the core (lightning collector + substation + 34 accumulators = 170 MJ each). More collectors stand every 36 tiles inside the core, so every building is protected.
-- **Two scrap shelves** (bottom): scrap belts come in from the west. In each block 16 recyclers drop their output onto a mixed belt, and filter inserters in the sort section to the east split 12 items into provider chests. Whatever is left rides the overflow belt (virtual signal T) to the void on the same shelf.
+- **Scrap island**: scrap belts come in from the west of the scrap shelves. In each block 16 recyclers drop their output onto a mixed belt, and filter inserters in the sort section to the east split 12 items into provider chests. Whatever is left rides the overflow belt (virtual signal T) to the void on the same shelf.
 - **Self-regulating**: when a provider chest is full its filter inserter stops and that item goes to the overflow, so the base never jams.
 - **Secondary recycling**: gears → iron, cable → copper, blue circuits → green (+ red), LDS → plastic (+ steel, copper).
 - **EM-plant cells**: the plant has one fluid input on each side, so the second fluid (holmium solution) comes from the centre pipe.
