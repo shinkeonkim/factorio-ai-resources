@@ -80,6 +80,7 @@ python3 tools/attach_image.py my-factory ~/Desktop/shot.png --caption-ko "게임
 | <img src="blueprints/planet-fulgora/images/preview.webp" width="160"> | [풀가오라 올인원 기지](blueprints/planet-fulgora/README.md)<br>`planet` `fulgora` `space-age` `all-in-one` `stackable` | 번개 수집기·축전지 띠로 둘러싼 직사각형 풀가오라 기지: 고철 초당 160 → 고철 선반 2개(재활용·분류·넘침 처리) → 홀뮴·전해액·초전도체·슈퍼커패시터 → 전자기 과학 분당 약 100, 2차 재활용, 전자기 공장 몰, 로켓. 블록 사이는 로봇. | 234×193 | - |
 | <img src="blueprints/planet-gleba/images/preview.webp" width="160"> | [글레바 올인원 기지](blueprints/planet-gleba/README.md)<br>`planet` `gleba` `space-age` `all-in-one` `stackable` `robots` | 돌벽과 레이저·기관총 포탑으로 둘러싼 직사각형 글레바 기지, 모두 로봇 공급: 과일 가공 → 바이오플럭스·영양분·펜타포드 알 → 농업 과학 분당 약 600, 철 박테리아 → 탄창, 탄소 섬유, 젤리 로켓 연료, 가열탑 전력(부패물 연료), 로켓·착륙장. | 124×89 | - |
 | <img src="blueprints/planet-aquilo/images/preview.webp" width="160"> | [아킬로 올인원 기지](blueprints/planet-aquilo/README.md)<br>`planet` `aquilo` `space-age` `all-in-one` `stackable` `robots` `heating` | 직사각형 하나로 지은 아킬로 기지, 열 배관이 모든 건물 사이를 지남: 암모니아 바다 → 암모니아·얼음·물, 리튬, 플루오로케톤 순환 → 극저온 과학 분당 약 96, 암모니아 로켓 연료, 얼음 플랫폼, 핵융합 전지, 가열탑 전력 겸 보온, 로켓·착륙장. 어는 건물마다 열 배관이 1칸 안에 있는지 생성할 때 검사합니다. | 300×226 | - |
+| <img src="blueprints/mall-aai-warehouse/images/preview.webp" width="160"> | [AAI 창고 자동 조합기](blueprints/mall-aai-warehouse/README.md)<br>`mall` `circuit` `robots` `aai` | 조합기 1대가 회로로 레시피를 바꿔 가며 6x6 창고와 로지스틱 창고 5종을 정해진 수량만큼 유지합니다. | 7×5 | - |
 
 <!-- CATALOG:END -->
 
