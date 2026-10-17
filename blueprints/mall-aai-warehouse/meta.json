@@ -1,0 +1,116 @@
+{
+  "id": "mall-aai-warehouse",
+  "order": 100,
+  "game": "2.0",
+  "mods": [
+    "base",
+    "aai-containers"
+  ],
+  "tags": [
+    "mall",
+    "circuit",
+    "robots",
+    "aai"
+  ],
+  "title": {
+    "ko": "AAI 창고 자동 조합기",
+    "en": "AAI warehouse auto-crafter"
+  },
+  "summary": {
+    "ko": "조합기 1대가 회로로 레시피를 바꿔 가며 6x6 창고와 로지스틱 창고 5종을 정해진 수량만큼 유지합니다.",
+    "en": "One assembler switches recipe by circuit to keep set stocks of the 6x6 warehouse and its five logistic variants."
+  },
+  "outputs": [
+    {
+      "item": "aai-warehouse",
+      "per_minute": "-",
+      "where": {
+        "ko": "버퍼 상자 (2개 미만이면 10개까지 채움)",
+        "en": "buffer chest (refilled to 10 when below 2)"
+      }
+    },
+    {
+      "item": "aai-warehouse-passive-provider",
+      "per_minute": "-",
+      "where": {
+        "ko": "버퍼 상자 (목표 10개)",
+        "en": "buffer chest (target 10)"
+      }
+    },
+    {
+      "item": "aai-warehouse-active-provider",
+      "per_minute": "-",
+      "where": {
+        "ko": "버퍼 상자 (목표 10개)",
+        "en": "buffer chest (target 10)"
+      }
+    },
+    {
+      "item": "aai-warehouse-storage",
+      "per_minute": "-",
+      "where": {
+        "ko": "버퍼 상자 (목표 10개)",
+        "en": "buffer chest (target 10)"
+      }
+    },
+    {
+      "item": "aai-warehouse-buffer",
+      "per_minute": "-",
+      "where": {
+        "ko": "버퍼 상자 (목표 10개)",
+        "en": "buffer chest (target 10)"
+      }
+    },
+    {
+      "item": "aai-warehouse-requester",
+      "per_minute": "-",
+      "where": {
+        "ko": "버퍼 상자 (목표 10개)",
+        "en": "buffer chest (target 10)"
+      }
+    }
+  ],
+  "images": [],
+  "roadmap": [
+    {
+      "stage": {
+        "ko": "0. 연구",
+        "en": "0. Research"
+      },
+      "do": {
+        "ko": "로봇 네트워크(요청·버퍼 상자)와 회로 조합기, AAI 창고 연구.",
+        "en": "Logistic robots (requester / buffer chests), combinators and the AAI warehouse research."
+      },
+      "research": [
+        "requester-chest",
+        "buffer-chest",
+        "decider-combinator",
+        "assembling-machine-2"
+      ]
+    },
+    {
+      "stage": {
+        "ko": "1. 설치",
+        "en": "1. Place"
+      },
+      "do": {
+        "ko": "로봇 네트워크 안에 붙여 넣고 전기만 연결. 강철판·콘크리트·전자회로·고급회로가 네트워크에 있으면 바로 일반 창고부터 만듭니다.",
+        "en": "Paste inside a robot network and connect power. With steel, concrete, green and red circuits in the network it starts with plain warehouses."
+      },
+      "research": []
+    }
+  ],
+  "next": [
+    {
+      "id": "mall-upgradeable",
+      "why": {
+        "ko": "건물 자재를 만드는 다른 몰",
+        "en": "another mall for building items"
+      }
+    }
+  ],
+  "credits": {
+    "ko": "원본: 사용자가 찍은 AAI 창고 6종 블루프린트와 레시피 정보.",
+    "en": "Based on the user's blueprint of the six AAI warehouses and the recipes they gave."
+  }
+}
